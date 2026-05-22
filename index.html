@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inside the Model — an interactive field guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   THE PALETTE
+   ============================================================ */
+:root {
+  --bg: #0c0d10;
+  --bg-2: #111317;
+  --surface: #161a20;
+  --surface-2: #1c2128;
+  --line: rgba(255,255,255,0.07);
+  --line-strong: rgba(255,255,255,0.16);
+  --line-bright: rgba(255,255,255,0.32);
+  --ink: #f1ece2;
+  --ink-2: #bfb8a8;
+  --ink-3: #807a6e;
+  --ink-4: #4a4640;
+  --accent: #e7a55a;       /* warm amber */
+  --accent-2: #6da8ff;     /* cold blue */
+  --accent-glow: rgba(231,165,90,0.22);
+  --pos: #7fc99a;
+  --neg: #e07d6b;
+  --grid: rgba(255,255,255,0.04);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-lg: 22px;
+  --shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 80px -40px rgba(0,0,0,0.7);
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-italic: "Instrument Serif", serif;
+  --font-body: "Geist", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* subtle film grain */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
+}
+
+/* ambient glow in background */
+body::after {
+  content: "";
+  position: fixed;
+  top: -20vh; left: -10vw;
+  width: 80vw; height: 60vh;
+  background: radial-gradient(ellipse at center, rgba(231,165,90,0.08), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(20px);
+}
+
+main { position: relative; z-index: 1; }
+
+::selection { background: var(--accent); color: #1a1208; }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.serif { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
+.italic { font-family: var(--font-italic); font-style: italic; font-weight: 400; }
+.mono { font-family: var(--font-mono); font-feature-settings: "tnum" 1, "zero" 1; }
+.amber { color: var(--accent); }
+.blue { color: var(--accent-2); }
+.muted { color: var(--ink-2); }
+.faint { color: var(--ink-3); }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.025em; line-height: 1.05; }
+h1 { font-size: clamp(48px, 9vw, 120px); margin: 0; }
+h2 { font-size: clamp(34px, 5vw, 56px); margin: 0 0 16px; }
+h3 { font-size: clamp(22px, 2.4vw, 28px); margin: 0 0 12px; font-weight: 500; letter-spacing: -0.015em; }
+p { margin: 0 0 1em; color: var(--ink-2); max-width: 62ch; }
+p.lead { color: var(--ink); font-size: 18px; line-height: 1.6; }
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-strong); transition: border-color 0.2s; }
+a:hover { border-color: var(--accent); }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 32px; }
+.narrow { max-width: 760px; }
+
+section {
+  padding: 96px 0;
+  position: relative;
+}
+
+section + section::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, 80%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 28px;
+}
+.eyebrow::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-3);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 0 64px;
+  position: relative;
+}
+
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+}
+.nav-row .dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-right: 8px;
+  box-shadow: 0 0 12px var(--accent-glow);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.hero-body {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: end;
+  padding: 64px 0 32px;
+}
+
+.hero-title {
+  font-size: clamp(56px, 11vw, 156px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+.hero-title .it {
+  font-family: var(--font-italic);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-side {
+  border-left: 1px solid var(--line);
+  padding-left: 32px;
+}
+.hero-side p {
+  font-size: 15px;
+  color: var(--ink-2);
+  max-width: 32ch;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.scroll-cue .line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--ink-3), transparent);
+  animation: drop 2s ease-in-out infinite;
+}
+@keyframes drop {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ============================================================
+   THE MAP — concept relationship diagram
+   ============================================================ */
+.map-section { padding: 96px 0; }
+.map-wrap {
+  position: relative;
+  margin: 48px auto 0;
+  max-width: 1080px;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(231,165,90,0.04), transparent 60%),
+    var(--bg-2);
+  overflow: hidden;
+}
+.map-wrap svg { width: 100%; height: 100%; display: block; }
+
+.node-group { cursor: pointer; transition: opacity 0.2s; }
+.node-group .node-bg {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  transition: all 0.25s;
+}
+.node-group:hover .node-bg {
+  fill: var(--surface-2);
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 12px var(--accent-glow));
+}
+.node-group.active .node-bg {
+  fill: var(--surface-2);
+  stroke: var(--accent);
+}
+.node-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  fill: var(--ink);
+  font-weight: 500;
+  text-anchor: middle;
+  pointer-events: none;
+}
+.node-sublabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--ink-3);
+  letter-spacing: 0.1em;
+  text-anchor: middle;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.edge {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  fill: none;
+  transition: stroke 0.2s;
+}
+.edge-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--ink-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.map-readout {
+  position: absolute;
+  bottom: 24px; left: 24px; right: 24px;
+  padding: 18px 22px;
+  background: rgba(12,13,16,0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  transition: opacity 0.2s;
+  min-height: 70px;
+}
+.map-readout .rl-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+/* ============================================================
+   GENERIC DEMO BLOCK
+   ============================================================ */
+.demo {
+  margin: 40px 0;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+.demo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.demo-header .label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.demo-header .label .num { color: var(--accent); margin-right: 10px; }
+
+/* ============================================================
+   FLOATING POINT VISUALIZER
+   ============================================================ */
+.fp-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.fp-input-row label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+.fp-input {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  width: 200px;
+}
+.fp-input:focus { outline: none; border-color: var(--accent); }
+
+.fp-format-tabs {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.fp-tab {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.fp-tab:hover { border-color: var(--line-bright); color: var(--ink); }
+.fp-tab.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+
+.fp-bits {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+.fp-bit {
+  width: 22px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.fp-bit.sign { background: rgba(224,125,107,0.15); color: var(--neg); border: 1px solid rgba(224,125,107,0.35); }
+.fp-bit.exp { background: rgba(109,168,255,0.12); color: var(--accent-2); border: 1px solid rgba(109,168,255,0.3); }
+.fp-bit.man { background: rgba(127,201,154,0.1); color: var(--pos); border: 1px solid rgba(127,201,154,0.28); }
+.fp-bit.off { opacity: 0.25; }
+
+.fp-legend {
+  display: flex;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  margin-top: 16px;
+}
+.fp-legend span { display: flex; align-items: center; gap: 6px; }
+.fp-legend i {
+  width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+}
+
+.fp-readout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.fp-stat {
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.fp-stat .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+.fp-stat .v { font-family: var(--font-mono); font-size: 16px; color: var(--ink); }
+.fp-stat .v.amber { color: var(--accent); }
+
+/* ============================================================
+   NEURON DEMO
+   ============================================================ */
+.neuron-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.neuron-svg-wrap {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.neuron-svg { width: 100%; height: auto; display: block; }
+
+.weight-controls { display: flex; flex-direction: column; gap: 12px; }
+.weight-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 60px;
+  align-items: center;
+  gap: 12px;
+}
+.weight-row .lbl { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.weight-row .lbl .sub { color: var(--ink-3); font-size: 9px; }
+.weight-row input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--line-strong);
+  border-radius: 2px;
+  outline: none;
+}
+.weight-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+}
+.weight-row input[type=range]::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); border: none; cursor: pointer;
+}
+.weight-row .val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  text-align: right;
+}
+
+.equation {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  line-height: 2;
+}
+.equation .out-val {
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   EMBEDDING SCATTER
+   ============================================================ */
+.embed-wrap {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 16px;
+}
+.embed-svg {
+  width: 100%;
+  height: 520px;
+  display: block;
+}
+.embed-axis { stroke: var(--line); stroke-width: 0.5; }
+.embed-grid-line { stroke: var(--grid); stroke-width: 0.5; }
+.embed-point {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.embed-point circle { transition: all 0.25s; }
+.embed-point text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-2);
+  pointer-events: none;
+  transition: fill 0.25s;
+}
+.embed-point:hover circle { r: 9; }
+.embed-point:hover text { fill: var(--ink); }
+.embed-point.dim { opacity: 0.25; }
+.embed-point.match circle { fill: var(--accent); }
+.embed-point.match text { fill: var(--accent); font-weight: 500; }
+.embed-point.query circle { fill: var(--accent-2); stroke: var(--ink); stroke-width: 2; r: 10; }
+.embed-point.query text { fill: var(--accent-2); font-weight: 500; }
+
+.embed-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.embed-search {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  min-width: 220px;
+}
+.embed-search:focus { outline: none; border-color: var(--accent); }
+
+.embed-k {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  letter-spacing: 0.08em;
+}
+.embed-k:hover { border-color: var(--line-bright); color: var(--ink); }
+.embed-k.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+
+.similarity-list {
+  margin-top: 16px;
+  display: grid;
+  gap: 6px;
+}
+.sim-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 80px 70px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.sim-row.top { background: rgba(231,165,90,0.06); border-color: rgba(231,165,90,0.2); }
+.sim-row .rank { color: var(--ink-3); }
+.sim-row .word { color: var(--ink); }
+.sim-row .bar-cell { position: relative; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.sim-row .bar-cell .bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 2px; }
+.sim-row .score { text-align: right; color: var(--accent); }
+
+/* ============================================================
+   QUANTIZATION SLIDER
+   ============================================================ */
+.quant-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.quant-slider-row {
+  margin-bottom: 24px;
+}
+.quant-slider-row .lbl {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+.quant-slider-row .lbl .v { color: var(--accent); }
+.quant-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.quant-tabs button {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.quant-tabs button.on {
+  background: var(--accent);
+  color: #1a1208;
+  border-color: var(--accent);
+}
+.quant-vis {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+.quant-vis .ring-wrap { position: relative; width: 100%; aspect-ratio: 1; max-width: 280px; margin: 0 auto; }
+.quant-vis svg { width: 100%; height: 100%; display: block; }
+.quant-vis .center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.quant-vis .center .big {
+  font-family: var(--font-display);
+  font-size: 48px;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  line-height: 1;
+}
+.quant-vis .center .small {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 8px;
+}
+
+.quant-stats { display: grid; gap: 8px; margin-top: 20px; }
+.quant-stat-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.quant-stat-row .k { color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; font-size: 10px; align-self: center; }
+.quant-stat-row .v { color: var(--ink); }
+
+/* ============================================================
+   SOFTMAX DEMO
+   ============================================================ */
+.softmax-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 16px;
+}
+.logit-list, .prob-list {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.logit-list .title, .prob-list .title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+.logit-row, .prob-row {
+  display: grid;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.logit-row { grid-template-columns: 60px 1fr 60px; }
+.prob-row { grid-template-columns: 60px 1fr 60px; }
+.logit-row .token, .prob-row .token { color: var(--ink); }
+.logit-row input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 2px;
+  background: var(--line-strong); border-radius: 2px; outline: none;
+}
+.logit-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent-2); cursor: pointer;
+}
+.logit-row .val, .prob-row .val { font-size: 12px; text-align: right; color: var(--accent); }
+.prob-row .bar-wrap { position: relative; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.prob-row .bar-wrap .bar {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.temp-control {
+  margin: 20px 0;
+  padding: 16px 20px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  display: grid;
+  grid-template-columns: 1fr 200px 60px;
+  align-items: center;
+  gap: 16px;
+}
+.temp-control .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); letter-spacing: 0.08em; text-transform: uppercase; }
+.temp-control input[type=range] {
+  -webkit-appearance: none; height: 2px; background: var(--line-strong);
+  border-radius: 2px; outline: none;
+}
+.temp-control input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); cursor: pointer;
+}
+.temp-control .val { font-family: var(--font-mono); font-size: 13px; color: var(--accent); text-align: right; }
+
+/* ============================================================
+   GLOSSARY
+   ============================================================ */
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+.gloss {
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+}
+.gloss:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.gloss .term {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.gloss .term .icon {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.gloss .def {
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  padding: 80px 0 48px;
+  margin-top: 64px;
+  border-top: 1px solid var(--line);
+}
+footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+footer .sig {
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 800px) {
+  .container { padding: 0 22px; }
+  .hero-body { grid-template-columns: 1fr; }
+  .hero-side { border-left: none; border-top: 1px solid var(--line); padding-left: 0; padding-top: 24px; }
+  .neuron-grid, .quant-wrap, .softmax-grid { grid-template-columns: 1fr; }
+  .fp-readout { grid-template-columns: 1fr; }
+  section { padding: 64px 0; }
+  .demo { padding: 22px; }
+  .fp-input-row { flex-direction: column; align-items: stretch; }
+  .fp-format-tabs { margin-left: 0; }
+  .embed-svg { height: 380px; }
+}
+
+/* SVG text — apply fonts and fills here since SVG presentation attrs don't resolve CSS variables */
+.neuron-svg text { font-family: var(--font-mono); fill: var(--ink-2); }
+.neuron-svg #w1Text, .neuron-svg #w2Text, .neuron-svg #w3Text { fill: var(--accent); }
+.neuron-svg #outVal { fill: var(--accent); }
+.neuron-svg .symbol-text { fill: var(--ink-3); }
+.neuron-svg .input-circle { fill: var(--bg-2); stroke: var(--line-strong); }
+.neuron-svg .neuron-circle { fill: var(--surface-2); stroke: var(--accent); }
+.neuron-svg .out-line { stroke: var(--line-bright); }
+.embed-svg text { font-family: var(--font-mono); fill: var(--ink-3); }
+
+/* small entrance animation for sections */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+</style>
+</head>
+
+<body>
+
+<main>
+
+<!-- =====================================================
+     HERO
+     ===================================================== -->
+<section class="hero">
+  <div class="container">
+    <div class="nav-row">
+      <div><span class="dot"></span>Inside the Model</div>
+      <div>An interactive field guide · 2026</div>
+    </div>
+
+    <div class="hero-body">
+      <h1 class="hero-title">
+        The shapes<br/>
+        of <span class="it">intelligence,</span><br/>
+        in numbers.
+      </h1>
+      <div class="hero-side">
+        <p>Every modern AI system is, underneath, an enormous arrangement of numbers. <span class="italic" style="color:var(--ink);">Weights, biases, embeddings, vectors</span> — pieces with simple definitions and surprisingly elegant relationships.</p>
+        <p class="faint mono" style="font-size:11px; letter-spacing:0.1em; margin-top:18px;">SCROLL TO BEGIN →</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding: 0;">
+      <div class="hero-meta">
+        <span>I. The Map</span>
+        <span>II. Numbers</span>
+        <span>III. Parameters</span>
+        <span>IV. Embeddings</span>
+        <span>V. Search</span>
+        <span>VI. Output</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Begin</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     I. THE MAP
+     ===================================================== -->
+<section class="map-section reveal" id="map">
+  <div class="container">
+    <div class="eyebrow">I · The Map</div>
+    <h2 class="serif">How it all <span class="italic amber">connects.</span></h2>
+    <p class="lead narrow">Six concepts. One pipeline. Hover any node to see what it does and how it links to the next.</p>
+
+    <div class="map-wrap">
+      <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+        <!-- arrows defs -->
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.4)"/>
+          </marker>
+        </defs>
+
+        <!-- Edges -->
+        <g id="edges">
+          <path class="edge" d="M 200 175 L 200 245" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 290 290 L 410 290" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 590 290 L 710 290" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 800 245 L 800 175" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 800 335 L 800 415" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 710 460 L 590 460" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 410 460 L 290 460" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 200 415 L 200 335" marker-end="url(#arrow)"/>
+
+          <text class="edge-label" x="215" y="220">stored as</text>
+          <text class="edge-label" x="320" y="280">combine via</text>
+          <text class="edge-label" x="620" y="280">producing</text>
+          <text class="edge-label" x="815" y="220">flows into</text>
+          <text class="edge-label" x="815" y="395">that become</text>
+          <text class="edge-label" x="620" y="450">searched by</text>
+          <text class="edge-label" x="320" y="450">predicts</text>
+          <text class="edge-label" x="215" y="395">via</text>
+        </g>
+
+        <!-- Nodes -->
+        <g id="nodes">
+          <g class="node-group" data-key="fp" transform="translate(110,110)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Numbers</text>
+            <text class="node-label" x="90" y="46">Floating Point</text>
+          </g>
+
+          <g class="node-group" data-key="params" transform="translate(110,255)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Parameters</text>
+            <text class="node-label" x="90" y="46">Weights + Biases</text>
+          </g>
+
+          <g class="node-group" data-key="forward" transform="translate(410,255)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Computation</text>
+            <text class="node-label" x="90" y="46">Forward Pass</text>
+          </g>
+
+          <g class="node-group" data-key="emb" transform="translate(710,110)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Vectors</text>
+            <text class="node-label" x="90" y="46">Embeddings</text>
+          </g>
+
+          <g class="node-group" data-key="act" transform="translate(710,255)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Hidden state</text>
+            <text class="node-label" x="90" y="46">Activations</text>
+          </g>
+
+          <g class="node-group" data-key="search" transform="translate(710,425)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Geometry</text>
+            <text class="node-label" x="90" y="46">Vector Search</text>
+          </g>
+
+          <g class="node-group" data-key="logits" transform="translate(410,425)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Distribution</text>
+            <text class="node-label" x="90" y="46">Logits → Softmax</text>
+          </g>
+
+          <g class="node-group" data-key="tokens" transform="translate(110,425)">
+            <rect class="node-bg" width="180" height="70" rx="12"/>
+            <text class="node-sublabel" x="90" y="22">Output</text>
+            <text class="node-label" x="90" y="46">Next Token</text>
+          </g>
+        </g>
+      </svg>
+
+      <div class="map-readout" id="mapReadout">
+        <div class="rl-title">Hover any node</div>
+        <div class="rl-body">Each concept is one stop in the pipeline that turns raw numbers into intelligent-looking behavior. Together they form a closed loop: parameters compute activations, activations form embeddings, embeddings get searched and ranked, ranks become probabilities, probabilities become the next number predicted.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     II. FLOATING POINT
+     ===================================================== -->
+<section class="reveal" id="fp">
+  <div class="container">
+    <div class="eyebrow">II · Numbers</div>
+    <h2 class="serif">Everything starts as a <span class="italic amber">number.</span></h2>
+    <p class="lead narrow">Before there are weights, layers, or embeddings — there are floating-point numbers. The format you choose decides how much memory the model takes, how fast it runs, and how precise it can be.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>IEEE 754 — under the hood</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">A floating-point number is three pieces of information packed together: <span class="mono" style="color:var(--neg);">sign</span> · <span class="mono" style="color:var(--accent-2);">exponent</span> · <span class="mono" style="color:var(--pos);">mantissa</span>.</p>
+        </div>
+        <div class="label"><span class="num">01</span>FORMAT</div>
+      </div>
+
+      <div class="fp-input-row">
+        <label>Value</label>
+        <input id="fpInput" type="text" class="fp-input mono" value="3.14159" />
+        <div class="fp-format-tabs" id="fpTabs">
+          <button class="fp-tab on" data-fmt="fp32">FP32</button>
+          <button class="fp-tab" data-fmt="fp16">FP16</button>
+          <button class="fp-tab" data-fmt="bf16">BF16</button>
+          <button class="fp-tab" data-fmt="fp8">FP8</button>
+        </div>
+      </div>
+
+      <div class="fp-bits" id="fpBits"></div>
+
+      <div class="fp-legend">
+        <span><i style="background:rgba(224,125,107,0.5);"></i>Sign (±)</span>
+        <span><i style="background:rgba(109,168,255,0.5);"></i>Exponent (scale)</span>
+        <span><i style="background:rgba(127,201,154,0.4);"></i>Mantissa (precision)</span>
+      </div>
+
+      <div class="fp-readout">
+        <div class="fp-stat"><div class="k">Total bits</div><div class="v" id="fpTotal">32</div></div>
+        <div class="fp-stat"><div class="k">Bytes per number</div><div class="v amber" id="fpBytes">4</div></div>
+        <div class="fp-stat"><div class="k">Reconstructed value</div><div class="v" id="fpRecon">3.14159…</div></div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.6;">
+        A model with 70 billion parameters in FP32 needs 280 GB of memory just to <em>hold</em> its weights. In FP8, that drops to 70 GB. This is why every modern model is shipped in a smaller format than it was trained in.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     III. WEIGHTS & BIASES
+     ===================================================== -->
+<section class="reveal" id="params">
+  <div class="container">
+    <div class="eyebrow">III · Parameters</div>
+    <h2 class="serif">A neuron is a <span class="italic amber">weighted sum.</span></h2>
+    <p class="lead narrow">Every parameter in a neural network is either a <em>weight</em> — how much an input matters — or a <em>bias</em> — a baseline value added in. That's it. Billions of them, but always one of those two things.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>One neuron, four numbers</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Three inputs, three weights, one bias. Adjust the sliders to see how the output changes.</p>
+        </div>
+        <div class="label"><span class="num">02</span>NEURON</div>
+      </div>
+
+      <div class="neuron-grid">
+        <div class="neuron-svg-wrap">
+          <svg viewBox="0 0 360 280" class="neuron-svg" id="neuronSvg">
+            <!-- Inputs -->
+            <g id="inputs">
+              <circle class="input-circle" cx="50" cy="60" r="20"/>
+              <text x="50" y="65" text-anchor="middle" font-size="13">x₁</text>
+
+              <circle class="input-circle" cx="50" cy="140" r="20"/>
+              <text x="50" y="145" text-anchor="middle" font-size="13">x₂</text>
+
+              <circle class="input-circle" cx="50" cy="220" r="20"/>
+              <text x="50" y="225" text-anchor="middle" font-size="13">x₃</text>
+            </g>
+
+            <!-- Connections (will be styled by JS) -->
+            <line id="w1Line" x1="70" y1="60" x2="240" y2="140" stroke-width="2"/>
+            <line id="w2Line" x1="70" y1="140" x2="240" y2="140" stroke-width="2"/>
+            <line id="w3Line" x1="70" y1="220" x2="240" y2="140" stroke-width="2"/>
+
+            <!-- Weight labels -->
+            <text id="w1Text" x="150" y="92" font-size="11" text-anchor="middle">w₁</text>
+            <text id="w2Text" x="150" y="135" font-size="11" text-anchor="middle">w₂</text>
+            <text id="w3Text" x="150" y="195" font-size="11" text-anchor="middle">w₃</text>
+
+            <!-- Neuron -->
+            <circle class="neuron-circle" cx="260" cy="140" r="28" stroke-width="1.5"/>
+            <text class="symbol-text" x="260" y="138" text-anchor="middle" font-size="10">∑</text>
+            <text class="symbol-text" x="260" y="152" text-anchor="middle" font-size="9">+b</text>
+
+            <!-- Output arrow -->
+            <line class="out-line" x1="288" y1="140" x2="328" y2="140" stroke-width="1.5" marker-end="url(#smallarrow)"/>
+            <text x="335" y="135" font-size="12" id="outVal">y</text>
+
+            <defs>
+              <marker id="smallarrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#bfb8a8"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <div>
+          <div class="weight-controls">
+            <div class="weight-row">
+              <div class="lbl">x₁ <span class="sub">input</span></div>
+              <input type="range" id="x1" min="-2" max="2" step="0.1" value="1"/>
+              <div class="val mono" id="x1Val">1.0</div>
+            </div>
+            <div class="weight-row">
+              <div class="lbl">x₂ <span class="sub">input</span></div>
+              <input type="range" id="x2" min="-2" max="2" step="0.1" value="0.5"/>
+              <div class="val mono" id="x2Val">0.5</div>
+            </div>
+            <div class="weight-row">
+              <div class="lbl">x₃ <span class="sub">input</span></div>
+              <input type="range" id="x3" min="-2" max="2" step="0.1" value="-1"/>
+              <div class="val mono" id="x3Val">-1.0</div>
+            </div>
+
+            <div style="height: 8px; border-top: 1px solid var(--line); margin: 8px 0;"></div>
+
+            <div class="weight-row">
+              <div class="lbl amber">w₁ <span class="sub">weight</span></div>
+              <input type="range" id="w1" min="-2" max="2" step="0.1" value="0.6"/>
+              <div class="val mono" id="w1Val">0.6</div>
+            </div>
+            <div class="weight-row">
+              <div class="lbl amber">w₂ <span class="sub">weight</span></div>
+              <input type="range" id="w2" min="-2" max="2" step="0.1" value="-0.4"/>
+              <div class="val mono" id="w2Val">-0.4</div>
+            </div>
+            <div class="weight-row">
+              <div class="lbl amber">w₃ <span class="sub">weight</span></div>
+              <input type="range" id="w3" min="-2" max="2" step="0.1" value="0.8"/>
+              <div class="val mono" id="w3Val">0.8</div>
+            </div>
+
+            <div style="height: 8px; border-top: 1px solid var(--line); margin: 8px 0;"></div>
+
+            <div class="weight-row">
+              <div class="lbl blue">b <span class="sub">bias</span></div>
+              <input type="range" id="b" min="-2" max="2" step="0.1" value="0.2"/>
+              <div class="val mono blue" id="bVal">0.2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="equation mono">
+        y = ReLU(<span class="amber" id="eqW1">0.6</span>·<span id="eqX1">1.0</span> + <span class="amber" id="eqW2">-0.4</span>·<span id="eqX2">0.5</span> + <span class="amber" id="eqW3">0.8</span>·<span id="eqX3">-1.0</span> + <span class="blue" id="eqB">0.2</span>) = <span class="out-val" id="eqOut">0.0</span>
+      </div>
+
+      <p class="muted" style="margin-top: 24px; font-size: 13.5px; line-height: 1.65;">
+        That's one neuron. A modern frontier model has on the order of <span class="amber mono">10¹¹</span> of these, organized into layers. Training is the process of finding the values of all those weights and biases — by gradient descent — so that the network's outputs match what we want.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     IV. EMBEDDINGS
+     ===================================================== -->
+<section class="reveal" id="emb">
+  <div class="container">
+    <div class="eyebrow">IV · Embeddings</div>
+    <h2 class="serif">Words become <span class="italic amber">coordinates.</span></h2>
+    <p class="lead narrow">An embedding turns something messy — a word, an image, a sentence — into a list of numbers. A vector. And vectors live in space, with directions and distances. Suddenly we can do geometry on meaning.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The semantic plane</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Real embeddings have hundreds or thousands of dimensions. Here are 30 words flattened to two. Notice that semantic neighbors cluster together.</p>
+        </div>
+        <div class="label"><span class="num">03</span>SPACE</div>
+      </div>
+
+      <div class="embed-wrap">
+        <svg viewBox="0 0 700 520" class="embed-svg" id="embedSvg"></svg>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        The fact that "king" is close to "queen" — and that the direction from "man" to "woman" is similar to the direction from "king" to "queen" — is the foundation of every modern AI system that "understands" text. It's also exactly how vector search works.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     V. VECTOR SEARCH
+     ===================================================== -->
+<section class="reveal" id="search">
+  <div class="container">
+    <div class="eyebrow">V · Vector Search</div>
+    <h2 class="serif">Find the nearest <span class="italic amber">point.</span></h2>
+    <p class="lead narrow">Once meaning is geometry, search is just distance. Type a word — the demo finds its embedding, then ranks every other word by cosine similarity.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Nearest neighbors, ranked</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Pick a query word. The closest points get highlighted in the same space you just saw.</p>
+        </div>
+        <div class="label"><span class="num">04</span>SEARCH</div>
+      </div>
+
+      <div class="embed-controls">
+        <input id="searchInput" class="embed-search" type="text" placeholder="Try: king, apple, matrix…" value="king"/>
+        <span class="mono" style="font-size:11px; color:var(--ink-3); letter-spacing:0.08em;">TOP-K</span>
+        <button class="embed-k" data-k="3">3</button>
+        <button class="embed-k on" data-k="5">5</button>
+        <button class="embed-k" data-k="8">8</button>
+      </div>
+
+      <div class="embed-wrap">
+        <svg viewBox="0 0 700 520" class="embed-svg" id="searchSvg"></svg>
+      </div>
+
+      <div class="similarity-list" id="simList"></div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Cosine similarity = (a · b) / (|a| × |b|). It's the cosine of the angle between two vectors — 1.0 if they point the same way, 0 if perpendicular, -1 if opposite. Production systems do this same calculation against millions of vectors using HNSW or IVF indexes that prune the search space.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     VI. QUANTIZATION
+     ===================================================== -->
+<section class="reveal" id="quant">
+  <div class="container">
+    <div class="eyebrow">VI · Quantization</div>
+    <h2 class="serif">Smaller numbers, <span class="italic amber">most of the smarts.</span></h2>
+    <p class="lead narrow">Models are trained in high precision but they don't <em>need</em> that precision to run. Quantization replaces each weight with a smaller, coarser approximation. The model gets smaller and faster; the quality, mostly, holds.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The precision–size trade</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Choose a precision. See how big a 70B-parameter model becomes — and what it loses.</p>
+        </div>
+        <div class="label"><span class="num">05</span>BITS</div>
+      </div>
+
+      <div class="quant-wrap">
+        <div>
+          <div class="quant-slider-row">
+            <div class="lbl"><span>Precision</span><span class="v" id="quantLabel">FP16</span></div>
+            <div class="quant-tabs" id="quantTabs">
+              <button data-q="32">FP32</button>
+              <button class="on" data-q="16">FP16</button>
+              <button data-q="8">FP8</button>
+              <button data-q="4">INT4</button>
+              <button data-q="1">1-bit</button>
+            </div>
+          </div>
+
+          <div class="quant-stats">
+            <div class="quant-stat-row"><span class="k">Bits per weight</span><span class="v mono" id="qBits">16</span></div>
+            <div class="quant-stat-row"><span class="k">Model size (70B)</span><span class="v mono amber" id="qSize">140 GB</span></div>
+            <div class="quant-stat-row"><span class="k">Fits on</span><span class="v mono" id="qFits">2× H100 (80GB)</span></div>
+            <div class="quant-stat-row"><span class="k">Quality retained</span><span class="v mono" id="qQual">~100%</span></div>
+            <div class="quant-stat-row"><span class="k">Speedup vs FP32</span><span class="v mono amber" id="qSpeed">2×</span></div>
+          </div>
+        </div>
+
+        <div class="quant-vis">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="80" fill="none" stroke="var(--line)" stroke-width="1"/>
+              <circle id="qRing" cx="100" cy="100" r="80" fill="none" stroke="var(--accent)" stroke-width="6"
+                stroke-dasharray="502" stroke-dashoffset="0"
+                transform="rotate(-90 100 100)" stroke-linecap="round"/>
+            </svg>
+            <div class="center">
+              <div class="big" id="qBig">140</div>
+              <div class="small">Gigabytes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 28px; font-size: 13.5px; line-height: 1.65;">
+        Going from FP16 → INT4 cuts memory by 4× with surprisingly little measurable quality loss. Below that, you trade off real capability. The frontier of this work is mixed-precision quantization, where the "important" weights (a small fraction) keep more bits and everyone else gets squeezed.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     VII. LOGITS → SOFTMAX → TOKEN
+     ===================================================== -->
+<section class="reveal" id="softmax">
+  <div class="container">
+    <div class="eyebrow">VII · Output</div>
+    <h2 class="serif">From numbers back to <span class="italic amber">language.</span></h2>
+    <p class="lead narrow">The model's final layer doesn't output a word. It outputs a logit — a raw score — for every possible next token. Softmax turns those scores into probabilities. Temperature changes how confidently it picks.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>"The cat sat on the …"</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Adjust the logits on the left. Watch the probabilities — and the temperature's effect — on the right.</p>
+        </div>
+        <div class="label"><span class="num">06</span>SOFTMAX</div>
+      </div>
+
+      <div class="temp-control">
+        <div class="lbl">Temperature</div>
+        <input type="range" id="temp" min="0.1" max="2.5" step="0.05" value="1.0"/>
+        <div class="val mono" id="tempVal">1.00</div>
+      </div>
+
+      <div class="softmax-grid">
+        <div class="logit-list">
+          <div class="title"><span>Logits (raw scores)</span><span>z</span></div>
+          <div id="logitList"></div>
+        </div>
+        <div class="prob-list">
+          <div class="title"><span>Probabilities</span><span>softmax(z / T)</span></div>
+          <div id="probList"></div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Temperature 0 always picks the top token (deterministic). Higher temperatures flatten the distribution — every token becomes more likely — which means more variety and more mistakes. The model itself doesn't change. Just how we read its output.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     VIII. GLOSSARY
+     ===================================================== -->
+<section class="reveal" id="gloss">
+  <div class="container">
+    <div class="eyebrow">VIII · Quick Reference</div>
+    <h2 class="serif">The <span class="italic amber">vocabulary.</span></h2>
+    <p class="lead narrow">Everything we've touched, in a sentence each.</p>
+
+    <div class="glossary-grid">
+      <div class="gloss"><div class="term"><span class="icon"></span>Tensor</div><div class="def">A multi-dimensional array of numbers. The data structure that everything in a neural network is. A scalar is 0D, a vector 1D, a matrix 2D, a tensor anything beyond.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Weight</div><div class="def">A learned number that scales how much one input contributes to one output. Most parameters in a model are weights.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Bias</div><div class="def">A learned constant added after the weighted sum. Lets a neuron output something other than zero when all inputs are zero.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Parameter</div><div class="def">A weight or a bias. The numbers the model learns during training and uses during inference. "70B parameters" means 70 billion of these.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Activation</div><div class="def">The output of a layer for a specific input — the intermediate values flowing through the model right now. Unlike parameters, these change with every input.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Gradient</div><div class="def">The direction of steepest increase of the loss with respect to a parameter. Training nudges each parameter in the opposite direction.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Floating point</div><div class="def">A way to store real numbers in a fixed number of bits using sign, exponent, and mantissa. Modern AI runs on FP32, FP16, BF16, FP8, and below.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Quantization</div><div class="def">Replacing high-precision weights with lower-precision approximations to save memory and compute. INT4 is common in production.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Embedding</div><div class="def">A vector that represents an input in a learned space where geometric distance reflects semantic similarity.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Vector</div><div class="def">An ordered list of numbers. In ML, almost always a point in a high-dimensional space representing something.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Dimension</div><div class="def">One coordinate axis of a vector space. A 1536-dim embedding has 1536 numbers in it. More dimensions = more room for nuance.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Cosine similarity</div><div class="def">A way to compare two vectors by the angle between them. Ranges from -1 to 1. The standard metric for vector search.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Vector search</div><div class="def">Finding the K closest vectors to a query vector in a large database. Powered by indexes like HNSW that avoid checking every point.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Latent space</div><div class="def">The internal vector space where a model represents its inputs. Often surprisingly meaningful — directions correspond to concepts.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Token</div><div class="def">The discrete unit a language model processes. Usually a sub-word, a few characters. "Unbelievable" might be three tokens.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Logit</div><div class="def">The raw, unnormalized score the model produces for each possible next token. Negative logits are possible.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Softmax</div><div class="def">A function that turns a list of numbers into a probability distribution. Exponentiate, then normalize so they sum to 1.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Temperature</div><div class="def">A divisor applied to logits before softmax. Higher temperature = flatter distribution = more random output.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Matrix multiplication</div><div class="def">The single dominant operation in a neural network. A layer's output = its weight matrix times its input vector. Roughly 99% of inference compute.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Forward pass</div><div class="def">Running an input through every layer of the model to produce an output. What happens every time you ask a model anything.</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<footer>
+  <div class="container">
+    <span>Inside the Model · 2026</span>
+    <span class="sig">A field guide.</span>
+    <span>Scroll → ↑</span>
+  </div>
+</footer>
+
+
+<!-- =====================================================
+     SCRIPTS
+     ===================================================== -->
+<script>
+/* ============================================================
+   REVEAL ON SCROLL
+   ============================================================ */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+
+/* ============================================================
+   I. THE MAP — node hover readout
+   ============================================================ */
+const MAP_INFO = {
+  fp: {
+    title: 'Floating Point — the substrate',
+    body: 'Every weight, bias, embedding, activation, and gradient in a model is a floating-point number. The format (FP32, FP16, BF16, FP8) controls how much memory and compute the model consumes. Numbers are the atoms of everything else here.'
+  },
+  params: {
+    title: 'Parameters — the learned state',
+    body: 'Parameters split cleanly in two: weights (how much each input matters) and biases (a baseline offset). All of them are floating-point numbers. Training is the process of finding values for them that make the model behave well.'
+  },
+  forward: {
+    title: 'Forward Pass — the computation',
+    body: 'For each layer: take the inputs, multiply by the weight matrix, add the bias, apply an activation function. Stack hundreds of these. The dominant cost is matrix multiplication. This is what runs every time you query a model.'
+  },
+  emb: {
+    title: 'Embeddings — meaning as geometry',
+    body: 'Every token, image patch, or document is mapped to a vector — a point in a high-dimensional space. The geometry of that space is learned: similar things end up close. Embeddings are the universal currency of modern AI.'
+  },
+  act: {
+    title: 'Activations — what the model is "thinking"',
+    body: 'The intermediate values flowing between layers as a specific input is processed. Activations are also vectors — and the deepest ones often look like embeddings of the input\'s meaning so far.'
+  },
+  search: {
+    title: 'Vector Search — finding neighbors',
+    body: 'Given a query embedding, return the nearest stored embeddings by cosine similarity or dot product. Powers RAG, semantic search, recommendation, deduplication. HNSW and IVF indexes make it fast at scale.'
+  },
+  logits: {
+    title: 'Logits → Softmax — building a distribution',
+    body: 'The final layer outputs a raw score (logit) for each possible next token. Softmax exponentiates and normalizes them into probabilities. Temperature controls how confidently the model commits.'
+  },
+  tokens: {
+    title: 'Next Token — the output',
+    body: 'Sample one token from the probability distribution, append it to the context, and run the whole pipeline again. A model that writes a paragraph is just doing this loop a few hundred times.'
+  }
+};
+const mapReadout = document.getElementById('mapReadout');
+const defaultReadout = mapReadout.innerHTML;
+document.querySelectorAll('.node-group').forEach(g => {
+  g.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.node-group').forEach(n => n.classList.remove('active'));
+    g.classList.add('active');
+    const info = MAP_INFO[g.dataset.key];
+    if (info) {
+      mapReadout.innerHTML = '<div class="rl-title">' + info.title + '</div><div class="rl-body">' + info.body + '</div>';
+    }
+  });
+});
+document.querySelector('.map-wrap').addEventListener('mouseleave', () => {
+  document.querySelectorAll('.node-group').forEach(n => n.classList.remove('active'));
+  mapReadout.innerHTML = defaultReadout;
+});
+
+
+/* ============================================================
+   II. FLOATING POINT VISUALIZER
+   ============================================================ */
+const FP_FORMATS = {
+  fp32: { total: 32, sign: 1, exp: 8, man: 23, bias: 127, label: 'FP32', bytes: 4 },
+  fp16: { total: 16, sign: 1, exp: 5, man: 10, bias: 15, label: 'FP16', bytes: 2 },
+  bf16: { total: 16, sign: 1, exp: 8, man: 7, bias: 127, label: 'BF16', bytes: 2 },
+  fp8:  { total: 8,  sign: 1, exp: 4, man: 3, bias: 7,   label: 'FP8 (E4M3)', bytes: 1 }
+};
+let currentFmt = 'fp32';
+
+function encodeFP(value, fmt) {
+  const f = FP_FORMATS[fmt];
+  let sign = 0;
+  if (value < 0) { sign = 1; value = -value; }
+  if (value === 0 || !isFinite(value)) {
+    return { sign: 0, exp: 0, man: 0, reconstructed: 0 };
+  }
+  // get exponent
+  let exp = Math.floor(Math.log2(value));
+  let mantissaFrac = value / Math.pow(2, exp) - 1;  // fractional part
+  let biasedExp = exp + f.bias;
+
+  // clamp to range
+  const maxExp = Math.pow(2, f.exp) - 2; // reserve all-ones for inf/nan
+  if (biasedExp < 1) biasedExp = 1;
+  if (biasedExp > maxExp) biasedExp = maxExp;
+
+  // mantissa rounding
+  const mantissaInt = Math.round(mantissaFrac * Math.pow(2, f.man));
+  const clampedMantissa = Math.min(mantissaInt, Math.pow(2, f.man) - 1);
+
+  // reconstruct
+  const reconExp = biasedExp - f.bias;
+  const reconstructed = (sign ? -1 : 1) * (1 + clampedMantissa / Math.pow(2, f.man)) * Math.pow(2, reconExp);
+
+  return { sign, exp: biasedExp, man: clampedMantissa, reconstructed };
+}
+
+function bitString(num, length) {
+  let s = (num >>> 0).toString(2);
+  while (s.length < length) s = '0' + s;
+  return s.slice(-length);
+}
+
+function renderFP() {
+  const f = FP_FORMATS[currentFmt];
+  const raw = document.getElementById('fpInput').value;
+  const num = parseFloat(raw);
+  const isValid = !isNaN(num);
+  const enc = isValid ? encodeFP(num, currentFmt) : { sign: 0, exp: 0, man: 0, reconstructed: 0 };
+
+  const signBits = bitString(enc.sign, f.sign);
+  const expBits = bitString(enc.exp, f.exp);
+  const manBits = bitString(enc.man, f.man);
+
+  const container = document.getElementById('fpBits');
+  let html = '';
+  for (const b of signBits) html += '<div class="fp-bit sign">' + b + '</div>';
+  for (const b of expBits) html += '<div class="fp-bit exp">' + b + '</div>';
+  for (const b of manBits) html += '<div class="fp-bit man">' + b + '</div>';
+  container.innerHTML = html;
+
+  document.getElementById('fpTotal').textContent = f.total;
+  document.getElementById('fpBytes').textContent = f.bytes;
+  let display = enc.reconstructed;
+  if (!isValid) display = '—';
+  else if (Math.abs(display) < 0.0001 || Math.abs(display) > 1000) display = display.toExponential(4);
+  else display = parseFloat(display.toPrecision(7)).toString();
+  document.getElementById('fpRecon').textContent = display;
+}
+
+document.getElementById('fpInput').addEventListener('input', renderFP);
+document.getElementById('fpTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.fp-tab');
+  if (!btn) return;
+  document.querySelectorAll('.fp-tab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  currentFmt = btn.dataset.fmt;
+  renderFP();
+});
+renderFP();
+
+
+/* ============================================================
+   III. NEURON
+   ============================================================ */
+function reLU(x) { return Math.max(0, x); }
+
+function strokeForWeight(w) {
+  // sign sets color, magnitude sets width
+  const width = 0.5 + Math.abs(w) * 2.5;
+  const color = w >= 0 ? 'rgba(231,165,90,' + Math.min(1, 0.35 + Math.abs(w) * 0.4) + ')' : 'rgba(224,125,107,' + Math.min(1, 0.35 + Math.abs(w) * 0.4) + ')';
+  return { width, color };
+}
+
+function renderNeuron() {
+  const x1 = parseFloat(document.getElementById('x1').value);
+  const x2 = parseFloat(document.getElementById('x2').value);
+  const x3 = parseFloat(document.getElementById('x3').value);
+  const w1 = parseFloat(document.getElementById('w1').value);
+  const w2 = parseFloat(document.getElementById('w2').value);
+  const w3 = parseFloat(document.getElementById('w3').value);
+  const b = parseFloat(document.getElementById('b').value);
+
+  ['x1', 'x2', 'x3', 'w1', 'w2', 'w3', 'b'].forEach(id => {
+    document.getElementById(id + 'Val').textContent = parseFloat(document.getElementById(id).value).toFixed(1);
+  });
+
+  // update lines
+  [['w1', w1], ['w2', w2], ['w3', w3]].forEach(([id, w]) => {
+    const s = strokeForWeight(w);
+    const line = document.getElementById(id + 'Line');
+    line.setAttribute('stroke', s.color);
+    line.setAttribute('stroke-width', s.width.toFixed(2));
+    const txt = document.getElementById(id + 'Text');
+    txt.textContent = id + ' = ' + w.toFixed(1);
+    txt.setAttribute('fill', w >= 0 ? '#e7a55a' : '#e07d6b');
+  });
+
+  const sum = w1 * x1 + w2 * x2 + w3 * x3 + b;
+  const out = reLU(sum);
+
+  document.getElementById('eqW1').textContent = w1.toFixed(1);
+  document.getElementById('eqW2').textContent = w2.toFixed(1);
+  document.getElementById('eqW3').textContent = w3.toFixed(1);
+  document.getElementById('eqX1').textContent = x1.toFixed(1);
+  document.getElementById('eqX2').textContent = x2.toFixed(1);
+  document.getElementById('eqX3').textContent = x3.toFixed(1);
+  document.getElementById('eqB').textContent = b.toFixed(1);
+  document.getElementById('eqOut').textContent = out.toFixed(2);
+  document.getElementById('outVal').textContent = 'y=' + out.toFixed(2);
+}
+['x1','x2','x3','w1','w2','w3','b'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderNeuron);
+});
+renderNeuron();
+
+
+/* ============================================================
+   IV. EMBEDDINGS — 2D scatter
+   ============================================================ */
+// Hand-crafted 2D positions clustered by meaning.
+// Five clusters: royalty, animals, food, math/ML, computing.
+const EMBEDDINGS = [
+  // Royalty (top-left)
+  { word: 'king',     x: 0.18, y: 0.18, cluster: 0 },
+  { word: 'queen',    x: 0.22, y: 0.26, cluster: 0 },
+  { word: 'prince',   x: 0.13, y: 0.24, cluster: 0 },
+  { word: 'throne',   x: 0.26, y: 0.15, cluster: 0 },
+  { word: 'crown',    x: 0.10, y: 0.13, cluster: 0 },
+  { word: 'royal',    x: 0.20, y: 0.10, cluster: 0 },
+
+  // Animals (top-right)
+  { word: 'cat',      x: 0.78, y: 0.20, cluster: 1 },
+  { word: 'dog',      x: 0.72, y: 0.16, cluster: 1 },
+  { word: 'lion',     x: 0.85, y: 0.24, cluster: 1 },
+  { word: 'tiger',    x: 0.88, y: 0.16, cluster: 1 },
+  { word: 'bird',     x: 0.75, y: 0.28, cluster: 1 },
+  { word: 'fish',     x: 0.82, y: 0.32, cluster: 1 },
+
+  // Food (middle)
+  { word: 'apple',    x: 0.46, y: 0.50, cluster: 2 },
+  { word: 'bread',    x: 0.52, y: 0.46, cluster: 2 },
+  { word: 'pizza',    x: 0.42, y: 0.55, cluster: 2 },
+  { word: 'rice',     x: 0.54, y: 0.55, cluster: 2 },
+  { word: 'orange',   x: 0.48, y: 0.42, cluster: 2 },
+  { word: 'cheese',   x: 0.56, y: 0.52, cluster: 2 },
+
+  // Math / ML (bottom-left)
+  { word: 'matrix',   x: 0.18, y: 0.78, cluster: 3 },
+  { word: 'vector',   x: 0.13, y: 0.72, cluster: 3 },
+  { word: 'tensor',   x: 0.10, y: 0.84, cluster: 3 },
+  { word: 'gradient', x: 0.22, y: 0.88, cluster: 3 },
+  { word: 'softmax',  x: 0.26, y: 0.74, cluster: 3 },
+  { word: 'embedding',x: 0.16, y: 0.66, cluster: 3 },
+
+  // Computing (bottom-right)
+  { word: 'computer', x: 0.78, y: 0.78, cluster: 4 },
+  { word: 'code',     x: 0.72, y: 0.72, cluster: 4 },
+  { word: 'GPU',      x: 0.82, y: 0.84, cluster: 4 },
+  { word: 'memory',   x: 0.86, y: 0.74, cluster: 4 },
+  { word: 'server',   x: 0.74, y: 0.86, cluster: 4 },
+  { word: 'API',      x: 0.88, y: 0.66, cluster: 4 }
+];
+
+const CLUSTER_COLORS = ['#e7a55a', '#7fc99a', '#e07d6b', '#6da8ff', '#c894e4'];
+
+function setupEmbedSvg(svgId, withCluster=true, interactive=false) {
+  const svg = document.getElementById(svgId);
+  svg.innerHTML = '';
+  const W = 700, H = 520, pad = 30;
+  const xScale = v => pad + v * (W - 2*pad);
+  const yScale = v => pad + v * (H - 2*pad);
+
+  // Grid lines
+  for (let i = 0; i <= 10; i++) {
+    const x = pad + (i/10) * (W - 2*pad);
+    const y = pad + (i/10) * (H - 2*pad);
+    svg.innerHTML += `<line class="embed-grid-line" x1="${x}" y1="${pad}" x2="${x}" y2="${H-pad}"/>`;
+    svg.innerHTML += `<line class="embed-grid-line" x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}"/>`;
+  }
+  // Axes
+  svg.innerHTML += `<line class="embed-axis" x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}"/>`;
+  svg.innerHTML += `<line class="embed-axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}"/>`;
+
+  // Axis labels
+  svg.innerHTML += `<text x="${W-pad}" y="${H-pad+18}" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="var(--ink-3)" letter-spacing="0.08em">DIM 1 →</text>`;
+  svg.innerHTML += `<text x="${pad-4}" y="${pad+8}" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="var(--ink-3)" letter-spacing="0.08em" transform="rotate(-90 ${pad-4} ${pad+8})">↑ DIM 2</text>`;
+
+  EMBEDDINGS.forEach(e => {
+    const cx = xScale(e.x), cy = yScale(e.y);
+    const color = withCluster ? CLUSTER_COLORS[e.cluster] : '#888';
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'embed-point');
+    g.setAttribute('data-word', e.word);
+    g.innerHTML = `
+      <circle cx="${cx}" cy="${cy}" r="5" fill="${color}" fill-opacity="0.85" stroke="${color}" stroke-width="1"/>
+      <text x="${cx + 10}" y="${cy + 4}">${e.word}</text>
+    `;
+    svg.appendChild(g);
+  });
+}
+setupEmbedSvg('embedSvg', true);
+
+
+/* ============================================================
+   V. VECTOR SEARCH
+   ============================================================ */
+function cosine(a, b) {
+  const dot = a.x * b.x + a.y * b.y;
+  const magA = Math.sqrt(a.x * a.x + a.y * a.y);
+  const magB = Math.sqrt(b.x * b.x + b.y * b.y);
+  return dot / (magA * magB);
+}
+
+// For more intuitive results on this small 2D set, use negative-distance similarity normalized.
+function similarity(a, b) {
+  const dx = a.x - b.x, dy = a.y - b.y;
+  const d = Math.sqrt(dx*dx + dy*dy);
+  return 1 - Math.min(d / 1.0, 1);  // 1 = same point, 0 = far
+}
+
+let currentK = 5;
+
+function runSearch() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const query = EMBEDDINGS.find(e => e.word.toLowerCase() === q);
+
+  setupEmbedSvg('searchSvg', true);
+  const svg = document.getElementById('searchSvg');
+  const points = svg.querySelectorAll('.embed-point');
+
+  const list = document.getElementById('simList');
+
+  if (!query) {
+    points.forEach(p => p.classList.remove('dim', 'match', 'query'));
+    list.innerHTML = '<div class="muted mono" style="padding: 16px; text-align: center; font-size: 12px;">Type one of the listed words above to run the search.</div>';
+    return;
+  }
+
+  // compute similarities
+  const sims = EMBEDDINGS
+    .filter(e => e.word !== query.word)
+    .map(e => ({ word: e.word, sim: similarity(query, e) }))
+    .sort((a, b) => b.sim - a.sim);
+
+  const topK = sims.slice(0, currentK);
+  const topWords = new Set(topK.map(t => t.word));
+
+  // visual update
+  points.forEach(p => {
+    const w = p.dataset.word;
+    p.classList.remove('dim', 'match', 'query');
+    if (w === query.word) p.classList.add('query');
+    else if (topWords.has(w)) p.classList.add('match');
+    else p.classList.add('dim');
+  });
+
+  // draw lines from query to top-k
+  const W = 700, H = 520, pad = 30;
+  const xScale = v => pad + v * (W - 2*pad);
+  const yScale = v => pad + v * (H - 2*pad);
+  const qx = xScale(query.x), qy = yScale(query.y);
+
+  topK.forEach((tk, i) => {
+    const target = EMBEDDINGS.find(e => e.word === tk.word);
+    const tx = xScale(target.x), ty = yScale(target.y);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', qx); line.setAttribute('y1', qy);
+    line.setAttribute('x2', tx); line.setAttribute('y2', ty);
+    line.setAttribute('stroke', '#e7a55a');
+    line.setAttribute('stroke-width', '1');
+    line.setAttribute('stroke-opacity', Math.max(0.2, tk.sim));
+    line.setAttribute('stroke-dasharray', '3 3');
+    svg.insertBefore(line, svg.firstChild.nextSibling);
+  });
+
+  // similarity list
+  list.innerHTML = topK.map((tk, i) => `
+    <div class="sim-row ${i === 0 ? 'top' : ''}">
+      <span class="rank">${String(i+1).padStart(2,'0')}</span>
+      <span class="word">${tk.word}</span>
+      <span class="bar-cell"><span class="bar" style="width:${(tk.sim * 100).toFixed(0)}%"></span></span>
+      <span class="score">${tk.sim.toFixed(3)}</span>
+    </div>
+  `).join('');
+}
+
+document.getElementById('searchInput').addEventListener('input', runSearch);
+document.querySelectorAll('.embed-k').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.embed-k').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    currentK = parseInt(btn.dataset.k, 10);
+    runSearch();
+  });
+});
+runSearch();
+
+
+/* ============================================================
+   VI. QUANTIZATION
+   ============================================================ */
+const QUANT_DATA = {
+  32: { label: 'FP32',  size: 280, fits: '4× H100 (80GB)',  qual: '100%',  speed: '1×' },
+  16: { label: 'FP16',  size: 140, fits: '2× H100 (80GB)',  qual: '~100%', speed: '2×' },
+  8:  { label: 'FP8',   size: 70,  fits: '1× H100 (80GB)',  qual: '~99%',  speed: '4×' },
+  4:  { label: 'INT4',  size: 35,  fits: '1× RTX 4090 (24GB) — almost', qual: '~97%',  speed: '8×' },
+  1:  { label: '1-bit', size: 8.75, fits: '1× consumer GPU', qual: '~85%',  speed: '32×' }
+};
+const RING_CIRC = 502; // 2 * π * 80
+function renderQuant(bits) {
+  const d = QUANT_DATA[bits];
+  document.getElementById('quantLabel').textContent = d.label;
+  document.getElementById('qBits').textContent = bits;
+  document.getElementById('qSize').textContent = d.size + ' GB';
+  document.getElementById('qFits').textContent = d.fits;
+  document.getElementById('qQual').textContent = d.qual;
+  document.getElementById('qSpeed').textContent = d.speed;
+  document.getElementById('qBig').textContent = d.size;
+
+  // ring: 280 GB -> full ring; smaller -> shorter
+  const frac = d.size / 280;
+  document.getElementById('qRing').setAttribute('stroke-dashoffset', RING_CIRC * (1 - frac));
+}
+document.getElementById('quantTabs').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  document.querySelectorAll('#quantTabs button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderQuant(parseInt(btn.dataset.q, 10));
+});
+renderQuant(16);
+
+
+/* ============================================================
+   VII. SOFTMAX
+   ============================================================ */
+const TOKENS = [
+  { token: 'mat',    logit: 4.2 },
+  { token: 'floor',  logit: 3.1 },
+  { token: 'couch',  logit: 2.7 },
+  { token: 'roof',   logit: 1.5 },
+  { token: 'moon',   logit: -0.8 },
+  { token: 'idea',   logit: -2.1 }
+];
+
+function softmax(logits, T) {
+  const scaled = logits.map(l => l / T);
+  const maxL = Math.max(...scaled);
+  const exps = scaled.map(l => Math.exp(l - maxL));
+  const sum = exps.reduce((a, b) => a + b, 0);
+  return exps.map(e => e / sum);
+}
+
+function renderSoftmax() {
+  const T = parseFloat(document.getElementById('temp').value);
+  document.getElementById('tempVal').textContent = T.toFixed(2);
+
+  const logits = TOKENS.map(t => t.logit);
+  const probs = softmax(logits, T);
+
+  document.getElementById('logitList').innerHTML = TOKENS.map((t, i) => `
+    <div class="logit-row">
+      <span class="token">"${t.token}"</span>
+      <input type="range" min="-3" max="5" step="0.1" value="${t.logit}" data-i="${i}"/>
+      <span class="val" id="lv${i}">${t.logit.toFixed(1)}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('probList').innerHTML = TOKENS.map((t, i) => `
+    <div class="prob-row">
+      <span class="token">"${t.token}"</span>
+      <span class="bar-wrap"><span class="bar" style="width:${(probs[i] * 100).toFixed(1)}%"></span></span>
+      <span class="val">${(probs[i] * 100).toFixed(1)}%</span>
+    </div>
+  `).join('');
+
+  document.querySelectorAll('#logitList input').forEach(input => {
+    input.addEventListener('input', e => {
+      const i = parseInt(e.target.dataset.i, 10);
+      TOKENS[i].logit = parseFloat(e.target.value);
+      renderSoftmax();
+    });
+  });
+}
+document.getElementById('temp').addEventListener('input', renderSoftmax);
+renderSoftmax();
+</script>
+
+</body>
+</html>
