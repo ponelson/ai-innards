@@ -164,6 +164,11 @@ section + section::before {
   color: var(--ink-3);
   letter-spacing: 0.08em;
 }
+.nav-row .right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
 .nav-row .dot {
   display: inline-block;
   width: 6px; height: 6px;
@@ -176,6 +181,93 @@ section + section::before {
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.85); }
+}
+.contact-btn {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.contact-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.contact-btn.on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(231,165,90,0.06);
+}
+.contact-card {
+  position: fixed;
+  top: 64px;
+  right: 28px;
+  z-index: 100;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  min-width: 280px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(231,165,90,0.08);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.contact-card.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.contact-card .cc-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+}
+.contact-card .cc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.contact-card .cc-row:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.contact-card .cc-icon {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  width: 60px;
+  flex-shrink: 0;
+}
+.contact-card a {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+  border-bottom: 1px solid transparent;
+}
+.contact-card a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+@media (max-width: 600px) {
+  .contact-card { right: 12px; left: 12px; min-width: 0; }
 }
 
 .hero-body {
@@ -793,6 +885,672 @@ section + section::before {
 .temp-control .val { font-family: var(--font-mono); font-size: 13px; color: var(--accent); text-align: right; }
 
 /* ============================================================
+   VII. THE MACHINE — silicon, dies, FLOPS, power
+   ============================================================ */
+/* Chip transistor scatter */
+.chip-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+.chip-chart {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.chip-chart svg { width: 100%; height: auto; display: block; }
+.chip-axis { stroke: var(--line); stroke-width: 0.5; }
+.chip-grid-line { stroke: var(--grid); stroke-width: 0.5; stroke-dasharray: 2 4; }
+.chip-axis-label { font-family: var(--font-mono); font-size: 10px; fill: var(--ink-3); letter-spacing: 0.08em; }
+.chip-dot { cursor: pointer; transition: all 0.2s; }
+.chip-dot circle { transition: all 0.25s; }
+.chip-dot text { font-family: var(--font-mono); font-size: 10px; fill: var(--ink-3); transition: fill 0.2s; }
+.chip-dot:hover circle { r: 7; }
+.chip-dot:hover text { fill: var(--ink); }
+.chip-dot.active circle { fill: var(--accent); r: 8; stroke: var(--ink); stroke-width: 1.5; }
+.chip-dot.active text { fill: var(--accent); font-weight: 500; }
+.chip-moore-line { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 4; opacity: 0.35; }
+
+.chip-detail {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.chip-detail .chip-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+.chip-detail .chip-year {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.chip-detail .chip-stat {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.chip-detail .chip-stat .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.chip-detail .chip-stat .v {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  text-align: right;
+}
+.chip-detail .chip-stat .v.amber { color: var(--accent); }
+.chip-detail .chip-pur {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+/* The Die schematic */
+.die-wrap {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-top: 12px;
+}
+.die-svg { width: 100%; height: auto; display: block; }
+.die-svg .die-package { fill: rgba(255,255,255,0.02); stroke: var(--line-strong); stroke-width: 1; }
+.die-svg .die-compute {
+  fill: url(#dieGrad);
+  stroke: var(--accent);
+  stroke-width: 1;
+}
+.die-svg .die-grid-inner { stroke: rgba(231,165,90,0.15); stroke-width: 0.5; }
+.die-svg .hbm-stack {
+  fill: rgba(109,168,255,0.08);
+  stroke: var(--accent-2);
+  stroke-width: 1;
+}
+.die-svg .hbm-line { stroke: var(--accent-2); stroke-width: 0.5; opacity: 0.4; }
+.die-svg .interconnect {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 1 2;
+  fill: none;
+}
+.die-svg .label { font-family: var(--font-mono); font-size: 11px; fill: var(--ink); text-anchor: middle; }
+.die-svg .label-sub { font-family: var(--font-mono); font-size: 9px; fill: var(--ink-3); text-anchor: middle; letter-spacing: 0.08em; }
+.die-svg .annotation { font-family: var(--font-mono); font-size: 10px; fill: var(--ink-2); }
+.die-svg .annotation-line { stroke: var(--ink-4); stroke-width: 0.5; }
+.die-svg .scale-bar { stroke: var(--ink-3); stroke-width: 1; }
+
+.die-readout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+.die-readout .ds {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.die-readout .ds .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+.die-readout .ds .v {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--ink);
+}
+.die-readout .ds .v .unit { color: var(--ink-3); font-size: 11px; margin-left: 2px; }
+.die-readout .ds .v.amber { color: var(--accent); }
+
+/* Cluster scale */
+.scale-control {
+  padding: 28px 32px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+}
+.scale-readout { text-align: center; margin-bottom: 26px; }
+.scale-big {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 9vw, 108px);
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-weight: 400;
+}
+.scale-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 10px;
+}
+.scale-desc {
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-2);
+  margin-top: 6px;
+}
+#scaleSlider {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 2px;
+  background: var(--line-strong);
+  border-radius: 2px;
+  outline: none;
+}
+#scaleSlider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 0 5px rgba(231,165,90,0.18);
+}
+#scaleSlider::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent); border: none; cursor: pointer;
+}
+.scale-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+}
+.scale-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.scale-stat {
+  padding: 18px 22px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.scale-stat .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+.scale-stat .v {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.scale-stat .v.amber { color: var(--accent); }
+.scale-stat .note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+
+/* Energy ladder */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rung {
+  display: grid;
+  grid-template-columns: 240px 1fr 140px;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 20px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  transition: all 0.2s;
+}
+.rung:hover { border-color: var(--line-bright); }
+.rung.highlight { border-color: var(--accent); background: rgba(231,165,90,0.04); }
+.rung .rung-label { color: var(--ink); }
+.rung .rung-detail {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+.rung .rung-bar-wrap {
+  height: 6px;
+  background: var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+.rung .rung-bar {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.rung .rung-val {
+  font-size: 13px;
+  color: var(--accent);
+  text-align: right;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 800px) {
+  .chip-grid, .die-readout, .scale-stats { grid-template-columns: 1fr; }
+  .die-readout { grid-template-columns: repeat(2, 1fr); }
+  .rung { grid-template-columns: 1fr; gap: 8px; }
+  .rung .rung-val { text-align: left; }
+}
+
+/* ============================================================
+   NEW SECTIONS — math, attention, tokens, training, stack
+   ============================================================ */
+
+/* Matrix multiplication */
+.matmul-wrap {
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 32px 28px; display: flex; align-items: center; justify-content: center;
+  gap: 22px; flex-wrap: wrap;
+}
+.matmul-mat { display: grid; gap: 3px; }
+.matmul-cell {
+  width: 40px; height: 40px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-2);
+  transition: all 0.25s;
+}
+.matmul-cell.active-row { background: rgba(231,165,90,0.15); border-color: var(--accent); color: var(--accent); }
+.matmul-cell.active-col { background: rgba(109,168,255,0.12); border-color: var(--accent-2); color: var(--accent-2); }
+.matmul-cell.computing { background: rgba(231,165,90,0.35); border-color: var(--accent); color: var(--ink); box-shadow: 0 0 12px rgba(231,165,90,0.4); }
+.matmul-cell.done { background: var(--surface-2); color: var(--ink); border-color: var(--line-strong); }
+.matmul-cell.dim { opacity: 0.4; }
+.matmul-symbol { font-family: var(--font-display); font-size: 32px; color: var(--ink-3); font-weight: 300; }
+.matmul-label {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-3); text-align: center; margin-bottom: 8px;
+}
+.matmul-label .amb { color: var(--accent); }
+.matmul-controls { margin-top: 22px; display: flex; gap: 12px; justify-content: center; align-items: center; }
+.matmul-btn {
+  background: var(--accent); color: #1a1208; border: none;
+  padding: 10px 22px; font-family: var(--font-mono); font-size: 11px;
+  border-radius: var(--radius-sm); cursor: pointer;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  transition: all 0.15s;
+}
+.matmul-btn:hover { background: #f5b56e; }
+.matmul-btn.ghost {
+  background: transparent; color: var(--ink-2); border: 1px solid var(--line-strong);
+}
+.matmul-btn.ghost:hover { border-color: var(--ink); color: var(--ink); }
+.matmul-readout {
+  font-family: var(--font-mono); font-size: 13px; color: var(--accent);
+  text-align: center; margin-top: 14px; min-height: 22px;
+}
+
+/* Architecture stack */
+.arch-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 28px; align-items: stretch; }
+.arch-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.arch-svg { width: 100%; height: auto; max-width: 360px; display: block; margin: 0 auto; }
+.arch-box { cursor: pointer; }
+.arch-box rect { transition: all 0.2s; }
+.arch-box .arch-fill { fill: var(--surface); stroke: var(--line-strong); }
+.arch-box:hover .arch-fill { stroke: var(--accent); fill: var(--surface-2); }
+.arch-box.active .arch-fill { stroke: var(--accent); fill: rgba(231,165,90,0.08); }
+.arch-box text { font-family: var(--font-mono); font-size: 11px; fill: var(--ink); text-anchor: middle; pointer-events: none; }
+.arch-box .arch-sub { font-size: 9px; fill: var(--ink-3); letter-spacing: 0.08em; }
+.arch-info {
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 28px 30px; display: flex; flex-direction: column; justify-content: center;
+}
+.arch-info .ai-title {
+  font-family: var(--font-display); font-size: 22px; font-weight: 500;
+  letter-spacing: -0.01em; margin-bottom: 4px;
+}
+.arch-info .ai-tag {
+  font-family: var(--font-mono); font-size: 10px; color: var(--accent);
+  letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px;
+}
+.arch-info .ai-body { font-size: 14px; color: var(--ink-2); line-height: 1.65; }
+.arch-flow { stroke: var(--ink-4); stroke-width: 1; fill: none; }
+.arch-repeat {
+  stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 3; fill: none; opacity: 0.5;
+}
+
+/* Attention */
+.att-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+.att-sentence {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap;
+}
+.att-token {
+  padding: 10px 18px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 13px;
+  cursor: pointer; transition: all 0.15s; color: var(--ink-2);
+}
+.att-token:hover { border-color: var(--line-bright); color: var(--ink); }
+.att-token.query {
+  background: var(--accent); color: #1a1208; border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+}
+.att-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: start; }
+.att-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 18px 20px; }
+.att-title {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px;
+}
+.att-heatmap { display: grid; gap: 2px; max-width: 360px; margin: 0 auto; }
+.att-cell {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 9px; border-radius: 2px;
+  transition: all 0.25s; cursor: pointer;
+}
+.att-cell.row-highlight { box-shadow: 0 0 0 2px var(--accent); z-index: 2; position: relative; }
+.att-axis {
+  display: grid; gap: 2px; font-family: var(--font-mono); font-size: 9px;
+  color: var(--ink-3); text-align: center; letter-spacing: 0.06em;
+}
+.att-axis-y {
+  font-family: var(--font-mono); font-size: 9px; color: var(--ink-3);
+  display: flex; flex-direction: column; gap: 2px; text-align: right; padding-right: 6px;
+  letter-spacing: 0.06em;
+}
+.att-matrix-frame {
+  display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center;
+}
+.att-x-labels { grid-column: 2; padding-left: 0; }
+.att-eq {
+  font-family: var(--font-mono); font-size: 13px; color: var(--ink); text-align: center;
+  margin: 14px 0; padding: 14px; background: var(--bg); border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+.att-list { margin-top: 14px; display: grid; gap: 4px; }
+.att-bar-row {
+  display: grid; grid-template-columns: 80px 1fr 50px; align-items: center; gap: 10px;
+  padding: 6px 10px; font-family: var(--font-mono); font-size: 11px;
+  background: var(--bg); border-radius: 4px;
+}
+.att-bar-row.top { background: rgba(231,165,90,0.06); }
+.att-bar-row .word { color: var(--ink); }
+.att-bar-row .bar-bg { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; position: relative; }
+.att-bar-row .bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 2px; }
+.att-bar-row .v { color: var(--accent); text-align: right; }
+
+/* Tokenizer */
+.tok-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.tok-input {
+  width: 100%; background: var(--bg); color: var(--ink);
+  border: 1px solid var(--line); padding: 14px 18px;
+  font-family: var(--font-mono); font-size: 14px; line-height: 1.6;
+  border-radius: var(--radius-sm); resize: vertical; min-height: 90px;
+}
+.tok-input:focus { outline: none; border-color: var(--accent); }
+.tok-output {
+  margin-top: 18px; padding: 16px 18px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  display: flex; flex-wrap: wrap; gap: 2px;
+  font-family: var(--font-mono); font-size: 14px; line-height: 2.1; min-height: 80px;
+}
+.tok-chunk { padding: 2px 7px; border-radius: 4px; white-space: pre; transition: all 0.15s; }
+.tok-chunk:hover { transform: translateY(-1px); }
+.tok-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+.tok-stat { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.tok-stat .k {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px;
+}
+.tok-stat .v { font-family: var(--font-mono); font-size: 18px; color: var(--accent); letter-spacing: -0.01em; }
+.tok-stat .v .unit { font-size: 11px; color: var(--ink-3); margin-left: 3px; }
+
+/* Gradient descent */
+.gd-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.gd-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 22px; }
+.gd-svg-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; }
+.gd-svg { width: 100%; height: auto; display: block; }
+.gd-controls { display: flex; flex-direction: column; gap: 18px; }
+.gd-row { display: grid; grid-template-columns: 1fr 60px; align-items: center; gap: 12px; }
+.gd-row .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); letter-spacing: 0.08em; text-transform: uppercase; }
+.gd-row .lbl-line {
+  grid-column: 1 / -1; display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.gd-row .lbl-line .v { color: var(--accent); }
+.gd-row input[type=range] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 2px;
+  background: var(--line-strong); border-radius: 2px; outline: none; grid-column: 1 / -1;
+}
+.gd-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); cursor: pointer; box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+}
+.gd-row input[type=range]::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%; background: var(--accent);
+  border: none; cursor: pointer;
+}
+.gd-btns { display: flex; gap: 10px; }
+.gd-btn {
+  flex: 1; padding: 10px 14px;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
+}
+.gd-btn.primary { background: var(--accent); color: #1a1208; border: none; }
+.gd-btn.primary:hover { background: #f5b56e; }
+.gd-btn.ghost { background: transparent; border: 1px solid var(--line-strong); color: var(--ink-2); }
+.gd-btn.ghost:hover { border-color: var(--ink); color: var(--ink); }
+.gd-readout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;
+}
+.gd-readout .r {
+  padding: 12px 14px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.gd-readout .r .k {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px;
+}
+.gd-readout .r .v { font-family: var(--font-mono); font-size: 16px; color: var(--accent); }
+
+/* Scaling laws */
+.scaling-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.scaling-svg { width: 100%; height: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.scaling-explain {
+  margin-top: 18px; padding: 16px 20px; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  font-size: 13.5px; color: var(--ink-2); line-height: 1.6;
+}
+
+/* MoE */
+.moe-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+.moe-svg { width: 100%; height: auto; max-width: 600px; display: block; margin: 0 auto; }
+.moe-expert { transition: all 0.4s; }
+.moe-expert rect.body { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1; transition: all 0.4s; }
+.moe-expert.active rect.body { fill: rgba(231,165,90,0.16); stroke: var(--accent); stroke-width: 1.5; }
+.moe-expert text { font-family: var(--font-mono); font-size: 10px; fill: var(--ink-2); text-anchor: middle; }
+.moe-expert.active text { fill: var(--accent); }
+.moe-route { stroke: var(--ink-4); stroke-width: 1; fill: none; opacity: 0.4; transition: all 0.3s; }
+.moe-route.active { stroke: var(--accent); opacity: 1; stroke-width: 1.5; }
+.moe-controls { display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.moe-tok-btn {
+  padding: 8px 16px; background: var(--surface); border: 1px solid var(--line);
+  color: var(--ink-2); font-family: var(--font-mono); font-size: 12px;
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
+}
+.moe-tok-btn:hover { border-color: var(--line-bright); color: var(--ink); }
+.moe-tok-btn.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+.moe-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+.moe-stat { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.moe-stat .k { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+.moe-stat .v { font-family: var(--font-mono); font-size: 18px; color: var(--accent); }
+
+/* Memory hierarchy */
+.mem-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.mem-row {
+  display: grid; grid-template-columns: 100px 1fr 80px 90px;
+  align-items: center; gap: 14px; padding: 12px 18px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  margin-bottom: 6px; font-family: var(--font-mono); font-size: 12px;
+}
+.mem-row .name { color: var(--ink); }
+.mem-row .name .sub { display: block; font-size: 10px; color: var(--ink-3); margin-top: 2px; letter-spacing: 0.04em; }
+.mem-row .size { color: var(--ink-3); font-size: 11px; text-align: right; }
+.mem-row .lat { color: var(--accent); text-align: right; font-size: 13px; letter-spacing: -0.01em; }
+.mem-bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; position: relative; }
+.mem-bar-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--accent-2), var(--accent)); border-radius: 3px; }
+
+/* KV cache */
+.kv-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.kv-slider-row {
+  display: grid; grid-template-columns: 1fr; gap: 8px;
+  margin-bottom: 22px; padding: 18px 22px; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+}
+.kv-slider-row .lbl-line {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+}
+.kv-slider-row .lbl-line .v { color: var(--accent); }
+.kv-slider-row input[type=range] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 2px;
+  background: var(--line-strong); border-radius: 2px; outline: none;
+}
+.kv-slider-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--accent); cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+}
+.kv-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kv-stat { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.kv-stat .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+.kv-stat .v { font-family: var(--font-display); font-size: 26px; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
+.kv-stat .v .unit { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); margin-left: 3px; letter-spacing: 0.08em; }
+.kv-stat .note { font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); margin-top: 6px; letter-spacing: 0.04em; }
+
+/* Networking */
+.net-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.net-bars { display: grid; gap: 8px; }
+.net-bar {
+  display: grid; grid-template-columns: 230px 1fr 120px; align-items: center; gap: 14px;
+  padding: 14px 18px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 12px;
+}
+.net-bar .name { color: var(--ink); }
+.net-bar .name .det { color: var(--ink-3); font-size: 10px; margin-top: 3px; letter-spacing: 0.04em; }
+.net-bar .bw { color: var(--accent); text-align: right; font-size: 14px; letter-spacing: -0.01em; }
+.net-bar .vis { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; position: relative; }
+.net-bar .vis-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--accent-2), var(--accent)); border-radius: 3px; }
+
+/* Cost economics */
+.econ-wrap { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+.econ-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.econ-controls { display: flex; flex-direction: column; gap: 20px; }
+.econ-row { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.econ-row .lbl-line {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-2);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.econ-row .lbl-line .v { color: var(--accent); }
+.econ-row input[type=range] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 2px;
+  background: var(--line-strong); border-radius: 2px; outline: none;
+}
+.econ-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); cursor: pointer; box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+}
+.econ-out {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 22px 26px; display: flex; flex-direction: column; gap: 14px; justify-content: center;
+}
+.econ-stat {
+  display: grid; grid-template-columns: 1fr auto; padding: 10px 0;
+  border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 12.5px;
+}
+.econ-stat:last-child { border-bottom: none; }
+.econ-stat .k { color: var(--ink-3); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; align-self: center; }
+.econ-stat .v { color: var(--ink); }
+.econ-stat .v.big { color: var(--accent); font-size: 24px; font-family: var(--font-display); letter-spacing: -0.01em; line-height: 1; }
+
+/* Sampling strategies */
+.sample-strategies { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+.sample-strat {
+  padding: 14px 16px; background: var(--bg); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
+}
+.sample-strat:hover { border-color: var(--line-bright); }
+.sample-strat.on { border-color: var(--accent); background: rgba(231,165,90,0.05); }
+.sample-strat .name {
+  font-family: var(--font-mono); font-size: 12px; color: var(--ink);
+  margin-bottom: 4px; letter-spacing: 0.04em;
+}
+.sample-strat .det { font-size: 11px; color: var(--ink-3); line-height: 1.5; font-family: var(--font-mono); }
+.sample-param {
+  margin-top: 12px; padding: 14px 18px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  display: grid; grid-template-columns: 1fr 180px 50px; align-items: center; gap: 14px;
+}
+.sample-param .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); letter-spacing: 0.08em; text-transform: uppercase; }
+.sample-param input[type=range] {
+  -webkit-appearance: none; appearance: none; height: 2px; background: var(--line-strong);
+  border-radius: 2px; outline: none;
+}
+.sample-param input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent-2); cursor: pointer;
+}
+.sample-param .val { font-family: var(--font-mono); font-size: 12px; color: var(--accent); text-align: right; }
+
+@media (max-width: 800px) {
+  .att-grid, .gd-grid, .econ-grid, .arch-grid { grid-template-columns: 1fr; }
+  .sample-strategies { grid-template-columns: 1fr; }
+  .tok-stats, .kv-stats { grid-template-columns: repeat(2, 1fr); }
+  .moe-stats { grid-template-columns: 1fr; }
+  .mem-row { grid-template-columns: 1fr 1fr; }
+  .net-bar { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
    GLOSSARY
    ============================================================ */
 .glossary-grid {
@@ -896,6 +1654,19 @@ footer .sig {
 
 <body>
 
+<!-- Contact card (fixed-position popover) -->
+<div class="contact-card" id="contactCard">
+  <div class="cc-label">GET IN TOUCH</div>
+  <div class="cc-row">
+    <span class="cc-icon">EMAIL</span>
+    <a href="mailto:ponelson@gmail.com">ponelson@gmail.com</a>
+  </div>
+  <div class="cc-row">
+    <span class="cc-icon">LINKEDIN</span>
+    <a href="https://www.linkedin.com/in/ponelson/" target="_blank" rel="noopener">linkedin.com/in/ponelson</a>
+  </div>
+</div>
+
 <main>
 
 <!-- =====================================================
@@ -905,7 +1676,10 @@ footer .sig {
   <div class="container">
     <div class="nav-row">
       <div><span class="dot"></span>Inside the Model</div>
-      <div>An interactive field guide · 2026</div>
+      <div class="right">
+        <span>An interactive field guide · 2026</span>
+        <button class="contact-btn" id="contactBtn">Contact</button>
+      </div>
     </div>
 
     <div class="hero-body">
@@ -922,12 +1696,13 @@ footer .sig {
 
     <div class="container" style="padding: 0;">
       <div class="hero-meta">
-        <span>I. The Map</span>
-        <span>II. Numbers</span>
-        <span>III. Parameters</span>
-        <span>IV. Embeddings</span>
-        <span>V. Search</span>
-        <span>VI. Output</span>
+        <span>I. Map</span>
+        <span>IV. Operation</span>
+        <span>V. Attention</span>
+        <span>VII. Embeddings</span>
+        <span>X. Machine</span>
+        <span>XII. Training</span>
+        <span>XIII. Output</span>
       </div>
     </div>
   </div>
@@ -1210,11 +1985,220 @@ footer .sig {
 
 
 <!-- =====================================================
-     IV. EMBEDDINGS
+     IV. THE OPERATION — matmul + architecture
+     ===================================================== -->
+<section class="reveal" id="operation">
+  <div class="container">
+    <div class="eyebrow">IV · The Operation</div>
+    <h2 class="serif">Almost everything is a <span class="italic amber">matrix multiply.</span></h2>
+    <p class="lead narrow">One operation does the bulk of the work inside any neural network. Take a vector of inputs, multiply by a matrix of learned weights, add a bias vector, apply a non-linearity. Repeat in layers. Compose those layers into a block. Stack the blocks.</p>
+
+    <!-- DEMO 11: MATMUL -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>One layer, one multiply</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">A 4×4 weight matrix times a 4-dim input gives a 4-dim output. Click "step" to watch each output element get computed — it's a dot product of one row of W with all of x.</p>
+        </div>
+        <div class="label"><span class="num">11</span>MATMUL</div>
+      </div>
+
+      <div class="matmul-wrap">
+        <div>
+          <div class="matmul-label"><span class="amb">W</span> · weights (4×4)</div>
+          <div class="matmul-mat" id="matW" style="grid-template-columns: repeat(4, 40px);"></div>
+        </div>
+
+        <div class="matmul-symbol">·</div>
+
+        <div>
+          <div class="matmul-label"><span class="amb">x</span> · input (4×1)</div>
+          <div class="matmul-mat" id="matX" style="grid-template-columns: repeat(1, 40px);"></div>
+        </div>
+
+        <div class="matmul-symbol">+</div>
+
+        <div>
+          <div class="matmul-label"><span class="amb">b</span> · bias</div>
+          <div class="matmul-mat" id="matB" style="grid-template-columns: repeat(1, 40px);"></div>
+        </div>
+
+        <div class="matmul-symbol">=</div>
+
+        <div>
+          <div class="matmul-label"><span class="amb">y</span> · output</div>
+          <div class="matmul-mat" id="matY" style="grid-template-columns: repeat(1, 40px);"></div>
+        </div>
+      </div>
+
+      <div class="matmul-readout" id="matmulReadout">Press "step" to compute the first output element.</div>
+
+      <div class="matmul-controls">
+        <button class="matmul-btn" id="matmulStep">Step</button>
+        <button class="matmul-btn ghost" id="matmulAuto">Auto-play</button>
+        <button class="matmul-btn ghost" id="matmulReset">Reset</button>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        That's the entire operation. Real layers have weight matrices that are thousands by thousands; a single B200 GPU does <span class="amber mono">~4.5 × 10¹⁵</span> of these multiplies per second at FP8. Almost every joule of training and inference energy is spent right here.
+      </p>
+    </div>
+
+    <!-- DEMO 12: ARCHITECTURE STACK -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>A transformer block</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">The whole architecture is one of these, repeated. Tap any box to see what it does.</p>
+        </div>
+        <div class="label"><span class="num">12</span>BLOCK</div>
+      </div>
+
+      <div class="arch-grid">
+        <div class="arch-wrap">
+          <svg viewBox="0 0 280 560" class="arch-svg" id="archSvg">
+            <defs>
+              <marker id="archarr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4a4640"/>
+              </marker>
+            </defs>
+
+            <!-- Flow arrows -->
+            <line class="arch-flow" x1="140" y1="40"  x2="140" y2="68"  marker-end="url(#archarr)"/>
+            <line class="arch-flow" x1="140" y1="108" x2="140" y2="138" marker-end="url(#archarr)"/>
+            <line class="arch-flow" x1="140" y1="178" x2="140" y2="208" marker-end="url(#archarr)"/>
+            <line class="arch-flow" x1="140" y1="248" x2="140" y2="278" marker-end="url(#archarr)"/>
+            <line class="arch-flow" x1="140" y1="318" x2="140" y2="348" marker-end="url(#archarr)"/>
+            <line class="arch-flow" x1="140" y1="388" x2="140" y2="418" marker-end="url(#archarr)"/>
+            <line class="arch-flow" x1="140" y1="458" x2="140" y2="488" marker-end="url(#archarr)"/>
+            <line class="arch-flow" x1="140" y1="528" x2="140" y2="556" marker-end="url(#archarr)"/>
+
+            <!-- Repeat bracket -->
+            <path class="arch-repeat" d="M 250 138 L 268 138 L 268 458 L 250 458"/>
+            <text x="272" y="302" font-family="var(--font-mono)" font-size="11" fill="#e7a55a">× N</text>
+
+            <!-- Blocks -->
+            <g class="arch-box" data-key="input" transform="translate(60,10)"><rect class="arch-fill" width="160" height="30" rx="4"/><text x="80" y="20" dy="3">Tokens</text></g>
+            <g class="arch-box" data-key="embed" transform="translate(60,70)"><rect class="arch-fill" width="160" height="40" rx="4"/><text x="80" y="20" dy="3">Token Embeddings</text><text class="arch-sub" x="80" y="33">+ POSITIONAL</text></g>
+            <g class="arch-box" data-key="ln1" transform="translate(60,140)"><rect class="arch-fill" width="160" height="40" rx="4"/><text x="80" y="20" dy="3">LayerNorm</text></g>
+            <g class="arch-box" data-key="attn" transform="translate(60,210)"><rect class="arch-fill" width="160" height="40" rx="4"/><text x="80" y="20" dy="3">Multi-Head Attention</text></g>
+            <g class="arch-box" data-key="add1" transform="translate(60,280)"><rect class="arch-fill" width="160" height="40" rx="4"/><text x="80" y="20" dy="3">Residual + Add</text></g>
+            <g class="arch-box" data-key="ln2" transform="translate(60,350)"><rect class="arch-fill" width="160" height="40" rx="4"/><text x="80" y="20" dy="3">LayerNorm</text></g>
+            <g class="arch-box" data-key="ffn" transform="translate(60,420)"><rect class="arch-fill" width="160" height="40" rx="4"/><text x="80" y="20" dy="3">Feed-Forward (MLP)</text></g>
+            <g class="arch-box" data-key="add2" transform="translate(60,490)"><rect class="arch-fill" width="160" height="40" rx="4"/><text x="80" y="20" dy="3">Residual + Add</text></g>
+          </svg>
+        </div>
+
+        <div class="arch-info" id="archInfo">
+          <div class="ai-title">A transformer block</div>
+          <div class="ai-tag">CLICK ANY BLOCK</div>
+          <div class="ai-body">Each block transforms a sequence of vectors into another sequence of the same shape, just richer. Modern frontier models stack 60–120 of these. The output of the final block, run through one more linear projection, becomes the logits.</div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Every weight in the entire 70B-parameter model lives somewhere in one of these boxes — distributed across N layers. The attention block is what makes a transformer a transformer; everything else has been around since the 80s. We'll look at attention next.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     V. ATTENTION — the mechanism
+     ===================================================== -->
+<section class="reveal" id="attention">
+  <div class="container">
+    <div class="eyebrow">V · Attention</div>
+    <h2 class="serif">Each token looks at <span class="italic amber">every other.</span></h2>
+    <p class="lead narrow">Attention is the single mechanism that makes transformers work. For each token in the sequence, ask: which other tokens matter for understanding this one? Add up the relevant ones, weighted by how relevant. That's it. The whole field hinges on this one idea from 2017.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Self-attention, made visible</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Click any token in "the cat sat on the warm mat" to make it the query. The heatmap shows where the query token's attention flows — which other tokens it pulls information from.</p>
+        </div>
+        <div class="label"><span class="num">13</span>ATTENTION</div>
+      </div>
+
+      <div class="att-wrap">
+        <div class="att-sentence" id="attSentence"></div>
+
+        <div class="att-eq">attention(Q, K, V) = softmax(<span class="amber">Q · Kᵀ</span> / √d) · <span class="blue">V</span></div>
+
+        <div class="att-grid">
+          <div class="att-panel">
+            <div class="att-title">Attention matrix · row = query, column = key</div>
+            <div class="att-matrix-frame">
+              <div class="att-axis-y" id="attYLabels"></div>
+              <div>
+                <div class="att-heatmap" id="attHeatmap"></div>
+                <div class="att-axis" id="attXLabels" style="margin-top: 6px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="att-panel">
+            <div class="att-title">From "<span id="attQueryWord" style="color: var(--accent);">cat</span>", attention flows to:</div>
+            <div class="att-list" id="attList"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Each token has three learned vectors: a <span class="amber mono">query</span> (what am I looking for?), a <span class="amber mono">key</span> (what do I offer?), and a <span class="blue mono">value</span> (the information I'd pass along). Multiply every query by every key, soften with softmax, weighted-sum the values. That's a single attention head. Real models run dozens of these in parallel and stack the result through many layers — and somehow that turns into language.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     VI. TOKENIZATION
+     ===================================================== -->
+<section class="reveal" id="tokens">
+  <div class="container">
+    <div class="eyebrow">VI · Tokenization</div>
+    <h2 class="serif">The model never sees <span class="italic amber">letters.</span></h2>
+    <p class="lead narrow">Text gets chopped into tokens before it ever reaches the model — units that are roughly sub-words, sometimes whole words, sometimes single characters when nothing else fits. This is also why models can't count letters and why your API bill is what it is.</p>
+
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Type anything, watch it split</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">This is a simplified BPE-style tokenizer — close in spirit to what GPT and Claude actually use.</p>
+        </div>
+        <div class="label"><span class="num">14</span>TOKENIZER</div>
+      </div>
+
+      <div class="tok-wrap">
+        <textarea id="tokInput" class="tok-input" placeholder="Type some text…">The transformer architecture revolutionized AI. Unbelievable, but tokenization can split "unbelievable" into 3 pieces!</textarea>
+
+        <div class="tok-output" id="tokOutput"></div>
+
+        <div class="tok-stats">
+          <div class="tok-stat"><div class="k">Tokens</div><div class="v" id="tokCount">—</div></div>
+          <div class="tok-stat"><div class="k">Characters</div><div class="v" id="tokChars">—</div></div>
+          <div class="tok-stat"><div class="k">Chars / token</div><div class="v" id="tokRatio">—</div></div>
+          <div class="tok-stat"><div class="k">Est. cost</div><div class="v" id="tokCost">—<span class="unit">¢</span></div></div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        English averages ~4 characters per token. Code is denser (~3). Chinese and Japanese are much less efficient (~1.5) because tokenizers were trained on English-heavy data. This is why "1M context" in English can be a quarter of that in some other languages — and why API pricing per token can hide a 3× real cost difference.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     VII. EMBEDDINGS
      ===================================================== -->
 <section class="reveal" id="emb">
   <div class="container">
-    <div class="eyebrow">IV · Embeddings</div>
+    <div class="eyebrow">VII · Embeddings</div>
     <h2 class="serif">Words become <span class="italic amber">coordinates.</span></h2>
     <p class="lead narrow">An embedding turns something messy — a word, an image, a sentence — into a list of numbers. A vector. And vectors live in space, with directions and distances. Suddenly we can do geometry on meaning.</p>
 
@@ -1244,7 +2228,7 @@ footer .sig {
      ===================================================== -->
 <section class="reveal" id="search">
   <div class="container">
-    <div class="eyebrow">V · Vector Search</div>
+    <div class="eyebrow">VIII · Vector Search</div>
     <h2 class="serif">Find the nearest <span class="italic amber">point.</span></h2>
     <p class="lead narrow">Once meaning is geometry, search is just distance. Type a word — the demo finds its embedding, then ranks every other word by cosine similarity.</p>
 
@@ -1284,7 +2268,7 @@ footer .sig {
      ===================================================== -->
 <section class="reveal" id="quant">
   <div class="container">
-    <div class="eyebrow">VI · Quantization</div>
+    <div class="eyebrow">IX · Quantization</div>
     <h2 class="serif">Smaller numbers, <span class="italic amber">most of the smarts.</span></h2>
     <p class="lead narrow">Models are trained in high precision but they don't <em>need</em> that precision to run. Quantization replaces each weight with a smaller, coarser approximation. The model gets smaller and faster; the quality, mostly, holds.</p>
 
@@ -1344,11 +2328,468 @@ footer .sig {
 
 
 <!-- =====================================================
-     VII. LOGITS → SOFTMAX → TOKEN
+     VII. THE MACHINE — silicon, dies, FLOPS, power
+     ===================================================== -->
+<section class="reveal" id="machine">
+  <div class="container">
+    <div class="eyebrow">X · The Machine</div>
+    <h2 class="serif">All of this runs on <span class="italic amber">silicon.</span></h2>
+    <p class="lead narrow">Every weight, every multiplication, every gradient update happens on a physical chip. The numbers get vivid: 208 billion switches on one piece of glass, datacenters drinking gigawatts, clusters that need their own power plants.</p>
+
+    <!-- DEMO 07: TRANSISTORS PER CHIP -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>From 2,300 transistors to 208 billion</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Fifty years of Moore's Law, plotted log-scale. Click any chip to see its details.</p>
+        </div>
+        <div class="label"><span class="num">06</span>SILICON</div>
+      </div>
+
+      <div class="chip-grid">
+        <div class="chip-chart">
+          <svg viewBox="0 0 700 320" id="chipSvg"></svg>
+        </div>
+        <div class="chip-detail" id="chipDetail"></div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        The dashed line is Moore's prediction — a doubling roughly every two years. The trend held for half a century, mostly. Modern frontier GPUs cheat by going wider (more silicon area) and by stacking two dies together when one is already as big as a reticle allows.
+      </p>
+    </div>
+
+    <!-- DEMO 08: THE B200 DIE -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>One package, two dies, eight memory stacks</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">A schematic of NVIDIA's Blackwell B200. Two reticle-limited compute dies (the most a single lithography step can produce) bonded onto one substrate, ringed by eight HBM3e memory stacks.</p>
+        </div>
+        <div class="label"><span class="num">07</span>THE DIE</div>
+      </div>
+
+      <div class="die-wrap">
+        <svg viewBox="0 0 700 460" class="die-svg" id="dieSvg">
+          <defs>
+            <linearGradient id="dieGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(231,165,90,0.14)"/>
+              <stop offset="100%" stop-color="rgba(231,165,90,0.04)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Package substrate -->
+          <rect class="die-package" x="40" y="50" width="620" height="320" rx="10"/>
+
+          <!-- HBM stacks - top row -->
+          <rect class="hbm-stack" x="90"  y="80" width="90" height="40" rx="2"/>
+          <rect class="hbm-stack" x="195" y="80" width="90" height="40" rx="2"/>
+          <rect class="hbm-stack" x="410" y="80" width="90" height="40" rx="2"/>
+          <rect class="hbm-stack" x="515" y="80" width="90" height="40" rx="2"/>
+
+          <!-- Compute dies -->
+          <g>
+            <rect class="die-compute" x="90"  y="150" width="195" height="120" rx="4"/>
+            <rect class="die-compute" x="410" y="150" width="195" height="120" rx="4"/>
+
+            <!-- Inner grid lines suggesting SM blocks -->
+            <g class="die-grid-inner">
+              <line x1="90"  y1="180" x2="285" y2="180"/>
+              <line x1="90"  y1="210" x2="285" y2="210"/>
+              <line x1="90"  y1="240" x2="285" y2="240"/>
+              <line x1="139" y1="150" x2="139" y2="270"/>
+              <line x1="188" y1="150" x2="188" y2="270"/>
+              <line x1="237" y1="150" x2="237" y2="270"/>
+              <line x1="410" y1="180" x2="605" y2="180"/>
+              <line x1="410" y1="210" x2="605" y2="210"/>
+              <line x1="410" y1="240" x2="605" y2="240"/>
+              <line x1="459" y1="150" x2="459" y2="270"/>
+              <line x1="508" y1="150" x2="508" y2="270"/>
+              <line x1="557" y1="150" x2="557" y2="270"/>
+            </g>
+
+            <text class="label" x="187" y="215">DIE 1</text>
+            <text class="label-sub" x="187" y="232">104B TRANSISTORS</text>
+            <text class="label" x="507" y="215">DIE 2</text>
+            <text class="label-sub" x="507" y="232">104B TRANSISTORS</text>
+          </g>
+
+          <!-- NV-HBI chiplet interconnect -->
+          <line class="interconnect" x1="285" y1="210" x2="410" y2="210"/>
+          <text class="label-sub" x="347" y="200">NV-HBI</text>
+          <text class="label-sub" x="347" y="225">10 TB/s</text>
+
+          <!-- HBM stacks - bottom row -->
+          <rect class="hbm-stack" x="90"  y="300" width="90" height="40" rx="2"/>
+          <rect class="hbm-stack" x="195" y="300" width="90" height="40" rx="2"/>
+          <rect class="hbm-stack" x="410" y="300" width="90" height="40" rx="2"/>
+          <rect class="hbm-stack" x="515" y="300" width="90" height="40" rx="2"/>
+
+          <!-- HBM labels -->
+          <text class="label-sub" x="135" y="105">HBM3e</text>
+          <text class="label-sub" x="240" y="105">HBM3e</text>
+          <text class="label-sub" x="455" y="105">HBM3e</text>
+          <text class="label-sub" x="560" y="105">HBM3e</text>
+          <text class="label-sub" x="135" y="325">HBM3e</text>
+          <text class="label-sub" x="240" y="325">HBM3e</text>
+          <text class="label-sub" x="455" y="325">HBM3e</text>
+          <text class="label-sub" x="560" y="325">HBM3e</text>
+
+          <!-- Top annotation -->
+          <line class="annotation-line" x1="240" y1="80" x2="240" y2="55"/>
+          <line class="annotation-line" x1="240" y1="55" x2="350" y2="55"/>
+          <text class="annotation" x="355" y="58">8 × 24 GB HBM3e · 8 TB/s</text>
+
+          <!-- Right annotation -->
+          <line class="annotation-line" x1="605" y1="210" x2="640" y2="210"/>
+          <text class="annotation" x="645" y="200">208 B</text>
+          <text class="annotation" x="645" y="212">transistors</text>
+          <text class="annotation" x="645" y="224">~1,600 mm²</text>
+
+          <!-- Bottom annotation -->
+          <line class="annotation-line" x1="350" y1="340" x2="350" y2="370"/>
+          <line class="scale-bar" x1="40" y1="395" x2="200" y2="395"/>
+          <line class="scale-bar" x1="40" y1="392" x2="40" y2="398"/>
+          <line class="scale-bar" x1="200" y1="392" x2="200" y2="398"/>
+          <text class="annotation" x="120" y="412" text-anchor="middle">≈ 45 mm</text>
+          <text class="annotation" x="350" y="385" text-anchor="middle">Package · 1,000 W TDP · TSMC 4NP</text>
+        </svg>
+      </div>
+
+      <div class="die-readout">
+        <div class="ds"><div class="k">Transistors</div><div class="v amber">208<span class="unit"> B</span></div></div>
+        <div class="ds"><div class="k">Density</div><div class="v">130<span class="unit"> M / mm²</span></div></div>
+        <div class="ds"><div class="k">Memory</div><div class="v">192<span class="unit"> GB HBM3e</span></div></div>
+        <div class="ds"><div class="k">FP8 compute</div><div class="v amber">4.5<span class="unit"> PFLOPS</span></div></div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        That "4NP" process name is mostly marketing — actual transistor features are around <span class="amber mono">20 nm</span>, which is still only ~100 silicon atoms across. A silicon atom is <span class="amber mono">0.2 nm</span>. There's not much room left to shrink before quantum effects make transistors stop working as switches.
+      </p>
+    </div>
+
+    <!-- DEMO 09: CLUSTER SCALE -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>One chip · one million</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Drag the slider through the scales of modern AI compute. Compute, power, and cost all update.</p>
+        </div>
+        <div class="label"><span class="num">08</span>CLUSTER</div>
+      </div>
+
+      <div class="scale-control">
+        <div class="scale-readout">
+          <div class="scale-big" id="scaleGpus">100,000</div>
+          <div class="scale-sub">B200 GPUs</div>
+          <div class="scale-desc" id="scaleDesc">xAI Colossus, phase 1 (2024)</div>
+        </div>
+        <input type="range" id="scaleSlider" min="0" max="6" step="1" value="3" />
+        <div class="scale-ticks">
+          <span>1</span><span>8</span><span>1K</span><span>100K</span><span>555K</span><span>1M</span><span>10M</span>
+        </div>
+      </div>
+
+      <div class="scale-stats">
+        <div class="scale-stat">
+          <div class="k">Total FP8 compute</div>
+          <div class="v amber" id="scaleFlops">450 PFLOPS</div>
+          <div class="note" id="scaleFlopsNote">≈ entire top500 supercomputer list, 2015</div>
+        </div>
+        <div class="scale-stat">
+          <div class="k">Continuous power draw</div>
+          <div class="v" id="scalePower">130 MW</div>
+          <div class="note" id="scalePowerNote">≈ 100,000 average US homes</div>
+        </div>
+        <div class="scale-stat">
+          <div class="k">GPU hardware cost</div>
+          <div class="v" id="scaleCost">$3.0 B</div>
+          <div class="note" id="scaleCostNote">at ~$30K per B200, not counting facility</div>
+        </div>
+        <div class="scale-stat">
+          <div class="k">Annual energy</div>
+          <div class="v amber" id="scaleEnergy">1.14 TWh / yr</div>
+          <div class="note" id="scaleEnergyNote">0.25% of US data center load</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO 10: ENERGY LADDER -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The energy ladder</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">From one query to the world's data centers. Log scale — each bar's length grows with the order of magnitude.</p>
+        </div>
+        <div class="label"><span class="num">09</span>WATTS</div>
+      </div>
+
+      <div class="ladder" id="energyLadder"></div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Global data centers used roughly <span class="amber mono">460 TWh</span> in 2025 — about 1.8% of all electricity — and the IEA expects that to nearly double by 2030, with AI as the driver. Whether that's worth it depends on whether the things AI ends up doing turn out to be worth the joules. There's no consensus on that yet, even inside the industry.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     XI. THE STACK — memory, KV cache, networking, cost
+     ===================================================== -->
+<section class="reveal" id="stack">
+  <div class="container">
+    <div class="eyebrow">XI · The Stack</div>
+    <h2 class="serif">The constraints that <span class="italic amber">actually shape AI.</span></h2>
+    <p class="lead narrow">Compute is what gets press, but compute isn't the bottleneck most of the time. Memory bandwidth is. Interconnect bandwidth is. Where the data lives, and how fast you can move it, decides what's possible.</p>
+
+    <!-- DEMO 15: MEMORY HIERARCHY -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The memory hierarchy</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Latency grows by 10–1000× at every step. The art of fast inference is keeping the data you need close to where you're computing.</p>
+        </div>
+        <div class="label"><span class="num">15</span>MEMORY</div>
+      </div>
+
+      <div class="mem-wrap" id="memWrap"></div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        A B200 has 192 GB of HBM right next to the dies, but it's still about 30× slower than the on-chip caches. This is why modern LLM serving is often described as "memory-bound" — the GPU finishes its math waiting for the next weights to arrive from HBM.
+      </p>
+    </div>
+
+    <!-- DEMO 16: KV CACHE -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The KV cache, growing</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">For every token in the context, the model has to keep around two large vectors — the key and value from each attention head. That memory adds up fast.</p>
+        </div>
+        <div class="label"><span class="num">16</span>KV-CACHE</div>
+      </div>
+
+      <div class="kv-wrap">
+        <div class="kv-slider-row">
+          <div class="lbl-line"><span>Context length</span><span class="v" id="kvCtxLabel">8,192 tokens</span></div>
+          <input type="range" id="kvSlider" min="0" max="6" step="1" value="2"/>
+          <div class="lbl-line" style="margin-top: 4px;">
+            <span style="font-size: 9px;">512</span><span style="font-size: 9px;">2K</span><span style="font-size: 9px;">8K</span><span style="font-size: 9px;">32K</span><span style="font-size: 9px;">128K</span><span style="font-size: 9px;">512K</span><span style="font-size: 9px;">2M</span>
+          </div>
+        </div>
+
+        <div class="kv-stats">
+          <div class="kv-stat">
+            <div class="k">KV cache size</div>
+            <div class="v"><span id="kvSize">5.0</span><span class="unit">GB</span></div>
+            <div class="note">per request, ~70B model in FP16</div>
+          </div>
+          <div class="kv-stat">
+            <div class="k">Attention compute</div>
+            <div class="v"><span id="kvFlops">1.3</span><span class="unit">PFLOP</span></div>
+            <div class="note" id="kvFlopsNote">grows quadratically — O(n²)</div>
+          </div>
+          <div class="kv-stat">
+            <div class="k">Memory bandwidth</div>
+            <div class="v"><span id="kvBw">0.6</span><span class="unit">ms read</span></div>
+            <div class="note">to stream the cache once</div>
+          </div>
+          <div class="kv-stat">
+            <div class="k">Requests per H100</div>
+            <div class="v" id="kvBatch">16</div>
+            <div class="note">limited by KV memory</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        This is why long-context models are expensive to serve, why batch sizes shrink as context grows, and why every serving system in production now spends huge effort on KV-cache compression, paging, and reuse.
+      </p>
+    </div>
+
+    <!-- DEMO 17: NETWORKING -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Bandwidth, on a single chart</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">From the slowest reasonable network to the fastest interconnect on a GPU package, ten orders of magnitude. Bar lengths are linear.</p>
+        </div>
+        <div class="label"><span class="num">17</span>NETWORK</div>
+      </div>
+
+      <div class="net-wrap">
+        <div class="net-bars" id="netBars"></div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Training a frontier model means doing an all-reduce — summing gradients across every GPU in the cluster — after every batch. With 100K+ GPUs, the network is usually the bottleneck, not the chips. NVLink and InfiniBand are why custom-built clusters beat the public cloud for training.
+      </p>
+    </div>
+
+    <!-- DEMO 18: COST ECONOMICS -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>What does it cost?</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">A rough back-of-the-envelope for training a model from scratch. Slide the dials.</p>
+        </div>
+        <div class="label"><span class="num">18</span>ECONOMICS</div>
+      </div>
+
+      <div class="econ-wrap">
+        <div class="econ-grid">
+          <div class="econ-controls">
+            <div class="econ-row">
+              <div class="lbl-line"><span>Parameters</span><span class="v" id="econParamsL">70 B</span></div>
+              <input type="range" id="econParams" min="0" max="6" step="1" value="3"/>
+            </div>
+            <div class="econ-row">
+              <div class="lbl-line"><span>Training tokens</span><span class="v" id="econTokensL">15 T</span></div>
+              <input type="range" id="econTokens" min="0" max="5" step="1" value="3"/>
+            </div>
+            <div class="econ-row">
+              <div class="lbl-line"><span>GPU type</span><span class="v" id="econGpuL">H100</span></div>
+              <input type="range" id="econGpu" min="0" max="2" step="1" value="1"/>
+            </div>
+            <div class="econ-row">
+              <div class="lbl-line"><span>Cluster size</span><span class="v" id="econClusterL">10,000 GPUs</span></div>
+              <input type="range" id="econCluster" min="0" max="4" step="1" value="2"/>
+            </div>
+          </div>
+
+          <div class="econ-out">
+            <div class="econ-stat"><span class="k">Compute required</span><span class="v" id="econFlops">63 ZFLOP</span></div>
+            <div class="econ-stat"><span class="k">Training time</span><span class="v big" id="econTime">35 days</span></div>
+            <div class="econ-stat"><span class="k">Hardware cost</span><span class="v" id="econHw">$300 M</span></div>
+            <div class="econ-stat"><span class="k">Energy used</span><span class="v" id="econEnergy">8.4 GWh</span></div>
+            <div class="econ-stat"><span class="k">Compute cost @ $2/h</span><span class="v" id="econCost">$17 M</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        These are dense-FLOPS estimates using the rule that training takes about 6 FLOPs per token per parameter. Actual costs are lower at FP8 / FP4, higher when you account for utilization (~40% is typical), failed runs, data prep, and salaries. GPT-4 reportedly cost ~$100M to train; rumored Grok-3 figures run higher.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     XII. TRAINING — gradient descent, scaling laws, MoE
+     ===================================================== -->
+<section class="reveal" id="training">
+  <div class="container">
+    <div class="eyebrow">XII · Training</div>
+    <h2 class="serif">How the weights <span class="italic amber">got there.</span></h2>
+    <p class="lead narrow">A model starts with random numbers. Training is the process of nudging every one of those billions of numbers in the direction that makes the loss go down. Repeat for months. Across the cluster you just costed.</p>
+
+    <!-- DEMO 19: GRADIENT DESCENT -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Gradient descent, on a hill</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">A toy 2D loss landscape. The marble takes steps proportional to the slope. Crank the learning rate too high and watch it overshoot.</p>
+        </div>
+        <div class="label"><span class="num">19</span>GRADIENT</div>
+      </div>
+
+      <div class="gd-wrap">
+        <div class="gd-grid">
+          <div class="gd-svg-wrap">
+            <svg viewBox="0 0 480 360" class="gd-svg" id="gdSvg"></svg>
+          </div>
+
+          <div class="gd-controls">
+            <div class="gd-row">
+              <div class="lbl-line"><span>Learning rate</span><span class="v" id="gdLrLabel">0.10</span></div>
+              <input type="range" id="gdLr" min="0.01" max="0.6" step="0.01" value="0.10"/>
+            </div>
+            <div class="gd-row">
+              <div class="lbl-line"><span>Momentum</span><span class="v" id="gdMomLabel">0.50</span></div>
+              <input type="range" id="gdMom" min="0" max="0.95" step="0.05" value="0.5"/>
+            </div>
+
+            <div class="gd-btns">
+              <button class="gd-btn primary" id="gdStep">Step ×10</button>
+              <button class="gd-btn ghost" id="gdReset">New start</button>
+            </div>
+
+            <div class="gd-readout">
+              <div class="r"><div class="k">Loss</div><div class="v" id="gdLoss">—</div></div>
+              <div class="r"><div class="k">Steps</div><div class="v" id="gdSteps">0</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Real training is this same loop, just in a billion dimensions instead of two. The loss is averaged over thousands of examples per step ("mini-batch"). Optimizers like Adam adjust the step size per parameter. But the core idea — gradient × learning rate — is unchanged since 1986.
+      </p>
+    </div>
+
+    <!-- DEMO 20: SCALING LAWS -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Scaling laws — loss as a function of compute</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Loss falls as a power law in compute, parameters, and data. Hover any curve.</p>
+        </div>
+        <div class="label"><span class="num">20</span>SCALING</div>
+      </div>
+
+      <div class="scaling-wrap">
+        <svg viewBox="0 0 700 360" class="scaling-svg" id="scalingSvg"></svg>
+
+        <div class="scaling-explain">
+          The orange line is the <span class="amber mono">compute-optimal frontier</span> — what DeepMind's 2022 "Chinchilla" paper showed: for a given training budget, you minimize loss by using roughly <span class="amber mono">20 tokens per parameter</span>. Train a model too small and you waste compute on overtraining. Too big and you starve it of data. The whole 2020–2024 era of frontier labs was an exercise in surfing this curve.
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO 21: MIXTURE OF EXPERTS -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Mixture of experts — sparse activation</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Each token routes through only a few of the model's layers — picked dynamically by a small router network. Total params stay huge, active params per token stay manageable.</p>
+        </div>
+        <div class="label"><span class="num">21</span>MOE</div>
+      </div>
+
+      <div class="moe-wrap">
+        <svg viewBox="0 0 600 320" class="moe-svg" id="moeSvg"></svg>
+
+        <div class="moe-controls">
+          <button class="moe-tok-btn on" data-tok="0">"The"</button>
+          <button class="moe-tok-btn" data-tok="1">"cat"</button>
+          <button class="moe-tok-btn" data-tok="2">"sat"</button>
+          <button class="moe-tok-btn" data-tok="3">"quietly"</button>
+          <button class="moe-tok-btn" data-tok="4">"on"</button>
+          <button class="moe-tok-btn" data-tok="5">"matrix"</button>
+        </div>
+
+        <div class="moe-stats">
+          <div class="moe-stat"><div class="k">Total parameters</div><div class="v">671 B</div></div>
+          <div class="moe-stat"><div class="k">Active per token</div><div class="v">37 B</div></div>
+          <div class="moe-stat"><div class="k">Effective compute</div><div class="v">5.5%</div></div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Numbers above are DeepSeek-V3's. GPT-4 is rumored to be MoE; Mixtral, DBRX, Qwen, Grok all are. The trick: huge capacity (lots of specialized experts) at small inference cost (only a few light up per token). The downside: you have to load every expert into memory anyway, even the ones you don't use this step.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     XIII. LOGITS → SOFTMAX → TOKEN
      ===================================================== -->
 <section class="reveal" id="softmax">
   <div class="container">
-    <div class="eyebrow">VII · Output</div>
+    <div class="eyebrow">XIII · Output</div>
     <h2 class="serif">From numbers back to <span class="italic amber">language.</span></h2>
     <p class="lead narrow">The model's final layer doesn't output a word. It outputs a logit — a raw score — for every possible next token. Softmax turns those scores into probabilities. Temperature changes how confidently it picks.</p>
 
@@ -1358,7 +2799,7 @@ footer .sig {
           <h3>"The cat sat on the …"</h3>
           <p style="margin: 6px 0 0; font-size: 13.5px;">Adjust the logits on the left. Watch the probabilities — and the temperature's effect — on the right.</p>
         </div>
-        <div class="label"><span class="num">06</span>SOFTMAX</div>
+        <div class="label"><span class="num">10</span>SOFTMAX</div>
       </div>
 
       <div class="temp-control">
@@ -1381,17 +2822,48 @@ footer .sig {
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
         Temperature 0 always picks the top token (deterministic). Higher temperatures flatten the distribution — every token becomes more likely — which means more variety and more mistakes. The model itself doesn't change. Just how we read its output.
       </p>
+
+      <!-- Sampling strategies extension -->
+      <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line);">
+        <h3 style="margin-bottom: 6px;">Sampling strategy</h3>
+        <p style="font-size: 13.5px; margin: 0;">Temperature is one knob. There are others — these are what actually runs in production.</p>
+
+        <div class="sample-strategies">
+          <div class="sample-strat on" data-strat="temp">
+            <div class="name">Temperature</div>
+            <div class="det">Soften the whole distribution. What you see above.</div>
+          </div>
+          <div class="sample-strat" data-strat="topk">
+            <div class="name">Top-K</div>
+            <div class="det">Keep only the K most likely tokens. Renormalize, sample.</div>
+          </div>
+          <div class="sample-strat" data-strat="topp">
+            <div class="name">Top-P (nucleus)</div>
+            <div class="det">Keep the smallest set whose probability sums to P. Adaptive.</div>
+          </div>
+        </div>
+
+        <div class="sample-param" id="sampleParam" style="display: none;">
+          <div class="lbl" id="sampleParamLabel">K =</div>
+          <input type="range" id="sampleSlider" min="1" max="6" step="1" value="3"/>
+          <div class="val mono" id="sampleParamVal">3</div>
+        </div>
+
+        <p class="muted" style="margin-top: 18px; font-size: 13.5px; line-height: 1.65;">
+          Top-K=1 with temperature 0 is "greedy" — same as argmax. Top-P (nucleus sampling) is the production default for most chat models, usually around 0.9–0.95: keeps the long tail's options open when the model is genuinely uncertain, closes them down when it's confident.
+        </p>
+      </div>
     </div>
   </div>
 </section>
 
 
 <!-- =====================================================
-     VIII. GLOSSARY
+     XIV. GLOSSARY
      ===================================================== -->
 <section class="reveal" id="gloss">
   <div class="container">
-    <div class="eyebrow">VIII · Quick Reference</div>
+    <div class="eyebrow">XIV · Quick Reference</div>
     <h2 class="serif">The <span class="italic amber">vocabulary.</span></h2>
     <p class="lead narrow">Everything we've touched, in a sentence each.</p>
 
@@ -1416,6 +2888,30 @@ footer .sig {
       <div class="gloss"><div class="term"><span class="icon"></span>Temperature</div><div class="def">A divisor applied to logits before softmax. Higher temperature = flatter distribution = more random output.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Matrix multiplication</div><div class="def">The single dominant operation in a neural network. A layer's output = its weight matrix times its input vector. Roughly 99% of inference compute.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Forward pass</div><div class="def">Running an input through every layer of the model to produce an output. What happens every time you ask a model anything.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Transistor</div><div class="def">A microscopic switch — the atomic unit of digital computation. A modern AI GPU has ~208 billion of them, each a few dozen atoms across.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Die</div><div class="def">A single piece of silicon cut from a wafer. Modern GPUs use multi-die packaging — two or more dies bonded together — because one die has hit the reticle size limit (~800 mm²).</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Process node</div><div class="def">A generation of chip manufacturing technology, named in nanometers ("3nm", "4nm"). The names stopped corresponding to physical size around 2015. What's real is transistor density: ~130–300 M/mm².</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>FLOPS</div><div class="def">Floating-point operations per second. The unit of compute throughput. A single B200 does ~5 PFLOPS (10¹⁵) at FP8. Modern AI clusters hit tens of EFLOPS (10¹⁸).</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>HBM</div><div class="def">High-Bandwidth Memory. DRAM stacked vertically and placed right next to a GPU die, with a wide interface. The B200 carries 192 GB of HBM3e at 8 TB/s.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Tensor core</div><div class="def">A specialized matrix-multiply unit inside modern GPUs. NVIDIA's 5th-gen tensor cores handle FP4, FP6, FP8, and FP16 with hardware sparsity support.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>TDP</div><div class="def">Thermal Design Power — the steady-state heat a chip is expected to dissipate. The B200 is rated at 1,000 W, up from the H100's 700 W.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Data center</div><div class="def">A facility housing thousands to millions of servers. AI data centers are increasingly purpose-built: liquid-cooled, gigawatt-scale, often with their own power generation.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>PUE</div><div class="def">Power Usage Effectiveness — how much total power a data center draws per watt of useful compute. Good modern facilities: 1.1–1.3. The overhead is cooling, lighting, networking, losses.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Self-attention</div><div class="def">The mechanism at the heart of every transformer. Each token computes a weighted sum over every other token, where the weights come from a learned compatibility function.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Q, K, V</div><div class="def">Query, key, value. For each token, the model produces three learned vectors. Queries × keys give attention weights; those weights are applied to values.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Multi-head attention</div><div class="def">Running several independent attention operations in parallel, each with its own learned Q/K/V projections. Each head specializes in different relationships.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Residual connection</div><div class="def">Adding a layer's input back to its output. Lets gradients flow through deep networks without vanishing. Every transformer block has two.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>LayerNorm</div><div class="def">Normalizing activations to have mean 0 and variance 1 across a vector. Stabilizes training of deep networks.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>FFN / MLP</div><div class="def">The feed-forward network inside each transformer block. Two linear layers with a non-linearity between. Roughly two-thirds of a model's parameters live here.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>BPE</div><div class="def">Byte-Pair Encoding — the algorithm behind most modern tokenizers. Starts from raw bytes, iteratively merges the most common adjacent pairs into single tokens.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>KV cache</div><div class="def">During generation, keys and values from previous tokens are cached so they don't need to be recomputed. Grows linearly with context length; dominates serving memory for long contexts.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Mixture of experts</div><div class="def">An architecture where each token activates only a sparse subset of the model's parameters via a learned router. Lets total capacity be enormous while per-token compute stays modest.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Scaling laws</div><div class="def">Empirical power-law relationships between loss, parameters, data, and compute. Chinchilla showed the optimal ratio is ~20 training tokens per parameter.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Learning rate</div><div class="def">How big a step gradient descent takes in the direction of steepest descent. Too small and training is slow; too large and it diverges.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Momentum</div><div class="def">An optimizer trick that adds a fraction of the previous step to the current step. Lets training move faster through long shallow valleys.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>All-reduce</div><div class="def">The collective communication that sums gradients across every GPU in a training cluster, after every batch. The bandwidth pattern that motivates NVLink and InfiniBand.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>NVLink</div><div class="def">NVIDIA's proprietary high-bandwidth interconnect between GPUs. Generation 5 hits 1.8 TB/s per GPU — about 14× PCIe Gen5.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Top-K / Top-P</div><div class="def">Sampling strategies. Top-K keeps the K most likely tokens; Top-P keeps the smallest set summing to probability P. Both renormalize and sample.</div></div>
     </div>
   </div>
 </section>
@@ -1914,6 +3410,1207 @@ function renderSoftmax() {
 }
 document.getElementById('temp').addEventListener('input', renderSoftmax);
 renderSoftmax();
+
+
+/* ============================================================
+   VII. THE MACHINE — silicon, dies, clusters, energy
+   ============================================================ */
+
+// ---- 07. Transistor count over time ----
+const CHIPS = [
+  { name: 'Intel 4004',     year: 1971, transistors: 2300,            node: '10 µm',  die: 12,    purpose: 'The first commercial microprocessor.' },
+  { name: 'Intel 80486',    year: 1989, transistors: 1180000,         node: '1 µm',   die: 165,   purpose: 'The PC era takes off.' },
+  { name: 'Intel Pentium',  year: 1993, transistors: 3100000,         node: '0.8 µm', die: 294,   purpose: 'Desktop dominance.' },
+  { name: 'Apple A4',       year: 2010, transistors: 80000000,        node: '45 nm',  die: 53,    purpose: 'The first iPad SoC.' },
+  { name: 'NVIDIA P100',    year: 2016, transistors: 15300000000,     node: '16 nm',  die: 610,   purpose: 'The first true deep-learning GPU.' },
+  { name: 'NVIDIA A100',    year: 2020, transistors: 54200000000,     node: '7 nm',   die: 826,   purpose: 'The chip that trained GPT-3.' },
+  { name: 'NVIDIA H100',    year: 2022, transistors: 80000000000,     node: 'TSMC 4N',die: 814,   purpose: 'The GPT-4 era workhorse.' },
+  { name: 'Apple M3 Max',   year: 2023, transistors: 92000000000,     node: 'TSMC 3nm', die: 600, purpose: 'Frontier consumer silicon.' },
+  { name: 'NVIDIA B200',    year: 2024, transistors: 208000000000,    node: 'TSMC 4NP',die: 1600, purpose: 'Two reticle-sized dies, bonded.' }
+];
+
+function formatTransistors(n) {
+  if (n >= 1e9) return (n/1e9).toFixed(n >= 1e10 ? 0 : 1) + ' B';
+  if (n >= 1e6) return (n/1e6).toFixed(n >= 1e7 ? 0 : 1) + ' M';
+  if (n >= 1e3) return (n/1e3).toFixed(0) + ' K';
+  return n.toString();
+}
+
+let selectedChip = CHIPS.length - 1; // Default to B200
+
+function renderChipChart() {
+  const svg = document.getElementById('chipSvg');
+  const W = 700, H = 320;
+  const padL = 50, padR = 30, padT = 30, padB = 50;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+
+  // years: 1970 → 2025
+  const yMin = 1970, yMax = 2026;
+  // log10(transistors): 3 → 12
+  const lMin = 3, lMax = 12;
+
+  const xScale = y => padL + (y - yMin) / (yMax - yMin) * innerW;
+  const yScale = lt => padT + (1 - (lt - lMin) / (lMax - lMin)) * innerH;
+
+  let html = '';
+
+  // grid lines + y-axis labels (powers of 10)
+  for (let p = 3; p <= 12; p++) {
+    const y = yScale(p);
+    html += `<line class="chip-grid-line" x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}"/>`;
+    const label = p < 6 ? Math.pow(10, p).toLocaleString() : '10' + ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹','¹⁰','¹¹','¹²'][p];
+    html += `<text class="chip-axis-label" x="${padL - 8}" y="${y + 3}" text-anchor="end">${label}</text>`;
+  }
+
+  // x-axis tick labels
+  for (const yr of [1970, 1980, 1990, 2000, 2010, 2020]) {
+    const x = xScale(yr);
+    html += `<line class="chip-grid-line" x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}"/>`;
+    html += `<text class="chip-axis-label" x="${x}" y="${H - padB + 16}" text-anchor="middle">${yr}</text>`;
+  }
+
+  // axis lines
+  html += `<line class="chip-axis" x1="${padL}" y1="${padT}" x2="${padL}" y2="${H - padB}"/>`;
+  html += `<line class="chip-axis" x1="${padL}" y1="${H - padB}" x2="${W - padR}" y2="${H - padB}"/>`;
+
+  // axis titles
+  html += `<text class="chip-axis-label" x="${W - padR}" y="${H - padB + 32}" text-anchor="end">YEAR →</text>`;
+  html += `<text class="chip-axis-label" x="${padL}" y="${padT - 12}" text-anchor="start">↑ TRANSISTORS (LOG)</text>`;
+
+  // Moore's law line (doubling every 2 years from 4004)
+  // From (1971, 2300) doubling every 2y => log10 grows by log10(2)/2 ≈ 0.1505 per year
+  const x1 = xScale(1971), y1 = yScale(Math.log10(2300));
+  const x2 = xScale(2025), y2 = yScale(Math.log10(2300) + (2025 - 1971) * Math.log10(2) / 2);
+  html += `<line class="chip-moore-line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  html += `<text class="chip-axis-label" x="${x2 - 6}" y="${y2 - 6}" text-anchor="end" fill="#e7a55a" opacity="0.7">MOORE</text>`;
+
+  // dots
+  CHIPS.forEach((c, i) => {
+    const cx = xScale(c.year);
+    const cy = yScale(Math.log10(c.transistors));
+    const active = i === selectedChip ? ' active' : '';
+    const r = i === selectedChip ? 8 : 5;
+    // short label
+    const short = c.name.replace('NVIDIA ', '').replace('Intel ', '').replace('Apple ', '');
+    const labelX = cx + 11;
+    const labelY = cy + 4;
+    html += `<g class="chip-dot${active}" data-i="${i}">
+      <title>${c.name} · ${c.year} · ${formatTransistors(c.transistors)} transistors</title>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${i === selectedChip ? '#e7a55a' : '#bfb8a8'}" stroke="${i === selectedChip ? '#f1ece2' : 'none'}" stroke-width="${i === selectedChip ? 1.5 : 0}"/>
+      <text x="${labelX}" y="${labelY}" font-size="10" fill="${i === selectedChip ? '#e7a55a' : '#807a6e'}">${short}</text>
+    </g>`;
+  });
+
+  svg.innerHTML = html;
+  svg.querySelectorAll('.chip-dot').forEach(g => {
+    g.addEventListener('click', () => {
+      selectedChip = parseInt(g.dataset.i, 10);
+      renderChipChart();
+      renderChipDetail();
+    });
+  });
+}
+
+function renderChipDetail() {
+  const c = CHIPS[selectedChip];
+  const density = c.transistors / c.die;
+  document.getElementById('chipDetail').innerHTML = `
+    <div>
+      <div class="chip-name">${c.name}</div>
+      <div class="chip-year">${c.year}</div>
+      <div class="chip-stat"><span class="k">Transistors</span><span class="v amber">${formatTransistors(c.transistors)}</span></div>
+      <div class="chip-stat"><span class="k">Process</span><span class="v">${c.node}</span></div>
+      <div class="chip-stat"><span class="k">Die area</span><span class="v">${c.die} mm²</span></div>
+      <div class="chip-stat"><span class="k">Density</span><span class="v">${formatTransistors(Math.round(density))}/mm²</span></div>
+    </div>
+    <div class="chip-pur">${c.purpose}</div>
+  `;
+}
+renderChipChart();
+renderChipDetail();
+
+
+// ---- 09. Cluster scale ----
+const SCALE_LEVELS = [
+  {
+    gpus: 1,        label: '1',
+    desc: 'a single B200, sitting in a server rack',
+    flops_pf: 4.5,
+    power_mw: 0.0013,   // 1.3 kW with PUE
+    cost_b: 0.00003,
+    homes: 'a small office\'s draw',
+    flopsCmp: 'roughly an iPhone 15 Pro × 50 at FP8'
+  },
+  {
+    gpus: 8,        label: '8',
+    desc: 'one DGX B200 server',
+    flops_pf: 36,
+    power_mw: 0.01,
+    cost_b: 0.00024,
+    homes: '≈ 8 average US homes',
+    flopsCmp: '36 PFLOPS — top-500 supercomputer territory in 2010'
+  },
+  {
+    gpus: 1000,     label: '1,000',
+    desc: 'a small startup cluster',
+    flops_pf: 4500,
+    power_mw: 1.3,
+    cost_b: 0.03,
+    homes: '≈ 1,000 homes',
+    flopsCmp: '4.5 EFLOPS — about the world\'s #1 supercomputer in 2018'
+  },
+  {
+    gpus: 100000,   label: '100,000',
+    desc: 'xAI Colossus, phase 1 (2024)',
+    flops_pf: 450000,
+    power_mw: 130,
+    cost_b: 3.0,
+    homes: '≈ 100,000 average US homes',
+    flopsCmp: '450 EFLOPS — past the entire top-500 list, combined'
+  },
+  {
+    gpus: 555000,   label: '555,000',
+    desc: 'xAI Colossus, 2026',
+    flops_pf: 2500000,
+    power_mw: 720,
+    cost_b: 18,
+    homes: '≈ 600,000 homes (facility total: 2 GW)',
+    flopsCmp: '2.5 ZFLOPS — more than all the world\'s supercomputers combined'
+  },
+  {
+    gpus: 1000000,  label: '1,000,000',
+    desc: 'Project Stargate target (OpenAI / SoftBank)',
+    flops_pf: 4500000,
+    power_mw: 1300,
+    cost_b: 30,
+    homes: '≈ 1 million homes',
+    flopsCmp: 'needs a dedicated gigawatt power plant'
+  },
+  {
+    gpus: 10000000, label: '10,000,000',
+    desc: 'speculative — beyond any announced build',
+    flops_pf: 45000000,
+    power_mw: 13000,
+    cost_b: 300,
+    homes: '≈ 10 million homes — a mid-size country',
+    flopsCmp: 'would consume more electricity than Switzerland'
+  }
+];
+
+function fmtFlops(pf) {
+  if (pf >= 1e9) return (pf/1e9).toFixed(1) + ' YFLOPS';
+  if (pf >= 1e6) return (pf/1e6).toFixed(pf >= 1e7 ? 0 : 1) + ' ZFLOPS';
+  if (pf >= 1e3) return (pf/1e3).toFixed(pf >= 1e4 ? 0 : 1) + ' EFLOPS';
+  return pf.toFixed(pf < 10 ? 1 : 0) + ' PFLOPS';
+}
+function fmtPower(mw) {
+  if (mw >= 1000) return (mw/1000).toFixed(1) + ' GW';
+  if (mw >= 1) return mw.toFixed(mw < 10 ? 1 : 0) + ' MW';
+  return (mw*1000).toFixed(1) + ' kW';
+}
+function fmtCost(b) {
+  if (b >= 1) return '$' + b.toFixed(b < 10 ? 1 : 0) + ' B';
+  if (b >= 0.001) return '$' + (b*1000).toFixed(0) + ' M';
+  return '$' + (b*1e6).toFixed(0) + 'K';
+}
+function fmtEnergy(mw) {
+  // annual energy from continuous MW
+  const twh = mw * 8760 / 1e6;
+  if (twh >= 1) return twh.toFixed(twh < 10 ? 2 : 1) + ' TWh/yr';
+  return (twh * 1000).toFixed(twh > 0.01 ? 1 : 2) + ' GWh/yr';
+}
+function energyComparison(twh) {
+  // global data center load ~460 TWh, US data centers ~183 TWh
+  if (twh >= 100) return (twh / 460 * 100).toFixed(1) + '% of global data center load';
+  if (twh >= 0.5) return (twh / 183 * 100).toFixed(2) + '% of US data center load';
+  return '< 0.01% of US data center load';
+}
+
+function renderScale() {
+  const idx = parseInt(document.getElementById('scaleSlider').value, 10);
+  const s = SCALE_LEVELS[idx];
+  document.getElementById('scaleGpus').textContent = s.label;
+  document.getElementById('scaleDesc').textContent = s.desc;
+  document.getElementById('scaleFlops').textContent = fmtFlops(s.flops_pf);
+  document.getElementById('scaleFlopsNote').textContent = s.flopsCmp;
+  document.getElementById('scalePower').textContent = fmtPower(s.power_mw);
+  document.getElementById('scalePowerNote').textContent = s.homes;
+  document.getElementById('scaleCost').textContent = fmtCost(s.cost_b);
+  const twhYr = s.power_mw * 8760 / 1e6;
+  document.getElementById('scaleEnergy').textContent = fmtEnergy(s.power_mw);
+  document.getElementById('scaleEnergyNote').textContent = energyComparison(twhYr);
+}
+document.getElementById('scaleSlider').addEventListener('input', renderScale);
+renderScale();
+
+
+// ---- 10. Energy ladder ----
+const LADDER = [
+  { label: '1 ChatGPT query',              detail: 'one user message',              wh: 0.3 },
+  { label: '1 LED bulb · 1 hour',          detail: '10 W bulb',                     wh: 10 },
+  { label: '1 B200 GPU · 1 hour',          detail: 'one chip, full tilt',           wh: 1000 },
+  { label: 'US household · 1 day',         detail: 'fridge, lights, AC, the works', wh: 30000 },
+  { label: 'DGX server · 1 day',           detail: '8 GPUs running 24 hours',       wh: 240000 },
+  { label: 'Colossus cluster · 1 hour',    detail: '555K GPUs, 2 GW total',         wh: 2000000000 },
+  { label: 'GPT-4 training run',           detail: 'one-time, estimated 50 GWh',    wh: 50000000000 },
+  { label: 'Colossus · 1 day',             detail: '48 GWh — ≈ NYC for an hour',    wh: 48000000000 },
+  { label: 'US data centers · 1 year',     detail: '183 TWh — ≈ all of Pakistan',   wh: 183000000000000 },
+  { label: 'Global data centers · 1 year', detail: '460 TWh — ≈ all of France',     wh: 460000000000000 }
+];
+
+function fmtWh(wh) {
+  if (wh >= 1e15) return (wh/1e12).toFixed(0) + ' TWh';
+  if (wh >= 1e12) return (wh/1e12).toFixed(1) + ' TWh';
+  if (wh >= 1e9)  return (wh/1e9).toFixed(0)  + ' GWh';
+  if (wh >= 1e6)  return (wh/1e6).toFixed(1)  + ' MWh';
+  if (wh >= 1e3)  return (wh/1e3).toFixed(wh >= 1e4 ? 0 : 1) + ' kWh';
+  if (wh >= 1)    return wh.toFixed(wh < 10 ? 1 : 0) + ' Wh';
+  return wh.toFixed(2) + ' Wh';
+}
+
+function renderLadder() {
+  // sort ascending, compute log-scale widths
+  const sorted = [...LADDER].sort((a, b) => a.wh - b.wh);
+  const minL = Math.log10(sorted[0].wh);
+  const maxL = Math.log10(sorted[sorted.length - 1].wh);
+  const range = maxL - minL;
+
+  document.getElementById('energyLadder').innerHTML = sorted.map((r, i) => {
+    const pct = ((Math.log10(r.wh) - minL) / range) * 100;
+    return `
+      <div class="rung">
+        <div>
+          <div class="rung-label">${r.label}</div>
+          <div class="rung-detail">${r.detail}</div>
+        </div>
+        <div class="rung-bar-wrap">
+          <div class="rung-bar" style="width: ${Math.max(2, pct)}%"></div>
+        </div>
+        <div class="rung-val">${fmtWh(r.wh)}</div>
+      </div>
+    `;
+  }).join('');
+}
+renderLadder();
+
+
+/* ============================================================
+   NEW: matrix multiplication animation
+   ============================================================ */
+const W_VALS = [
+  [ 0.6, -0.3,  0.2,  0.1],
+  [ 0.1,  0.5, -0.4,  0.3],
+  [-0.2,  0.4,  0.7, -0.1],
+  [ 0.3,  0.2, -0.1,  0.5]
+];
+const X_VALS = [1.0, 0.5, -0.8, 0.4];
+const B_VALS = [0.1, -0.2, 0.0, 0.3];
+let matStep = -1; // -1 = nothing done
+
+function renderMatmul() {
+  // W matrix
+  document.getElementById('matW').innerHTML = W_VALS.flat().map((v, idx) => {
+    const r = Math.floor(idx / 4);
+    const cls = matStep >= 0 && r === matStep ? 'active-row' : (matStep >= 0 && r < matStep ? 'dim' : '');
+    return `<div class="matmul-cell ${cls}">${v.toFixed(1)}</div>`;
+  }).join('');
+
+  // x vector
+  document.getElementById('matX').innerHTML = X_VALS.map((v) => {
+    const cls = matStep >= 0 ? 'active-col' : '';
+    return `<div class="matmul-cell ${cls}">${v.toFixed(1)}</div>`;
+  }).join('');
+
+  // b vector
+  document.getElementById('matB').innerHTML = B_VALS.map((v, i) => {
+    const cls = matStep >= 0 && i === matStep ? 'active-row' : (matStep >= 0 && i < matStep ? 'dim' : '');
+    return `<div class="matmul-cell ${cls}">${v.toFixed(1)}</div>`;
+  }).join('');
+
+  // y vector (only computed cells)
+  document.getElementById('matY').innerHTML = [0,1,2,3].map(i => {
+    if (i < matStep) {
+      const y = W_VALS[i].reduce((s, w, j) => s + w * X_VALS[j], 0) + B_VALS[i];
+      return `<div class="matmul-cell done">${y.toFixed(2)}</div>`;
+    } else if (i === matStep) {
+      const y = W_VALS[i].reduce((s, w, j) => s + w * X_VALS[j], 0) + B_VALS[i];
+      return `<div class="matmul-cell computing">${y.toFixed(2)}</div>`;
+    } else {
+      return `<div class="matmul-cell">·</div>`;
+    }
+  }).join('');
+
+  // Readout
+  if (matStep < 0) {
+    document.getElementById('matmulReadout').innerHTML = 'Press "step" to compute the first output element.';
+  } else if (matStep > 3) {
+    document.getElementById('matmulReadout').innerHTML = '<span style="color: var(--ink-2)">Done — every output is one dot product plus a bias.</span>';
+  } else {
+    const dotTerms = W_VALS[matStep].map((w, j) => `${w.toFixed(1)}·${X_VALS[j].toFixed(1)}`).join(' + ');
+    const y = W_VALS[matStep].reduce((s, w, j) => s + w * X_VALS[j], 0) + B_VALS[matStep];
+    document.getElementById('matmulReadout').innerHTML = `y[${matStep}] = ${dotTerms} + ${B_VALS[matStep].toFixed(1)} = <strong>${y.toFixed(2)}</strong>`;
+  }
+}
+document.getElementById('matmulStep').addEventListener('click', () => {
+  if (matStep > 3) matStep = -1;
+  matStep++;
+  renderMatmul();
+});
+let matmulAutoTimer = null;
+document.getElementById('matmulAuto').addEventListener('click', () => {
+  if (matmulAutoTimer) { clearInterval(matmulAutoTimer); matmulAutoTimer = null; return; }
+  matStep = 0;
+  renderMatmul();
+  matmulAutoTimer = setInterval(() => {
+    matStep++;
+    if (matStep > 3) { clearInterval(matmulAutoTimer); matmulAutoTimer = null; }
+    renderMatmul();
+  }, 900);
+});
+document.getElementById('matmulReset').addEventListener('click', () => {
+  if (matmulAutoTimer) { clearInterval(matmulAutoTimer); matmulAutoTimer = null; }
+  matStep = -1;
+  renderMatmul();
+});
+renderMatmul();
+
+
+/* ============================================================
+   NEW: architecture stack
+   ============================================================ */
+const ARCH_INFO = {
+  input:  { t: 'Input tokens', tag: 'STAGE 0', b: 'Text gets tokenized into integers — IDs into the model\'s vocabulary. A 100-token prompt is just a list of 100 numbers.' },
+  embed:  { t: 'Token + positional embeddings', tag: 'STAGE 1', b: 'Each token ID looks up a learned vector (the embedding). A second learned vector encodes the token\'s position in the sequence. They\'re added together — that\'s the input to the first transformer block.' },
+  ln1:    { t: 'Layer normalization', tag: 'STAGE 2', b: 'Rescales each vector so its values have mean 0 and variance 1. Stabilizes the gradients flowing through deep networks. Cheap to compute, dramatically helpful in practice.' },
+  attn:   { t: 'Multi-head self-attention', tag: 'STAGE 3', b: 'The defining operation of a transformer. For each position, look at every other position and decide what to mix in. Done in parallel across multiple "heads" that each specialize differently.' },
+  add1:   { t: 'Residual add', tag: 'STAGE 4', b: 'Add the attention output back to what came in. This residual connection means each layer is learning a refinement, not a replacement. The trick that lets you stack 100+ layers without gradients dying.' },
+  ln2:    { t: 'Layer normalization', tag: 'STAGE 5', b: 'Same as before — rescale activations so the FFN sees inputs with well-behaved statistics.' },
+  ffn:    { t: 'Feed-forward network', tag: 'STAGE 6', b: 'A simple 2-layer MLP, applied independently to every token. Usually expands the dimension by 4× and contracts it back. Two-thirds of a model\'s parameters sit here.' },
+  add2:   { t: 'Residual add', tag: 'STAGE 7', b: 'And one more residual — adding the FFN output back into the stream. The block returns to the same shape it started with. The next layer takes this as input. Repeat 60–120 times.' }
+};
+function setArch(key) {
+  document.querySelectorAll('.arch-box').forEach(b => b.classList.toggle('active', b.dataset.key === key));
+  const i = ARCH_INFO[key] || ARCH_INFO.input;
+  document.getElementById('archInfo').innerHTML = `
+    <div class="ai-title">${i.t}</div>
+    <div class="ai-tag">${i.tag}</div>
+    <div class="ai-body">${i.b}</div>
+  `;
+}
+document.querySelectorAll('.arch-box').forEach(b => {
+  b.addEventListener('click', () => setArch(b.dataset.key));
+});
+
+
+/* ============================================================
+   NEW: attention (QKV) heatmap
+   ============================================================ */
+const ATT_TOKENS = ['the', 'cat', 'sat', 'on', 'the', 'warm', 'mat'];
+// Handcrafted attention weights — each row is one query's attention to every token.
+// Designed to be plausible: "cat" attends to itself + "the" + "mat";
+// "sat" attends to "cat" (subject) and "on" (action);
+// "the" (first) attends weakly to "cat", "the" (second) to "mat", etc.
+const ATT_WEIGHTS = [
+  // the   cat   sat   on    the   warm  mat
+  [0.30, 0.45, 0.05, 0.05, 0.05, 0.05, 0.05],  // the   → cat
+  [0.25, 0.40, 0.10, 0.05, 0.05, 0.05, 0.10],  // cat   → self + the
+  [0.05, 0.55, 0.20, 0.10, 0.02, 0.03, 0.05],  // sat   → cat (subject)
+  [0.05, 0.10, 0.50, 0.20, 0.05, 0.03, 0.07],  // on    → sat (verb)
+  [0.05, 0.05, 0.05, 0.10, 0.20, 0.10, 0.45],  // the   → mat
+  [0.03, 0.05, 0.02, 0.05, 0.15, 0.25, 0.45],  // warm  → mat
+  [0.05, 0.20, 0.05, 0.05, 0.10, 0.15, 0.40]   // mat   → self + cat
+];
+
+let attQuery = 1; // default: "cat"
+
+function colorForWeight(w) {
+  // 0 = transparent dark, 1 = full amber
+  const t = Math.pow(w, 0.7);
+  return `rgba(231, 165, 90, ${0.05 + t * 0.85})`;
+}
+
+function renderAttention() {
+  // Sentence tokens
+  document.getElementById('attSentence').innerHTML = ATT_TOKENS.map((t, i) =>
+    `<button class="att-token${i === attQuery ? ' query' : ''}" data-i="${i}">${t}<sub style="opacity:0.5; font-size: 9px; margin-left: 4px;">${i}</sub></button>`
+  ).join('');
+
+  document.querySelectorAll('.att-token').forEach(b => {
+    b.addEventListener('click', () => {
+      attQuery = parseInt(b.dataset.i, 10);
+      renderAttention();
+    });
+  });
+
+  // Heatmap
+  const n = ATT_TOKENS.length;
+  document.getElementById('attHeatmap').style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+  let cells = '';
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      const w = ATT_WEIGHTS[i][j];
+      const isRow = i === attQuery;
+      const opacity = isRow ? 1 : (i === attQuery ? 1 : 0.55);
+      cells += `<div class="att-cell${isRow ? ' row-highlight' : ''}" style="background: ${colorForWeight(w)}; opacity: ${opacity};">${w >= 0.2 ? w.toFixed(2) : ''}</div>`;
+    }
+  }
+  document.getElementById('attHeatmap').innerHTML = cells;
+
+  // X labels (keys)
+  document.getElementById('attXLabels').style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+  document.getElementById('attXLabels').innerHTML = ATT_TOKENS.map(t => `<div>${t}</div>`).join('');
+
+  // Y labels (queries)
+  document.getElementById('attYLabels').innerHTML = ATT_TOKENS.map((t, i) =>
+    `<div style="height: ${100/n}%; display: flex; align-items: center; justify-content: flex-end; color: ${i === attQuery ? 'var(--accent)' : 'var(--ink-3)'};">${t}</div>`
+  ).join('');
+
+  // Query word label
+  document.getElementById('attQueryWord').textContent = ATT_TOKENS[attQuery];
+
+  // Bars list (sorted)
+  const row = ATT_WEIGHTS[attQuery];
+  const sorted = ATT_TOKENS.map((t, i) => ({ t, i, w: row[i] })).sort((a, b) => b.w - a.w);
+  document.getElementById('attList').innerHTML = sorted.map((r, idx) =>
+    `<div class="att-bar-row${idx === 0 ? ' top' : ''}">
+      <span class="word">${r.t}</span>
+      <span class="bar-bg"><span class="bar" style="width: ${(r.w * 100).toFixed(0)}%"></span></span>
+      <span class="v">${r.w.toFixed(2)}</span>
+    </div>`
+  ).join('');
+}
+renderAttention();
+
+
+/* ============================================================
+   NEW: tokenizer
+   ============================================================ */
+// A simplified BPE-style tokenizer: longest-match against a curated vocabulary.
+// Captures the spirit of real tokenizers without needing 50K+ entries.
+const TOK_VOCAB = [
+  // Common whole-word tokens (with leading space to mimic real BPE)
+  ' the', ' a', ' an', ' is', ' are', ' was', ' were', ' be', ' been', ' being',
+  ' of', ' to', ' in', ' on', ' at', ' for', ' with', ' by', ' from', ' as',
+  ' and', ' or', ' but', ' if', ' then', ' so', ' that', ' this', ' it', ' its',
+  ' I', ' you', ' he', ' she', ' we', ' they', ' me', ' my', ' your', ' our',
+  ' can', ' will', ' would', ' could', ' should', ' may', ' might', ' do', ' does', ' did',
+  ' have', ' has', ' had', ' get', ' got', ' make', ' made', ' take', ' took',
+  ' all', ' some', ' any', ' no', ' not', ' only', ' just', ' very', ' more', ' most',
+  ' time', ' way', ' day', ' year', ' work', ' life', ' world', ' people', ' man', ' woman',
+  ' new', ' old', ' good', ' great', ' big', ' small', ' long', ' short',
+  ' model', ' models', ' AI', ' data', ' code', ' computer', ' system', ' learning',
+  ' transformer', ' attention', ' neural', ' network', ' deep', ' training',
+  ' architecture', ' revolution', ' revolutionized', ' tokenization', ' split',
+  ' pieces', ' piece', ' three', ' but', ' into', ' can',
+  // Common subword pieces
+  'ing', 'tion', 'sion', 'ness', 'ment', 'able', 'ible', 'ize', 'ise', 'ate',
+  'ly', 'ful', 'less', 'ous', 'ish', 'er', 'or', 'est', 'al', 'ic', 'ed', 'es',
+  'un', 're', 'in', 'pre', 'dis', 'over', 'under',
+  'ation', 'isation', 'ization', 'iz', 'iza',
+  // Common roots
+  ' believ', ' achiev', ' know', ' under', ' over',
+  ' Unbeliev', 'eliev',
+  // Punctuation
+  '.', ',', '!', '?', ';', ':', '"', '(', ')', '-', '—', "'", '/',
+  ' \n', '\n',
+];
+
+// Sort by length descending for longest-match
+const TOK_SORTED = [...TOK_VOCAB].sort((a, b) => b.length - a.length);
+
+// Color palette for tokens (cycle through, distinct hues)
+const TOK_COLORS = [
+  'rgba(231,165,90,0.18)', 'rgba(109,168,255,0.18)', 'rgba(127,201,154,0.18)',
+  'rgba(224,125,107,0.18)', 'rgba(200,148,228,0.18)', 'rgba(231,200,90,0.16)',
+];
+const TOK_BORDERS = [
+  'rgba(231,165,90,0.5)', 'rgba(109,168,255,0.5)', 'rgba(127,201,154,0.5)',
+  'rgba(224,125,107,0.5)', 'rgba(200,148,228,0.5)', 'rgba(231,200,90,0.5)',
+];
+
+function tokenize(text) {
+  const tokens = [];
+  let i = 0;
+  while (i < text.length) {
+    // Try longest match from vocabulary
+    let matched = null;
+    for (const vt of TOK_SORTED) {
+      if (text.substring(i, i + vt.length) === vt) {
+        matched = vt;
+        break;
+      }
+    }
+    if (matched) {
+      tokens.push(matched);
+      i += matched.length;
+    } else {
+      // Fallback: single character
+      tokens.push(text[i]);
+      i++;
+    }
+  }
+  return tokens;
+}
+
+function renderTokens() {
+  const text = document.getElementById('tokInput').value;
+  const tokens = tokenize(text);
+
+  const html = tokens.map((t, i) => {
+    const display = t.replace(/\n/g, '↵').replace(/ /g, '·');
+    const color = TOK_COLORS[i % TOK_COLORS.length];
+    const border = TOK_BORDERS[i % TOK_BORDERS.length];
+    return `<span class="tok-chunk" style="background:${color}; border: 1px solid ${border};" title="token ${i}: '${t.replace(/\n/g, "\\n").replace(/'/g, "\\'")}' (${t.length} chars)">${escapeHTML(display)}</span>`;
+  }).join('');
+
+  document.getElementById('tokOutput').innerHTML = html || '<span style="color: var(--ink-3); font-style: italic;">Type something above…</span>';
+  document.getElementById('tokCount').textContent = tokens.length.toLocaleString();
+  document.getElementById('tokChars').textContent = text.length.toLocaleString();
+  const ratio = tokens.length > 0 ? (text.length / tokens.length).toFixed(2) : '—';
+  document.getElementById('tokRatio').textContent = ratio;
+  // Cost estimate: assume $2.50 per 1M input tokens (rough Claude/GPT-4 input rate)
+  const cents = (tokens.length / 1000000) * 250;
+  document.getElementById('tokCost').innerHTML = cents.toFixed(cents < 0.001 ? 5 : 4) + '<span class="unit">¢</span>';
+}
+function escapeHTML(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+document.getElementById('tokInput').addEventListener('input', renderTokens);
+renderTokens();
+
+
+/* ============================================================
+   NEW: memory hierarchy
+   ============================================================ */
+const MEM_LEVELS = [
+  { name: 'Register',  sub: 'on-die',     size: '< 1 KB',      lat: '0.3 ns',   bar: 100 },
+  { name: 'L1 cache',  sub: 'on-die',     size: '~ 64 KB',     lat: '1 ns',     bar: 92  },
+  { name: 'L2 cache',  sub: 'on-die',     size: '~ 50 MB',     lat: '5 ns',     bar: 78  },
+  { name: 'L3 cache',  sub: 'on-die',     size: '~ 200 MB',    lat: '15 ns',    bar: 65  },
+  { name: 'HBM',       sub: 'on-package', size: '192 GB',      lat: '300 ns',   bar: 48  },
+  { name: 'DRAM',      sub: 'off-chip',   size: '1 TB',        lat: '90 ns',    bar: 58  },
+  { name: 'NVMe SSD',  sub: 'rack',       size: '10 TB',       lat: '50 µs',    bar: 25  },
+  { name: 'Network',   sub: 'cluster',    size: 'PB+',         lat: '10 µs',    bar: 32  },
+];
+function renderMem() {
+  document.getElementById('memWrap').innerHTML = MEM_LEVELS.map(m => `
+    <div class="mem-row">
+      <div class="name">${m.name}<span class="sub">${m.sub}</span></div>
+      <div class="mem-bar"><div class="mem-bar-fill" style="width: ${m.bar}%"></div></div>
+      <div class="size">${m.size}</div>
+      <div class="lat">${m.lat}</div>
+    </div>
+  `).join('');
+}
+renderMem();
+
+
+/* ============================================================
+   NEW: KV cache
+   ============================================================ */
+const KV_CONTEXTS = [
+  { tokens: 512,    label: '512 tokens' },
+  { tokens: 2048,   label: '2,048 tokens' },
+  { tokens: 8192,   label: '8,192 tokens' },
+  { tokens: 32768,  label: '32,768 tokens' },
+  { tokens: 131072, label: '128K tokens' },
+  { tokens: 524288, label: '512K tokens' },
+  { tokens: 2000000,label: '2M tokens' }
+];
+function renderKV() {
+  const idx = parseInt(document.getElementById('kvSlider').value, 10);
+  const ctx = KV_CONTEXTS[idx];
+  document.getElementById('kvCtxLabel').textContent = ctx.label;
+
+  // KV cache size: 2 (K+V) × n_layers × n_heads × head_dim × 2 bytes (FP16) × ctx_len
+  // For ~70B model: 80 layers, 64 heads, 128 head_dim → 2 × 80 × 64 × 128 × 2 = 2.6 MB per token
+  const kvBytesPerToken = 2 * 80 * 64 * 128 * 2;  // ~2.6 MB
+  const kvBytes = kvBytesPerToken * ctx.tokens;
+  const kvGB = kvBytes / 1e9;
+  document.getElementById('kvSize').textContent = kvGB < 1 ? kvGB.toFixed(2) : kvGB.toFixed(1);
+
+  // Attention compute: O(n² × d) per layer
+  // Rough: 4 × n_layers × ctx² × hidden_dim FLOPs
+  const attFlops = 4 * 80 * ctx.tokens * ctx.tokens * 8192;
+  let attLabel;
+  if (attFlops >= 1e15) attLabel = (attFlops / 1e15).toFixed(1) + ' P';
+  else if (attFlops >= 1e12) attLabel = (attFlops / 1e12).toFixed(1) + ' T';
+  else if (attFlops >= 1e9) attLabel = (attFlops / 1e9).toFixed(1) + ' G';
+  else attLabel = (attFlops / 1e6).toFixed(0) + ' M';
+  document.getElementById('kvFlops').textContent = attLabel.split(' ')[0];
+  document.querySelector('#kvFlops').nextElementSibling.textContent = attLabel.split(' ')[1] + 'FLOP';
+  // Just update unit cleanly
+  document.querySelector('#kvFlops').innerHTML = attLabel.split(' ')[0];
+  // Reset unit span via JS reconstruction
+  const flopsCell = document.getElementById('kvFlops').parentNode;
+  flopsCell.innerHTML = attLabel.split(' ')[0] + '<span class="unit">' + (attLabel.split(' ')[1] || '') + 'FLOP</span>';
+
+  // BW to read cache: at 3.35 TB/s (H100), how long to stream it once
+  const bwMs = (kvBytes / 3.35e12) * 1000;
+  document.getElementById('kvBw').textContent = bwMs < 0.1 ? bwMs.toFixed(2) : bwMs.toFixed(1);
+
+  // Batch capacity: H100 has 80 GB; subtract ~30 GB for weights, rest for KV
+  const availableGB = 50;
+  const batch = Math.max(1, Math.floor(availableGB / Math.max(0.5, kvGB)));
+  document.getElementById('kvBatch').textContent = batch >= 1 ? batch.toLocaleString() : '< 1';
+
+  if (ctx.tokens > 100000) {
+    document.getElementById('kvFlopsNote').textContent = 'quadratic cost gets crushing past 100K';
+  } else {
+    document.getElementById('kvFlopsNote').textContent = 'grows quadratically — O(n²)';
+  }
+}
+document.getElementById('kvSlider').addEventListener('input', renderKV);
+renderKV();
+
+
+/* ============================================================
+   NEW: networking bandwidth
+   ============================================================ */
+const NET_LINKS = [
+  { name: 'Home WiFi',           det: '802.11ax · best case',         bw_gbps: 1,       label: '1 Gbps' },
+  { name: '1 GbE ethernet',      det: 'office network',               bw_gbps: 1,       label: '1 Gbps' },
+  { name: '100 GbE',             det: 'cloud backbone',               bw_gbps: 100,     label: '100 Gbps' },
+  { name: 'InfiniBand HDR',      det: 'AI cluster fabric',            bw_gbps: 400,     label: '400 Gbps' },
+  { name: 'InfiniBand NDR',      det: 'next-gen cluster',             bw_gbps: 800,     label: '800 Gbps' },
+  { name: 'PCIe Gen 5 ×16',      det: 'GPU ↔ CPU',                    bw_gbps: 1000,    label: '1 Tbps' },
+  { name: 'NVLink 5',            det: 'GPU ↔ GPU (B200)',             bw_gbps: 14400,   label: '14.4 Tbps' },
+  { name: 'HBM3e on-package',    det: 'GPU ↔ its memory',             bw_gbps: 64000,   label: '64 Tbps' },
+  { name: 'NV-HBI chiplet link', det: 'die ↔ die on B200',           bw_gbps: 80000,   label: '80 Tbps' },
+];
+function renderNet() {
+  const maxBw = Math.max(...NET_LINKS.map(l => l.bw_gbps));
+  document.getElementById('netBars').innerHTML = NET_LINKS.map(l => `
+    <div class="net-bar">
+      <div class="name">${l.name}<div class="det">${l.det}</div></div>
+      <div class="vis"><div class="vis-fill" style="width: ${Math.max(2, (l.bw_gbps / maxBw) * 100)}%"></div></div>
+      <div class="bw">${l.label}</div>
+    </div>
+  `).join('');
+}
+renderNet();
+
+
+/* ============================================================
+   NEW: cost economics
+   ============================================================ */
+const ECON_PARAMS = [
+  { p: 1e9,   label: '1 B (small)' },
+  { p: 7e9,   label: '7 B' },
+  { p: 13e9,  label: '13 B' },
+  { p: 70e9,  label: '70 B' },
+  { p: 175e9, label: '175 B' },
+  { p: 405e9, label: '405 B' },
+  { p: 1e12,  label: '1 T (frontier)' }
+];
+const ECON_TOKENS = [
+  { t: 100e9,  label: '100 B' },
+  { t: 1e12,   label: '1 T' },
+  { t: 5e12,   label: '5 T' },
+  { t: 15e12,  label: '15 T (Llama 3)' },
+  { t: 30e12,  label: '30 T' },
+  { t: 100e12, label: '100 T (everything)' }
+];
+const ECON_GPUS = [
+  { name: 'A100', flops: 0.624e15, watts: 400 },   // FP16
+  { name: 'H100', flops: 2e15,     watts: 700 },   // FP16
+  { name: 'B200', flops: 4.5e15,   watts: 1000 }   // FP16 (~half of FP8 peak)
+];
+const ECON_CLUSTERS = [
+  { n: 100,    label: '100 GPUs' },
+  { n: 1000,   label: '1,000 GPUs' },
+  { n: 10000,  label: '10,000 GPUs' },
+  { n: 100000, label: '100,000 GPUs' },
+  { n: 555000, label: '555,000 (Colossus)' }
+];
+const GPU_HOURLY_RATE = { 'A100': 1.2, 'H100': 2.5, 'B200': 4.0 };
+const GPU_COST = { 'A100': 10000, 'H100': 30000, 'B200': 32000 };
+
+function fmtMoney(d) {
+  if (d >= 1e9) return '$' + (d/1e9).toFixed(1) + ' B';
+  if (d >= 1e6) return '$' + (d/1e6).toFixed(0) + ' M';
+  if (d >= 1e3) return '$' + (d/1e3).toFixed(0) + ' K';
+  return '$' + d.toFixed(0);
+}
+function fmtCompute(f) {
+  if (f >= 1e24) return (f/1e24).toFixed(1) + ' YFLOP';
+  if (f >= 1e21) return (f/1e21).toFixed(1) + ' ZFLOP';
+  if (f >= 1e18) return (f/1e18).toFixed(1) + ' EFLOP';
+  if (f >= 1e15) return (f/1e15).toFixed(1) + ' PFLOP';
+  return (f/1e12).toFixed(1) + ' TFLOP';
+}
+
+function renderEcon() {
+  const p = ECON_PARAMS[+document.getElementById('econParams').value];
+  const t = ECON_TOKENS[+document.getElementById('econTokens').value];
+  const g = ECON_GPUS[+document.getElementById('econGpu').value];
+  const c = ECON_CLUSTERS[+document.getElementById('econCluster').value];
+
+  document.getElementById('econParamsL').textContent = p.label;
+  document.getElementById('econTokensL').textContent = t.label;
+  document.getElementById('econGpuL').textContent = g.name;
+  document.getElementById('econClusterL').textContent = c.label;
+
+  // Rule: training FLOPs ≈ 6 × parameters × tokens (forward + backward + optimizer)
+  const totalFlops = 6 * p.p * t.t;
+  // Total cluster throughput, assume 40% utilization (MFU)
+  const clusterFlops = g.flops * c.n * 0.40;
+  const secondsNeeded = totalFlops / clusterFlops;
+  const daysNeeded = secondsNeeded / 86400;
+
+  // Hardware cost
+  const hwCost = GPU_COST[g.name] * c.n;
+  // Cloud rental cost
+  const cloudHours = (secondsNeeded / 3600);
+  const cloudCost = cloudHours * GPU_HOURLY_RATE[g.name] * c.n;
+  // Energy: PUE 1.3, watts × hours × #GPUs
+  const energyKwh = g.watts / 1000 * cloudHours * c.n * 1.3;
+  const energyGwh = energyKwh / 1e6;
+
+  document.getElementById('econFlops').textContent = fmtCompute(totalFlops);
+  document.getElementById('econTime').textContent = daysNeeded < 1 ? (daysNeeded * 24).toFixed(1) + ' hours' :
+                                                   daysNeeded < 60 ? daysNeeded.toFixed(daysNeeded < 10 ? 1 : 0) + ' days' :
+                                                   (daysNeeded/30).toFixed(1) + ' months';
+  document.getElementById('econHw').textContent = fmtMoney(hwCost);
+  document.getElementById('econEnergy').textContent = energyGwh < 0.001 ? (energyKwh).toFixed(0) + ' kWh' :
+                                                     energyGwh < 1 ? (energyGwh * 1000).toFixed(0) + ' MWh' :
+                                                     energyGwh.toFixed(energyGwh < 10 ? 1 : 0) + ' GWh';
+  document.getElementById('econCost').textContent = fmtMoney(cloudCost);
+}
+['econParams', 'econTokens', 'econGpu', 'econCluster'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderEcon);
+});
+renderEcon();
+
+
+/* ============================================================
+   NEW: gradient descent
+   ============================================================ */
+// Loss function: a banana-shape with one minimum near (1, 1)
+// f(x, y) = (1-x)^2 + 5*(y - x^2)^2  (Rosenbrock, scaled)
+function gdLoss(x, y) {
+  return Math.pow(1 - x, 2) + 5 * Math.pow(y - x*x, 2);
+}
+function gdGrad(x, y) {
+  // ∂f/∂x = -2(1-x) + 5·2(y-x²)·(-2x) = -2(1-x) - 20x(y-x²)
+  // ∂f/∂y = 5·2(y-x²) = 10(y-x²)
+  const dx = -2 * (1 - x) - 20 * x * (y - x * x);
+  const dy = 10 * (y - x * x);
+  return { dx, dy };
+}
+
+const GD_VIEW = { x0: -1.6, x1: 2.0, y0: -1.5, y1: 2.5, w: 480, h: 360 };
+let gdState = { x: -1.2, y: 2.0, vx: 0, vy: 0, steps: 0, path: [] };
+
+function gdToScreen(x, y) {
+  return {
+    sx: ((x - GD_VIEW.x0) / (GD_VIEW.x1 - GD_VIEW.x0)) * GD_VIEW.w,
+    sy: ((GD_VIEW.y1 - y) / (GD_VIEW.y1 - GD_VIEW.y0)) * GD_VIEW.h
+  };
+}
+
+function renderGd() {
+  const svg = document.getElementById('gdSvg');
+  let html = '';
+
+  // Contour map: precompute loss on grid, draw filled rectangles
+  const cols = 60, rows = 45;
+  const cellW = GD_VIEW.w / cols, cellH = GD_VIEW.h / rows;
+  let lossMin = Infinity, lossMax = -Infinity;
+  const grid = [];
+  for (let i = 0; i < rows; i++) {
+    grid[i] = [];
+    for (let j = 0; j < cols; j++) {
+      const x = GD_VIEW.x0 + (j + 0.5) / cols * (GD_VIEW.x1 - GD_VIEW.x0);
+      const y = GD_VIEW.y1 - (i + 0.5) / rows * (GD_VIEW.y1 - GD_VIEW.y0);
+      const L = Math.log(1 + gdLoss(x, y));
+      grid[i][j] = L;
+      if (L < lossMin) lossMin = L;
+      if (L > lossMax) lossMax = L;
+    }
+  }
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      const t = (grid[i][j] - lossMin) / (lossMax - lossMin);
+      // colormap: dark cool (low) → warmer (high)
+      const r = Math.round(20 + t * 80);
+      const g = Math.round(22 + t * 60);
+      const b = Math.round(32 - t * 20);
+      html += `<rect x="${j*cellW}" y="${i*cellH}" width="${cellW+0.5}" height="${cellH+0.5}" fill="rgb(${r},${g},${b})"/>`;
+    }
+  }
+
+  // Contour lines (specific log-loss levels)
+  const levels = [0.5, 1.0, 1.8, 3.0, 5.0];
+  // (Simpler: just draw a few iso-level points)
+  // Skipping for performance — color shading conveys the gradient.
+
+  // Minimum marker (x=1, y=1)
+  const min = gdToScreen(1, 1);
+  html += `<circle cx="${min.sx}" cy="${min.sy}" r="8" fill="none" stroke="#7fc99a" stroke-width="1" stroke-dasharray="2 2"/>`;
+  html += `<circle cx="${min.sx}" cy="${min.sy}" r="3" fill="#7fc99a"/>`;
+  html += `<text x="${min.sx + 12}" y="${min.sy + 4}" font-family="ui-monospace" font-size="10" fill="#7fc99a">min</text>`;
+
+  // Path
+  if (gdState.path.length > 1) {
+    let d = 'M ';
+    gdState.path.forEach((p, i) => {
+      const s = gdToScreen(p.x, p.y);
+      d += `${s.sx},${s.sy} ${i < gdState.path.length - 1 ? 'L ' : ''}`;
+    });
+    html += `<path d="${d}" stroke="#e7a55a" stroke-width="1.2" fill="none" opacity="0.7"/>`;
+    gdState.path.forEach((p, i) => {
+      const s = gdToScreen(p.x, p.y);
+      const op = 0.2 + 0.8 * (i / gdState.path.length);
+      html += `<circle cx="${s.sx}" cy="${s.sy}" r="1.5" fill="#e7a55a" opacity="${op}"/>`;
+    });
+  }
+
+  // Current position (marble)
+  const cur = gdToScreen(gdState.x, gdState.y);
+  html += `<circle cx="${cur.sx}" cy="${cur.sy}" r="7" fill="#e7a55a" stroke="#f1ece2" stroke-width="1.5"/>`;
+
+  svg.setAttribute('viewBox', `0 0 ${GD_VIEW.w} ${GD_VIEW.h}`);
+  svg.innerHTML = html;
+
+  // Readouts
+  document.getElementById('gdLoss').textContent = gdLoss(gdState.x, gdState.y).toFixed(3);
+  document.getElementById('gdSteps').textContent = gdState.steps;
+}
+
+function gdStep() {
+  const lr = +document.getElementById('gdLr').value;
+  const mom = +document.getElementById('gdMom').value;
+  const g = gdGrad(gdState.x, gdState.y);
+  gdState.vx = mom * gdState.vx - lr * g.dx;
+  gdState.vy = mom * gdState.vy - lr * g.dy;
+  gdState.x += gdState.vx;
+  gdState.y += gdState.vy;
+  // clip
+  gdState.x = Math.max(GD_VIEW.x0 + 0.05, Math.min(GD_VIEW.x1 - 0.05, gdState.x));
+  gdState.y = Math.max(GD_VIEW.y0 + 0.05, Math.min(GD_VIEW.y1 - 0.05, gdState.y));
+  gdState.path.push({ x: gdState.x, y: gdState.y });
+  if (gdState.path.length > 200) gdState.path.shift();
+  gdState.steps++;
+  renderGd();
+}
+
+function gdResetState() {
+  // Random start
+  const x = GD_VIEW.x0 + 0.2 + Math.random() * (GD_VIEW.x1 - GD_VIEW.x0 - 0.4);
+  const y = GD_VIEW.y0 + 0.2 + Math.random() * (GD_VIEW.y1 - GD_VIEW.y0 - 0.4);
+  gdState = { x, y, vx: 0, vy: 0, steps: 0, path: [{x, y}] };
+  renderGd();
+}
+document.getElementById('gdStep').addEventListener('click', () => {
+  for (let i = 0; i < 10; i++) gdStep();
+});
+document.getElementById('gdReset').addEventListener('click', gdResetState);
+document.getElementById('gdLr').addEventListener('input', () => {
+  document.getElementById('gdLrLabel').textContent = (+document.getElementById('gdLr').value).toFixed(2);
+});
+document.getElementById('gdMom').addEventListener('input', () => {
+  document.getElementById('gdMomLabel').textContent = (+document.getElementById('gdMom').value).toFixed(2);
+});
+gdResetState();
+
+
+/* ============================================================
+   NEW: scaling laws chart
+   ============================================================ */
+function renderScaling() {
+  const svg = document.getElementById('scalingSvg');
+  const W = 700, H = 360;
+  const padL = 60, padR = 40, padT = 30, padB = 60;
+  const iw = W - padL - padR, ih = H - padT - padB;
+
+  // x: log10(compute) from 1e19 to 1e26 FLOPs
+  const xMin = 19, xMax = 26;
+  // y: log10(loss) — toy values, just for shape
+  const yMin = 0.3, yMax = 1.4;
+
+  const xs = c => padL + (c - xMin) / (xMax - xMin) * iw;
+  const ys = l => padT + (1 - (l - yMin) / (yMax - yMin)) * ih;
+
+  let html = '';
+
+  // grid
+  for (let c = xMin; c <= xMax; c++) {
+    const x = xs(c);
+    html += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>`;
+    const label = '10' + ['¹⁹','²⁰','²¹','²²','²³','²⁴','²⁵','²⁶'][c - xMin];
+    html += `<text x="${x}" y="${H - padB + 18}" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#807a6e" letter-spacing="0.06em">${label}</text>`;
+  }
+  for (let l = 0.4; l <= 1.4; l += 0.2) {
+    const y = ys(l);
+    html += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>`;
+    html += `<text x="${padL - 8}" y="${y + 3}" text-anchor="end" font-family="ui-monospace" font-size="10" fill="#807a6e">${l.toFixed(1)}</text>`;
+  }
+
+  // axis labels
+  html += `<text x="${W - padR}" y="${H - padB + 38}" text-anchor="end" font-family="ui-monospace" font-size="10" fill="#807a6e" letter-spacing="0.1em">COMPUTE (FLOPS) →</text>`;
+  html += `<text x="${padL}" y="${padT - 12}" text-anchor="start" font-family="ui-monospace" font-size="10" fill="#807a6e" letter-spacing="0.1em">↑ LOSS</text>`;
+
+  // axis
+  html += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H - padB}" stroke="rgba(255,255,255,0.16)" stroke-width="0.5"/>`;
+  html += `<line x1="${padL}" y1="${H - padB}" x2="${W - padR}" y2="${H - padB}" stroke="rgba(255,255,255,0.16)" stroke-width="0.5"/>`;
+
+  // Several model sizes — each is a curve that flattens out (overtraining)
+  // L(C, N) = a/N^α + b/D^β + c, where C ~ 6ND, so each N curve in C dies into a plateau
+  const sizes = [
+    { N: 1e9,  color: 'rgba(255,255,255,0.25)', label: '1B' },
+    { N: 7e9,  color: 'rgba(127,201,154,0.5)',  label: '7B' },
+    { N: 70e9, color: 'rgba(109,168,255,0.55)', label: '70B' },
+    { N: 1e12, color: 'rgba(224,125,107,0.5)',  label: '1T' }
+  ];
+  sizes.forEach(s => {
+    let pathD = '';
+    for (let cl = xMin; cl <= xMax; cl += 0.1) {
+      const C = Math.pow(10, cl);
+      const D = C / (6 * s.N);
+      if (D < 1e8) continue;
+      // simplified loss formula
+      const loss = 0.35 + Math.pow(s.N, -0.34) * 8 + Math.pow(D, -0.28) * 7;
+      const x = xs(cl);
+      const y = ys(loss);
+      pathD += (pathD ? ' L ' : 'M ') + `${x},${y}`;
+    }
+    html += `<path d="${pathD}" stroke="${s.color}" stroke-width="1.3" fill="none"/>`;
+    // label at end of curve
+    const lastC = xMax;
+    const lastD = Math.pow(10, lastC) / (6 * s.N);
+    const lastLoss = 0.35 + Math.pow(s.N, -0.34) * 8 + Math.pow(lastD, -0.28) * 7;
+    html += `<text x="${xs(lastC) + 6}" y="${ys(lastLoss) + 4}" font-family="ui-monospace" font-size="10" fill="${s.color}">${s.label}</text>`;
+  });
+
+  // Compute-optimal (Chinchilla) curve: optimal N for each C
+  let optD = '';
+  for (let cl = xMin; cl <= xMax; cl += 0.1) {
+    const C = Math.pow(10, cl);
+    // Chinchilla: N_opt ∝ C^0.5, D = 20 × N_opt
+    const N_opt = Math.pow(C / 6 / 20, 0.5);
+    const D_opt = 20 * N_opt;
+    const loss = 0.35 + Math.pow(N_opt, -0.34) * 8 + Math.pow(D_opt, -0.28) * 7;
+    const x = xs(cl);
+    const y = ys(loss);
+    optD += (optD ? ' L ' : 'M ') + `${x},${y}`;
+  }
+  html += `<path d="${optD}" stroke="#e7a55a" stroke-width="2" fill="none" stroke-dasharray="6 3"/>`;
+  html += `<text x="${xs(xMax) - 4}" y="${padT + 16}" text-anchor="end" font-family="ui-monospace" font-size="11" fill="#e7a55a" letter-spacing="0.06em">COMPUTE-OPTIMAL (Chinchilla)</text>`;
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = html;
+}
+renderScaling();
+
+
+/* ============================================================
+   NEW: mixture of experts
+   ============================================================ */
+// Route patterns: which 2 of 8 experts each token activates
+const MOE_ROUTES = [
+  [0, 3],  // "The"     → experts 0, 3
+  [1, 4],  // "cat"     → experts 1, 4
+  [2, 5],  // "sat"     → experts 2, 5
+  [1, 6],  // "quietly" → experts 1, 6
+  [4, 7],  // "on"      → experts 4, 7
+  [3, 5]   // "matrix"  → experts 3, 5
+];
+let moeActiveTok = 0;
+
+function renderMoE() {
+  const svg = document.getElementById('moeSvg');
+  const W = 600, H = 320;
+  let html = '';
+
+  // Input token at top
+  const route = MOE_ROUTES[moeActiveTok];
+  const tokenWords = ['The', 'cat', 'sat', 'quietly', 'on', 'matrix'];
+  html += `<rect x="260" y="20" width="80" height="36" rx="6" fill="rgba(231,165,90,0.16)" stroke="#e7a55a" stroke-width="1.5"/>`;
+  html += `<text x="300" y="42" text-anchor="middle" font-family="ui-monospace" font-size="13" fill="#e7a55a">"${tokenWords[moeActiveTok]}"</text>`;
+
+  // Router
+  html += `<rect x="240" y="86" width="120" height="32" rx="4" fill="#1c2128" stroke="rgba(255,255,255,0.16)"/>`;
+  html += `<text x="300" y="106" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#bfb8a8">ROUTER</text>`;
+
+  // 8 experts in 2 rows
+  const expertW = 60, expertH = 36, gap = 12;
+  const totalW = 8 * expertW + 7 * gap;
+  const startX = (W - totalW) / 2;
+  const expertY = 180;
+
+  for (let i = 0; i < 8; i++) {
+    const ex = startX + i * (expertW + gap);
+    const active = route.includes(i);
+    html += `<g class="moe-expert${active ? ' active' : ''}">
+      <rect class="body" x="${ex}" y="${expertY}" width="${expertW}" height="${expertH}" rx="4"/>
+      <text x="${ex + expertW/2}" y="${expertY + 22}">E${i}</text>
+    </g>`;
+    // Route line from router to this expert
+    const routeClass = active ? 'moe-route active' : 'moe-route';
+    html += `<path class="${routeClass}" d="M 300 118 Q 300 150 ${ex + expertW/2} ${expertY}"/>`;
+  }
+
+  // Output below experts
+  html += `<rect x="260" y="260" width="80" height="36" rx="6" fill="#1c2128" stroke="rgba(255,255,255,0.16)"/>`;
+  html += `<text x="300" y="282" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#bfb8a8">output</text>`;
+  // Lines from active experts to output
+  route.forEach(idx => {
+    const ex = startX + idx * (expertW + gap) + expertW/2;
+    html += `<path class="moe-route active" d="M ${ex} ${expertY + expertH} Q ${ex} 245 300 260"/>`;
+  });
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = html;
+}
+document.querySelectorAll('.moe-tok-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.moe-tok-btn').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    moeActiveTok = parseInt(b.dataset.tok, 10);
+    renderMoE();
+  });
+});
+renderMoE();
+
+
+/* ============================================================
+   NEW: sampling strategies extension to softmax
+   ============================================================ */
+let samplingStrategy = 'temp';
+let samplingParam = 3;
+
+function applySamplingStrategy(probs) {
+  if (samplingStrategy === 'temp') return probs;
+
+  if (samplingStrategy === 'topk') {
+    const k = samplingParam;
+    // Get indices of top-k
+    const indexed = probs.map((p, i) => ({ p, i })).sort((a, b) => b.p - a.p);
+    const topSet = new Set(indexed.slice(0, k).map(x => x.i));
+    // Zero out others, renormalize
+    let masked = probs.map((p, i) => topSet.has(i) ? p : 0);
+    const sum = masked.reduce((a, b) => a + b, 0);
+    return masked.map(p => sum > 0 ? p / sum : 0);
+  }
+
+  if (samplingStrategy === 'topp') {
+    const p_thresh = samplingParam / 10; // slider 1-10 → 0.1-1.0
+    const indexed = probs.map((p, i) => ({ p, i })).sort((a, b) => b.p - a.p);
+    let cumSum = 0;
+    const keepSet = new Set();
+    for (const { p, i } of indexed) {
+      keepSet.add(i);
+      cumSum += p;
+      if (cumSum >= p_thresh) break;
+    }
+    let masked = probs.map((p, i) => keepSet.has(i) ? p : 0);
+    const sum = masked.reduce((a, b) => a + b, 0);
+    return masked.map(p => sum > 0 ? p / sum : 0);
+  }
+
+  return probs;
+}
+
+// Patch renderSoftmax to apply sampling strategy
+const originalRenderSoftmax = renderSoftmax;
+renderSoftmax = function () {
+  const T = parseFloat(document.getElementById('temp').value);
+  document.getElementById('tempVal').textContent = T.toFixed(2);
+
+  const logits = TOKENS.map(t => t.logit);
+  let probs = softmax(logits, T);
+  probs = applySamplingStrategy(probs);
+
+  document.getElementById('logitList').innerHTML = TOKENS.map((t, i) => `
+    <div class="logit-row">
+      <span class="token">"${t.token}"</span>
+      <input type="range" min="-3" max="5" step="0.1" value="${t.logit}" data-i="${i}"/>
+      <span class="val" id="lv${i}">${t.logit.toFixed(1)}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('probList').innerHTML = TOKENS.map((t, i) => `
+    <div class="prob-row" style="${probs[i] === 0 ? 'opacity: 0.3;' : ''}">
+      <span class="token">"${t.token}"</span>
+      <span class="bar-wrap"><span class="bar" style="width:${(probs[i] * 100).toFixed(1)}%"></span></span>
+      <span class="val">${(probs[i] * 100).toFixed(1)}%</span>
+    </div>
+  `).join('');
+
+  document.querySelectorAll('#logitList input').forEach(input => {
+    input.addEventListener('input', e => {
+      const i = parseInt(e.target.dataset.i, 10);
+      TOKENS[i].logit = parseFloat(e.target.value);
+      renderSoftmax();
+    });
+  });
+};
+
+document.querySelectorAll('.sample-strat').forEach(s => {
+  s.addEventListener('click', () => {
+    document.querySelectorAll('.sample-strat').forEach(x => x.classList.remove('on'));
+    s.classList.add('on');
+    samplingStrategy = s.dataset.strat;
+
+    const paramDiv = document.getElementById('sampleParam');
+    if (samplingStrategy === 'temp') {
+      paramDiv.style.display = 'none';
+    } else {
+      paramDiv.style.display = 'grid';
+      const slider = document.getElementById('sampleSlider');
+      if (samplingStrategy === 'topk') {
+        document.getElementById('sampleParamLabel').textContent = 'K =';
+        slider.min = 1; slider.max = 6; slider.step = 1; slider.value = 3;
+        samplingParam = 3;
+      } else if (samplingStrategy === 'topp') {
+        document.getElementById('sampleParamLabel').textContent = 'P =';
+        slider.min = 1; slider.max = 10; slider.step = 1; slider.value = 9;
+        samplingParam = 9;
+      }
+      document.getElementById('sampleParamVal').textContent =
+        samplingStrategy === 'topp' ? (samplingParam / 10).toFixed(1) : samplingParam;
+    }
+    renderSoftmax();
+  });
+});
+
+document.getElementById('sampleSlider').addEventListener('input', e => {
+  samplingParam = +e.target.value;
+  document.getElementById('sampleParamVal').textContent =
+    samplingStrategy === 'topp' ? (samplingParam / 10).toFixed(1) : samplingParam;
+  renderSoftmax();
+});
+renderSoftmax();
+
+/* ============================================================
+   Contact card toggle
+   ============================================================ */
+(function() {
+  const btn = document.getElementById('contactBtn');
+  const card = document.getElementById('contactCard');
+  if (!btn || !card) return;
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = card.classList.toggle('show');
+    btn.classList.toggle('on', open);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!card.contains(e.target) && e.target !== btn) {
+      card.classList.remove('show');
+      btn.classList.remove('on');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      card.classList.remove('show');
+      btn.classList.remove('on');
+    }
+  });
+})();
 </script>
 
 </body>
