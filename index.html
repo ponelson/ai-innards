@@ -1649,6 +1649,284 @@ footer .sig {
 }
 .reveal.in { opacity: 1; transform: none; }
 
+/* ============================================================
+   ADDED: inline term tooltips  (Register / L1 / logit / min …)
+   ============================================================ */
+.gterm {
+  border-bottom: 1px dotted var(--line-bright);
+  cursor: help;
+  position: relative;
+  color: inherit;
+}
+.gterm::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0; bottom: 145%;
+  width: max-content; max-width: 300px;
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12.5px; line-height: 1.55;
+  letter-spacing: 0; text-transform: none;
+  box-shadow: 0 18px 40px -18px rgba(0,0,0,0.85);
+  opacity: 0; transform: translateY(5px);
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  z-index: 80;
+}
+.gterm::before {
+  content: "";
+  position: absolute;
+  left: 14px; bottom: 145%;
+  width: 8px; height: 8px;
+  background: var(--surface-2);
+  border-right: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  transform: translateY(9px) rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.16s ease;
+  z-index: 81;
+  pointer-events: none;
+}
+.gterm:hover::after, .gterm:focus-visible::after,
+.gterm:hover::before, .gterm:focus-visible::before { opacity: 1; }
+.gterm:hover::after, .gterm:focus-visible::after { transform: translateY(0); }
+/* tooltips that would clip the right edge */
+.gterm.tip-right::after { left: auto; right: 0; }
+.gterm.tip-right::before { left: auto; right: 14px; }
+
+/* ============================================================
+   ADDED: sticky side navigation (scroll-spy)
+   ============================================================ */
+.side-nav {
+  position: fixed;
+  top: 50%; left: 24px;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex; flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  max-height: 86vh;
+  overflow: hidden;
+}
+.side-nav.show { opacity: 1; pointer-events: auto; }
+.side-nav a {
+  display: flex; align-items: center; gap: 10px;
+  border: none;
+  padding: 3px 6px;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 10.5px; letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+.side-nav a .rail {
+  width: 16px; height: 1px;
+  background: currentColor;
+  transition: width 0.2s ease, background 0.2s ease;
+  flex: none;
+}
+.side-nav a .sn-label {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+.side-nav:hover a .sn-label { opacity: 1; transform: none; }
+.side-nav a:hover { color: var(--ink-2); }
+.side-nav a.active { color: var(--accent); }
+.side-nav a.active .rail { width: 26px; background: var(--accent); }
+.side-nav a.active .sn-label { opacity: 1; transform: none; color: var(--accent); }
+@media (max-width: 1320px) { .side-nav { display: none; } }
+
+/* ============================================================
+   ADDED: interactive table of contents (hero)
+   ============================================================ */
+.hero-toc {
+  margin-top: 26px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px 26px;
+}
+.hero-toc a {
+  border: none;
+  display: flex; align-items: baseline; gap: 9px;
+  padding: 7px 0;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.18s ease;
+  border-bottom: 1px solid transparent;
+}
+.hero-toc a:hover { color: var(--accent); }
+.hero-toc a .toc-num {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.08em;
+  color: var(--ink-4);
+  min-width: 30px;
+  transition: color 0.18s ease;
+}
+.hero-toc a:hover .toc-num { color: var(--accent); }
+.hero-toc a .toc-name {
+  font-family: var(--font-body);
+  font-size: 13.5px; letter-spacing: -0.01em;
+}
+@media (max-width: 900px) { .hero-toc { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .hero-toc { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   ADDED: legend chips + minerals grid for new sections
+   ============================================================ */
+.chart-legend {
+  display: flex; flex-wrap: wrap; gap: 18px;
+  margin: 0 0 16px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+.chart-legend .lg { display: inline-flex; align-items: center; gap: 8px; }
+.chart-legend .swatch {
+  width: 22px; height: 6px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  flex: none;
+}
+.chart-legend .swatch.amber { background: var(--accent); width: 10px; }
+.chart-legend .swatch.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+.mem-row .name .gterm { border-bottom-color: var(--line-strong); }
+
+/* Grid section: fact cards */
+.fact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 4px;
+}
+.fact-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+.fact-card .fc-v {
+  font-family: var(--font-display);
+  font-size: 34px; line-height: 1; letter-spacing: -0.02em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.fact-card .fc-v .u { font-size: 16px; color: var(--ink-3); margin-left: 3px; letter-spacing: 0; }
+.fact-card .fc-k { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+.fact-card .fc-note { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; margin: 0; }
+
+/* Grid section: region / AZ schematic */
+.az-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 4px; }
+.az-region {
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.az-region .az-title {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.az-zones { display: flex; flex-direction: column; gap: 10px; }
+.az-zone {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 12px 14px;
+}
+.az-zone.single { border-left-color: var(--accent); }
+.az-zone .z-name { font-family: var(--font-mono); font-size: 12px; color: var(--ink); }
+.az-zone .z-sub { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+@media (max-width: 720px) { .az-wrap { grid-template-columns: 1fr; } }
+
+/* Minerals table */
+.min-table { display: grid; gap: 6px; margin-top: 4px; }
+.min-row {
+  display: grid; grid-template-columns: 130px 1fr; gap: 16px;
+  align-items: start;
+  padding: 14px 18px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.min-row .m-el { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+.min-row .m-el .m-sym { color: var(--ink-3); font-size: 11px; margin-left: 6px; }
+.min-row .m-use { font-size: 13px; color: var(--ink-2); line-height: 1.55; }
+@media (max-width: 600px) { .min-row { grid-template-columns: 1fr; gap: 6px; } }
+
+/* ============================================================
+   ADDED: "From scratch" build section
+   ============================================================ */
+.path-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.path-tab {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em;
+  padding: 9px 16px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line-strong);
+  color: var(--ink-2); cursor: pointer; transition: all 0.18s ease;
+}
+.path-tab:hover { color: var(--ink); border-color: var(--line-bright); }
+.path-tab.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+
+.path-flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 22px; }
+.flow-step {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 14px 12px;
+  position: relative;
+}
+.flow-step .fs-n { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); letter-spacing: 0.1em; }
+.flow-step .fs-t { font-family: var(--font-display); font-size: 16px; margin: 6px 0 6px; letter-spacing: -0.01em; color: var(--ink); }
+.flow-step .fs-d { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+.flow-step .fs-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%); color: var(--ink-4); z-index: 2; font-size: 12px; }
+@media (max-width: 860px) { .path-flow { grid-template-columns: repeat(2, 1fr); } .flow-step .fs-arrow { display: none; } }
+@media (max-width: 480px) { .path-flow { grid-template-columns: 1fr; } }
+
+.build-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 4px; }
+.build-col {
+  background: var(--bg); border: 1px solid var(--line-strong);
+  border-radius: var(--radius); padding: 22px;
+  display: flex; flex-direction: column;
+}
+.build-col h4 {
+  font-family: var(--font-display); font-weight: 500; font-size: 19px;
+  margin: 0 0 4px; letter-spacing: -0.015em; color: var(--ink);
+}
+.build-col .bc-tag { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.build-col ul { list-style: none; margin: 0 0 14px; padding: 0; }
+.build-col li { font-size: 13px; color: var(--ink-2); line-height: 1.5; padding: 5px 0 5px 16px; position: relative; }
+.build-col li::before { content: "›"; position: absolute; left: 0; color: var(--ink-4); }
+.build-col .bc-foot { margin-top: auto; font-size: 12px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 12px; line-height: 1.5; }
+.build-col .bc-foot b { color: var(--ink); font-weight: 500; }
+@media (max-width: 820px) { .build-cols { grid-template-columns: 1fr; } }
+
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 4px; }
+.tool-cat {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 18px;
+}
+.tool-cat .tc-k { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+.tool-cat .tc-list { font-size: 13px; color: var(--ink); line-height: 1.7; }
+.tool-cat .tc-list span { color: var(--ink-3); }
+
+/* ============================================================
+   ADDED: respect reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.05s !important; }
+}
+
 </style>
 </head>
 
@@ -1666,6 +1944,9 @@ footer .sig {
     <a href="https://www.linkedin.com/in/ponelson/" target="_blank" rel="noopener">linkedin.com/in/ponelson</a>
   </div>
 </div>
+
+<!-- Sticky scroll-spy navigation (populated by JS from the sections) -->
+<nav class="side-nav" id="sideNav" aria-label="Section navigation"></nav>
 
 <main>
 
@@ -1695,15 +1976,13 @@ footer .sig {
     </div>
 
     <div class="container" style="padding: 0;">
-      <div class="hero-meta">
-        <span>I. Map</span>
-        <span>IV. Operation</span>
-        <span>V. Attention</span>
-        <span>VII. Embeddings</span>
-        <span>X. Machine</span>
-        <span>XII. Training</span>
-        <span>XIII. Output</span>
-      </div>
+      <nav class="hero-toc" id="heroToc" aria-label="Table of contents">
+        <!-- built from the sections themselves by JS; static fallback below -->
+        <a href="#map"><span class="toc-num">I</span><span class="toc-name">The Map</span></a>
+        <a href="#fp"><span class="toc-num">II</span><span class="toc-name">Numbers</span></a>
+        <a href="#params"><span class="toc-num">III</span><span class="toc-name">Parameters</span></a>
+        <a href="#operation"><span class="toc-num">IV</span><span class="toc-name">The Operation</span></a>
+      </nav>
     </div>
   </div>
 
@@ -2465,6 +2744,9 @@ footer .sig {
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
         That "4NP" process name is mostly marketing — actual transistor features are around <span class="amber mono">20 nm</span>, which is still only ~100 silicon atoms across. A silicon atom is <span class="amber mono">0.2 nm</span>. There's not much room left to shrink before quantum effects make transistors stop working as switches.
       </p>
+      <p class="faint" style="margin-top: 14px; font-size: 12px; line-height: 1.6;">
+        The B200 shown here is the reference point for this guide. NVIDIA now ships on a roughly annual cadence: <span class="muted">Blackwell Ultra (B300 / GB300)</span> arrived in late 2025 with 288 GB of HBM3e, and <span class="muted">Vera Rubin</span> — HBM4, ~13 TB/s, on a 3 nm process — is due in the second half of 2026, with Rubin Ultra (2027) and Feynman (2028) already on the map. The numbers move, the shapes don't.
+      </p>
     </div>
 
     <!-- DEMO 09: CLUSTER SCALE -->
@@ -2526,7 +2808,7 @@ footer .sig {
       <div class="ladder" id="energyLadder"></div>
 
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
-        Global data centers used roughly <span class="amber mono">460 TWh</span> in 2025 — about 1.8% of all electricity — and the IEA expects that to nearly double by 2030, with AI as the driver. Whether that's worth it depends on whether the things AI ends up doing turn out to be worth the joules. There's no consensus on that yet, even inside the industry.
+        Global data centers used roughly <span class="amber mono">415 TWh</span> in 2024 and about <span class="amber mono">485 TWh</span> in 2025 — around 1.5% of all electricity. The IEA's base case has that roughly doubling to <span class="amber mono">~945 TWh</span> by 2030 (near 3% of world demand), with AI-focused capacity tripling and doing most of the pushing. Whether that's worth it depends on whether the things AI ends up doing turn out to be worth the joules. There's no consensus on that yet, even inside the industry.
       </p>
     </div>
   </div>
@@ -2534,11 +2816,160 @@ footer .sig {
 
 
 <!-- =====================================================
-     XI. THE STACK — memory, KV cache, networking, cost
+     XI. THE GRID — power, geography, materials
+     ===================================================== -->
+<section class="reveal" id="grid">
+  <div class="container">
+    <div class="eyebrow">XI · The Grid</div>
+    <h2 class="serif">The bottleneck isn't chips. <span class="italic amber">It's power.</span></h2>
+    <p class="lead narrow">You can buy the GPUs. Getting a gigawatt of electricity to them — reliably, on a schedule — is now the hard part. The AI race has quietly become an energy-and-infrastructure race, decided by grid queues, transformers, geography, and the metals underneath all of it.</p>
+
+    <!-- DEMO 22: THE POWER WALL -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The power wall</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">What it actually takes to plug a large new load into the grid, circa 2026.</p>
+        </div>
+        <div class="label"><span class="num">22</span>GRID</div>
+      </div>
+
+      <div class="fact-grid">
+        <div class="fact-card">
+          <div class="fc-k">US interconnection queue</div>
+          <div class="fc-v">2,000<span class="u">+ GW</span></div>
+          <p class="fc-note">Generation and storage waiting to connect to the US grid at the end of 2025 — roughly double the entire existing US power fleet. Historically only ~13% of queued capacity ever gets built.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Time to energize</div>
+          <div class="fc-v">4–8<span class="u"> yrs</span></div>
+          <p class="fc-note">From interconnection application to power flowing. In PJM — the grid serving the data-center belt — the average has climbed from under 2 years in 2008 to over 8 years today.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Large transformer lead time</div>
+          <div class="fc-v">2–4<span class="u"> yrs</span></div>
+          <p class="fc-note">The big steel-and-copper units that step voltage up and down. Lead times roughly tripled since 2020; the specialty grain-oriented electrical steel they need is itself a chokepoint.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Capital per gigawatt</div>
+          <div class="fc-v">~$29<span class="u"> B</span></div>
+          <p class="fc-note">All-in facility cost for a gigawatt of AI data center — buildings, power, cooling, networking, and the GPUs themselves. A single campus can now rival a nuclear plant in cost.</p>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        For decades, siting a data center was about land, fiber, and tax breaks. Now the first question is: can the grid even give you the power, and when? Load is growing faster than transmission can be permitted and built, so power availability has become the primary screen for a serious project — and the reason developers increasingly bring their own generation instead of waiting in line.
+      </p>
+    </div>
+
+    <!-- DEMO 23: GET TO A GIGAWATT -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>How to get to a gigawatt</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">If the grid can't hand you a gigawatt on your timeline, you make your own. Pick a strategy.</p>
+        </div>
+        <div class="label"><span class="num">23</span>POWER</div>
+      </div>
+
+      <div class="path-tabs" id="powTabs">
+        <button class="path-tab on" data-pow="grid">Grid connection</button>
+        <button class="path-tab" data-pow="gas">Behind-the-meter gas</button>
+        <button class="path-tab" data-pow="nuclear">Nuclear / SMR</button>
+        <button class="path-tab" data-pow="solar">Solar + storage</button>
+      </div>
+
+      <div class="scale-stats" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="scale-stat">
+          <div class="k">Time to power</div>
+          <div class="v amber" id="powTime">4–8 years</div>
+          <div class="note" id="powTimeNote">interconnection queue + transmission upgrades</div>
+        </div>
+        <div class="scale-stat">
+          <div class="k">Firmness</div>
+          <div class="v" id="powFirm">High</div>
+          <div class="note" id="powFirmNote">grid-backed, 24/7 — if you can get the connection</div>
+        </div>
+        <div class="scale-stat">
+          <div class="k">The catch</div>
+          <div class="v" style="font-size: 20px;" id="powCatch">The queue</div>
+          <div class="note" id="powCatchNote">years of waiting; upgrade costs you may have to share</div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;" id="powBody">
+        The default, and the slowest. You apply to the regional grid operator, wait through impact studies and transmission upgrades, and hope your project doesn't get stuck behind thousands of others. Fine for an existing site with power already contracted; increasingly untenable for a new gigawatt-scale build.
+      </p>
+    </div>
+
+    <!-- DEMO 24: REGIONS & AVAILABILITY ZONES -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Regions, zones, and one giant building</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Two opposite geometries: cloud spreads out for safety; AI training packs into one place for speed.</p>
+        </div>
+        <div class="label"><span class="num">24</span>GEOGRAPHY</div>
+      </div>
+
+      <div class="az-wrap">
+        <div class="az-region">
+          <div class="az-title"><span>Cloud region · <span class="mono" style="color:var(--accent-2);">us-east-1</span></span><span class="mono" style="font-size:10px;">SPREAD OUT</span></div>
+          <div class="az-zones">
+            <div class="az-zone"><div class="z-name">Availability Zone A</div><div class="z-sub">1+ data centers · own power, cooling, network</div></div>
+            <div class="az-zone"><div class="z-name">Availability Zone B</div><div class="z-sub">miles away · independent failure domain</div></div>
+            <div class="az-zone"><div class="z-name">Availability Zone C</div><div class="z-sub">low-latency links between them (&lt;1–2 ms)</div></div>
+          </div>
+          <p class="fc-note" style="margin-top: 14px;">A <b style="color:var(--ink);">region</b> is a geographic area; the isolated data centers inside it are <b style="color:var(--ink);">availability zones</b>. Spread your app across several so a flood, fire, or grid fault takes out one, not all. This is how ordinary cloud stays up.</p>
+        </div>
+        <div class="az-region">
+          <div class="az-title"><span>AI training campus · <span class="mono" style="color:var(--accent);">single site</span></span><span class="mono" style="font-size:10px;">PACKED IN</span></div>
+          <div class="az-zones">
+            <div class="az-zone single"><div class="z-name">One coherent cluster</div><div class="z-sub">100,000s of GPUs, one building complex</div></div>
+            <div class="az-zone single"><div class="z-name">One NVLink / InfiniBand fabric</div><div class="z-sub">every GPU a few microseconds from every other</div></div>
+            <div class="az-zone single"><div class="z-name">One dedicated power plant</div><div class="z-sub">gigawatt-scale, often on-site generation</div></div>
+          </div>
+          <p class="fc-note" style="margin-top: 14px;">Frontier training wants the <b style="color:var(--ink);">opposite</b> of redundancy: every GPU as close as physically possible, because an all-reduce after every batch punishes distance. So the biggest clusters are single mega-sites — xAI's Colossus in Memphis, OpenAI's Stargate in Abilene — not spread across zones.</p>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Google is the exception that proves the rule: it trains across multiple data centers stitched into one logical machine over its own fiber. For everyone else, physics still favors the single giant room — which is exactly why the power problem lands all in one place.
+      </p>
+    </div>
+
+    <!-- DEMO 25: CRITICAL MINERALS -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The materials underneath</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Chase the bottleneck far enough and it stops being silicon and becomes mining.</p>
+        </div>
+        <div class="label"><span class="num">25</span>MINERALS</div>
+      </div>
+
+      <div class="min-table">
+        <div class="min-row"><div class="m-el">Copper<span class="m-sym">Cu</span></div><div class="m-use">Everything electrical: busbars, cabling, transformer and motor windings. The highest-volume metal in the buildout — S&amp;P projects world demand rising from ~28 to ~42 million tonnes a year by 2040, a "copper supercycle" that data centers help drive.</div></div>
+        <div class="min-row"><div class="m-el">Gallium<span class="m-sym">Ga</span></div><div class="m-use">Power electronics (GaN) that convert and regulate the huge currents feeding racks efficiently. Low-volume but strategically fragile — supply is concentrated in China, which has used export controls as leverage.</div></div>
+        <div class="min-row"><div class="m-el">Rare earths<span class="m-sym">Nd, Dy…</span></div><div class="m-use">Neodymium and friends make the permanent magnets in fans, pumps, motors, and generators — including the turbines spun up to power these sites. Also China-dominated and export-sensitive.</div></div>
+        <div class="min-row"><div class="m-el">Electrical steel<span class="m-sym">GOES</span></div><div class="m-use">Grain-oriented silicon steel is the core of every transformer. A narrow global manufacturing base makes it a direct cap on how fast grid and site power can be built.</div></div>
+        <div class="min-row"><div class="m-el">Aluminum &amp; more<span class="m-sym">Al, Au, Ag</span></div><div class="m-use">Aluminum for structure and long-haul transmission lines; gold and silver for the reliable electrical contacts inside connectors and boards. Small quantities, non-negotiable reliability.</div></div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        This is the cascade the headlines skip. A better model needs more compute; more compute needs more power; more power needs transformers, turbines, and transmission; and those need copper, electrical steel, gallium, and rare earths — dug out of the ground on mining timelines, not chip timelines. The furthest-upstream constraint on artificial intelligence is, oddly, geology.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     XII. THE STACK — memory, KV cache, networking, cost
      ===================================================== -->
 <section class="reveal" id="stack">
   <div class="container">
-    <div class="eyebrow">XI · The Stack</div>
+    <div class="eyebrow">XII · The Stack</div>
     <h2 class="serif">The constraints that <span class="italic amber">actually shape AI.</span></h2>
     <p class="lead narrow">Compute is what gets press, but compute isn't the bottleneck most of the time. Memory bandwidth is. Interconnect bandwidth is. Where the data lives, and how fast you can move it, decides what's possible.</p>
 
@@ -2547,15 +2978,20 @@ footer .sig {
       <div class="demo-header">
         <div>
           <h3>The memory hierarchy</h3>
-          <p style="margin: 6px 0 0; font-size: 13.5px;">Latency grows by 10–1000× at every step. The art of fast inference is keeping the data you need close to where you're computing.</p>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Every step down the ladder trades speed for size. The art of fast inference is keeping the data you need close to where you're computing. Hover any name for what it is.</p>
         </div>
         <div class="label"><span class="num">15</span>MEMORY</div>
+      </div>
+
+      <div class="chart-legend">
+        <span class="lg"><span class="swatch"></span>bar length = relative speed (log scale) — longer means faster and closer to the core</span>
+        <span class="lg"><span class="swatch amber"></span>amber number = access latency (the wait for one value)</span>
       </div>
 
       <div class="mem-wrap" id="memWrap"></div>
 
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
-        A B200 has 192 GB of HBM right next to the dies, but it's still about 30× slower than the on-chip caches. This is why modern LLM serving is often described as "memory-bound" — the GPU finishes its math waiting for the next weights to arrive from HBM.
+        So the bar and the number are two views of the same fact: a long bar is a short wait. Register to SSD spans about six orders of magnitude — a register answers in 0.3 ns, an SSD in ~50,000 ns. Two orderings look wrong but aren't: host <span class="gterm" tabindex="0" data-tip="HBM optimizes for bandwidth, not latency. A single random access to HBM waits longer than one to a CPU's local DDR — but HBM serves thousands of accesses in parallel at 8 TB/s, which is what a GPU actually needs.">DRAM has lower latency than HBM</span>, and the <span class="gterm" tabindex="0" data-tip="A one-way RDMA read across InfiniBand is a few microseconds; a local NVMe read is tens of microseconds. Reaching a neighbor's memory over the fabric can be faster than reaching your own disk.">cluster network beats the local SSD</span>. The blue-to-amber shading inside each bar is decorative — a bar carries one value, its length. This latency gap is why LLM serving is called "memory-bound": the GPU often finishes its math waiting on the next weights to arrive from HBM.
       </p>
     </div>
 
@@ -2612,9 +3048,13 @@ footer .sig {
       <div class="demo-header">
         <div>
           <h3>Bandwidth, on a single chart</h3>
-          <p style="margin: 6px 0 0; font-size: 13.5px;">From the slowest reasonable network to the fastest interconnect on a GPU package, ten orders of magnitude. Bar lengths are linear.</p>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">From the slowest reasonable network to the fastest interconnect on a GPU package. Hover any name for what it is.</p>
         </div>
         <div class="label"><span class="num">17</span>NETWORK</div>
+      </div>
+
+      <div class="chart-legend">
+        <span class="lg"><span class="swatch"></span>bar length = data moved per second, drawn linearly (each bar as a fraction of the fastest)</span>
       </div>
 
       <div class="net-wrap">
@@ -2622,7 +3062,7 @@ footer .sig {
       </div>
 
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
-        Training a frontier model means doing an all-reduce — summing gradients across every GPU in the cluster — after every batch. With 100K+ GPUs, the network is usually the bottleneck, not the chips. NVLink and InfiniBand are why custom-built clusters beat the public cloud for training.
+        One thing to notice: unlike the memory chart above (log scale), these bars are linear, so the top few links dwarf everything below them — home WiFi is a sliver because on-package memory is literally 80,000× faster. Same decorative blue-to-amber shading; the number is the bar's length. And this is why the network matters: training a frontier model means an all-reduce — summing gradients across every GPU in the cluster — after every batch. With 100K+ GPUs, the network is usually the bottleneck, not the chips. NVLink and InfiniBand are why custom-built clusters beat the public cloud for training.
       </p>
     </div>
 
@@ -2680,16 +3120,25 @@ footer .sig {
      ===================================================== -->
 <section class="reveal" id="training">
   <div class="container">
-    <div class="eyebrow">XII · Training</div>
+    <div class="eyebrow">XIII · Training</div>
     <h2 class="serif">How the weights <span class="italic amber">got there.</span></h2>
     <p class="lead narrow">A model starts with random numbers. Training is the process of nudging every one of those billions of numbers in the direction that makes the loss go down. Repeat for months. Across the cluster you just costed.</p>
+
+    <div class="demo" style="background: transparent; border: none; padding: 0 0 4px;">
+      <p class="muted" style="font-size: 14.5px; line-height: 1.7; max-width: 68ch;">
+        The engine that does the nudging is <span class="amber">gradient descent</span>. Picture the model's error as a landscape: every possible setting of the weights is a point on the ground, and the height at that point is how wrong the model is. You want the lowest valley. You can't see the whole map — there are billions of dimensions — but at wherever you're standing you can feel which way is downhill. That downhill direction is the <span class="gterm" tabindex="0" data-tip="The gradient is the slope of the loss with respect to every weight at once — the direction that increases error fastest. Descent means stepping the opposite way, downhill. Computed for the whole model by backpropagation.">gradient</span>. Take a step that way, feel again, step again. That loop, repeated trillions of times, is how every modern model learns.
+      </p>
+      <p class="muted" style="font-size: 14.5px; line-height: 1.7; max-width: 68ch;">
+        It matters because it is the <span class="italic" style="color:var(--ink);">only</span> known way to fit a model with hundreds of billions of parameters. Nobody hand-sets those numbers; there are far too many. Gradient descent is what turns raw compute and data into a working model — the reason more GPUs and more tokens buy you a better model at all. The method itself is old: the mathematician Augustin-Louis Cauchy wrote it down in <span class="mono amber">1847</span>. What made it work for neural networks was <span class="gterm" tabindex="0" data-tip="Backpropagation: the chain rule applied through every layer to get the gradient for all weights in one backward sweep. Popularized for neural nets by Rumelhart, Hinton, and Williams in 1986.">backpropagation</span>, popularized in <span class="mono amber">1986</span> — a way to compute the gradient for every weight in one efficient sweep. The core idea hasn't changed since.
+      </p>
+    </div>
 
     <!-- DEMO 19: GRADIENT DESCENT -->
     <div class="demo">
       <div class="demo-header">
         <div>
           <h3>Gradient descent, on a hill</h3>
-          <p style="margin: 6px 0 0; font-size: 13.5px;">A toy 2D loss landscape. The marble takes steps proportional to the slope. Crank the learning rate too high and watch it overshoot.</p>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">A toy 2D loss landscape, shaded by height (dark = low error). The amber marble rolls downhill toward the green <span class="gterm" tabindex="0" data-tip="&quot;min&quot; marks the minimum — the lowest point of the loss surface, where the model is as accurate as this landscape allows. Training tries to reach it. Real landscapes have many valleys; you settle for a good one, not the perfect one.">min</span> marker. Crank the learning rate too high and watch it overshoot.</p>
         </div>
         <div class="label"><span class="num">19</span>GRADIENT</div>
       </div>
@@ -2702,11 +3151,11 @@ footer .sig {
 
           <div class="gd-controls">
             <div class="gd-row">
-              <div class="lbl-line"><span>Learning rate</span><span class="v" id="gdLrLabel">0.10</span></div>
+              <div class="lbl-line"><span class="gterm" tabindex="0" data-tip="How big a step to take downhill each iteration. Too small: training crawls. Too large: the marble leaps past the valley and bounces around or flies off. The single most important training knob.">Learning rate</span><span class="v" id="gdLrLabel">0.10</span></div>
               <input type="range" id="gdLr" min="0.01" max="0.6" step="0.01" value="0.10"/>
             </div>
             <div class="gd-row">
-              <div class="lbl-line"><span>Momentum</span><span class="v" id="gdMomLabel">0.50</span></div>
+              <div class="lbl-line"><span class="gterm" tabindex="0" data-tip="Carry a fraction of the previous step into the next one, like a rolling ball keeping its speed. Smooths the path and powers through long shallow valleys instead of zig-zagging.">Momentum</span><span class="v" id="gdMomLabel">0.50</span></div>
               <input type="range" id="gdMom" min="0" max="0.95" step="0.05" value="0.5"/>
             </div>
 
@@ -2716,15 +3165,15 @@ footer .sig {
             </div>
 
             <div class="gd-readout">
-              <div class="r"><div class="k">Loss</div><div class="v" id="gdLoss">—</div></div>
-              <div class="r"><div class="k">Steps</div><div class="v" id="gdSteps">0</div></div>
+              <div class="r"><div class="k"><span class="gterm" tabindex="0" data-tip="Loss = how wrong the model is right now, one number. It's the height of the marble on the landscape. Training exists to make this fall.">Loss</span></div><div class="v" id="gdLoss">—</div></div>
+              <div class="r"><div class="k"><span class="gterm" tabindex="0" data-tip="One step = one downhill move: feel the slope, move by (slope × learning rate), repeat. Real training runs for hundreds of thousands to millions of these.">Steps</span></div><div class="v" id="gdSteps">0</div></div>
             </div>
           </div>
         </div>
       </div>
 
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
-        Real training is this same loop, just in a billion dimensions instead of two. The loss is averaged over thousands of examples per step ("mini-batch"). Optimizers like Adam adjust the step size per parameter. But the core idea — gradient × learning rate — is unchanged since 1986.
+        Real training is this same loop, just in a billion dimensions instead of two. The loss is averaged over thousands of examples per step ("mini-batch"). Optimizers like Adam adjust the step size per parameter automatically. But the core idea — step downhill by gradient × learning rate — is the same one from 1847, made practical for neural networks in 1986.
       </p>
     </div>
 
@@ -2733,7 +3182,7 @@ footer .sig {
       <div class="demo-header">
         <div>
           <h3>Scaling laws — loss as a function of compute</h3>
-          <p style="margin: 6px 0 0; font-size: 13.5px;">Loss falls as a power law in compute, parameters, and data. Hover any curve.</p>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">The remarkable finding: how good a model gets is largely predictable from how much compute you spend. Hover any curve.</p>
         </div>
         <div class="label"><span class="num">20</span>SCALING</div>
       </div>
@@ -2742,7 +3191,8 @@ footer .sig {
         <svg viewBox="0 0 700 360" class="scaling-svg" id="scalingSvg"></svg>
 
         <div class="scaling-explain">
-          The orange line is the <span class="amber mono">compute-optimal frontier</span> — what DeepMind's 2022 "Chinchilla" paper showed: for a given training budget, you minimize loss by using roughly <span class="amber mono">20 tokens per parameter</span>. Train a model too small and you waste compute on overtraining. Too big and you starve it of data. The whole 2020–2024 era of frontier labs was an exercise in surfing this curve.
+          <p style="margin: 0 0 12px;">First, the phrase. <span class="italic" style="color:var(--ink);">Loss</span> is the model's average error — how surprised it is by the next token, one number that falls as it gets better. <span class="italic" style="color:var(--ink);">Compute</span> is the total arithmetic spent training it, measured in FLOPs (roughly GPUs × time). "Loss as a function of compute" just means plotting one against the other: spend the x-axis, get the y-axis. The startling result, from OpenAI's 2020 scaling-laws paper, is that this plot is a clean straight line on log axes — a power law. Error falls in a smooth, predictable way as you add compute, parameters, and data. That predictability is what let labs justify nine-figure training runs before starting: you could forecast the payoff.</p>
+          <p style="margin: 0;">The amber line is the <span class="amber mono">compute-optimal frontier</span> — DeepMind's 2022 "Chinchilla" refinement: for a fixed budget, you minimize loss with roughly <span class="amber mono">20 tokens per parameter</span>. Too few parameters and you overtrain a small model; too many and you starve a big one of data. The 2020–2024 frontier era was largely an exercise in surfing this curve.</p>
         </div>
       </div>
     </div>
@@ -2789,9 +3239,21 @@ footer .sig {
      ===================================================== -->
 <section class="reveal" id="softmax">
   <div class="container">
-    <div class="eyebrow">XIII · Output</div>
+    <div class="eyebrow">XIV · Output</div>
     <h2 class="serif">From numbers back to <span class="italic amber">language.</span></h2>
-    <p class="lead narrow">The model's final layer doesn't output a word. It outputs a logit — a raw score — for every possible next token. Softmax turns those scores into probabilities. Temperature changes how confidently it picks.</p>
+    <p class="lead narrow">The model's final layer doesn't output a word. It outputs a logit — a raw score — for every possible next token. Softmax turns those scores into probabilities. Then a sampling rule picks one.</p>
+
+    <div class="demo" style="background: transparent; border: none; padding: 0 0 8px;">
+      <p class="muted" style="font-size: 14.5px; line-height: 1.7; max-width: 68ch;">
+        Four words do all the work here, so plainly:
+      </p>
+      <div class="min-table" style="margin-top: 10px;">
+        <div class="min-row"><div class="m-el">Logit</div><div class="m-use">The raw score the model assigns each candidate next token before any normalizing — often just called the "score." Can be negative. There is one logit per token in the vocabulary (~100,000 of them). Bigger logit = the model likes that token more.</div></div>
+        <div class="min-row"><div class="m-el">Temperature</div><div class="m-use">A dial that divides the logits before softmax. Low (→0) sharpens the distribution toward the single top token — safe, repetitive, deterministic. High (>1) flattens it so unlikely tokens get a real chance — creative, and more error-prone. The model doesn't change; only how boldly you read it.</div></div>
+        <div class="min-row"><div class="m-el">Top-K</div><div class="m-use">Before sampling, throw away everything except the <span class="mono">K</span> highest-scoring tokens, then pick from those. A fixed-size shortlist. K=1 means always take the top token (greedy).</div></div>
+        <div class="min-row"><div class="m-el">Top-P<span class="m-sym">nucleus</span></div><div class="m-use">Keep the smallest set of top tokens whose probabilities add up to <span class="mono">P</span> (say 0.9), then pick from those. The shortlist resizes itself: short when the model is confident, long when it's unsure. The production default for most chat models.</div></div>
+      </div>
+    </div>
 
     <div class="demo">
       <div class="demo-header">
@@ -2859,11 +3321,164 @@ footer .sig {
 
 
 <!-- =====================================================
-     XIV. GLOSSARY
+     XV. FROM SCRATCH — building a model, idea to execution
+     ===================================================== -->
+<section class="reveal" id="build">
+  <div class="container">
+    <div class="eyebrow">XV · From Scratch</div>
+    <h2 class="serif">So you want to <span class="italic amber">build one.</span></h2>
+    <p class="lead narrow">Everything so far explained what a model <span class="italic">is</span>. This is the other direction: what it takes to make one — the pipeline from idea to running system, the tools involved, and where the whole thing actually runs. The honest headline first: almost no one trains from scratch, and knowing when not to is half the skill.</p>
+
+    <!-- DEMO 26: THE PIPELINE -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The pipeline, idea to execution</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">The same six stages hold across model types — what changes is the data and the middle. Switch the target.</p>
+        </div>
+        <div class="label"><span class="num">26</span>PIPELINE</div>
+      </div>
+
+      <div class="path-tabs" id="modelTabs">
+        <button class="path-tab on" data-model="llm">LLM · text</button>
+        <button class="path-tab" data-model="vlm">VLM · vision + text</button>
+        <button class="path-tab" data-model="world">World model</button>
+      </div>
+
+      <div class="path-flow" id="pipeFlow"></div>
+
+      <p class="muted" style="margin-top: 4px; font-size: 13.5px; line-height: 1.65;" id="pipeNote"></p>
+    </div>
+
+    <!-- DEMO 27: WHERE IT RUNS -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Where does it actually run?</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Three ways to get the GPUs. The trade is always the same: control versus convenience versus cost.</p>
+        </div>
+        <div class="label"><span class="num">27</span>COMPUTE</div>
+      </div>
+
+      <div class="build-cols">
+        <div class="build-col">
+          <div class="bc-tag">Rent · full stack</div>
+          <h4>Hyperscaler</h4>
+          <ul>
+            <li>AWS, Azure, Google Cloud, Oracle</li>
+            <li>200+ managed services around the GPUs</li>
+            <li>Global regions, deep compliance</li>
+            <li>Priciest per GPU-hour; often virtualized</li>
+            <li>Newest chips can have waitlists</li>
+          </ul>
+          <div class="bc-foot"><b>Best when</b> your model needs to sit next to databases, pipelines, and compliance you already run there.</div>
+        </div>
+        <div class="build-col">
+          <div class="bc-tag">Rent · GPU-first</div>
+          <h4>Neocloud</h4>
+          <ul>
+            <li>CoreWeave, Lambda, Crusoe, Nebius, Nscale</li>
+            <li>Bare-metal GPUs on InfiniBand fabric</li>
+            <li>30–80% cheaper for raw compute</li>
+            <li>Often the freshest hardware, first</li>
+            <li>Fewer services, fewer regions</li>
+          </ul>
+          <div class="bc-foot"><b>Best when</b> you're training or serving at scale and want price-performance. Even hyperscalers rent from these to fill gaps.</div>
+        </div>
+        <div class="build-col">
+          <div class="bc-tag">Own · on-prem / colo</div>
+          <h4>On-premises</h4>
+          <ul>
+            <li>Buy DGX / HGX systems outright</li>
+            <li>Run your own power, cooling, network — or colocate</li>
+            <li>Maximum control, security, data sovereignty</li>
+            <li>Enormous upfront capital + ops burden</li>
+            <li>You own the depreciation curve</li>
+          </ul>
+          <div class="bc-foot"><b>Best when</b> data can't leave the building, or you'll keep the cluster busy 24/7 for years.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO 28: THE TOOLBOX -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The toolbox</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">The open-source and commercial stack most teams actually reach for.</p>
+        </div>
+        <div class="label"><span class="num">28</span>TOOLS</div>
+      </div>
+
+      <div class="tool-grid">
+        <div class="tool-cat"><div class="tc-k">Framework</div><div class="tc-list">PyTorch <span>· dominant</span><br/>JAX <span>· Google / TPU</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Training stack</div><div class="tc-list">Megatron-LM<br/>DeepSpeed · NeMo<br/>torchtitan · Nanotron</div></div>
+        <div class="tool-cat"><div class="tc-k">Parallelism</div><div class="tc-list">data · tensor<br/>pipeline · sequence<br/>FSDP <span>· shard everything</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Data</div><div class="tc-list">Common Crawl + licensed<br/>dedup · quality filter<br/>tokenizer <span>(BPE)</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Orchestration</div><div class="tc-list">SLURM · Kubernetes<br/>Ray<br/>NCCL <span>· GPU comms</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Alignment</div><div class="tc-list">SFT <span>· instruction-tune</span><br/>DPO · RLHF · GRPO<br/>eval harnesses</div></div>
+        <div class="tool-cat"><div class="tc-k">Start from open weights</div><div class="tc-list">Llama · Qwen · Mistral<br/>DeepSeek · Gemma<br/>OLMo <span>· fully open</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Serving</div><div class="tc-list">vLLM · SGLang<br/>TensorRT-LLM · TGI<br/>+ quantization</div></div>
+      </div>
+    </div>
+
+    <!-- DEMO 29: BUILD, BUY, OR FINE-TUNE -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Build, adapt, or just call an API?</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">The decision almost everyone gets wrong by reaching for "train from scratch" first.</p>
+        </div>
+        <div class="label"><span class="num">29</span>DECIDE</div>
+      </div>
+
+      <div class="build-cols">
+        <div class="build-col">
+          <div class="bc-tag">Cheapest → priciest</div>
+          <h4>Call an API</h4>
+          <ul>
+            <li>Use a frontier model as-is</li>
+            <li>Prompt, tools, retrieval (RAG)</li>
+            <li>Days to a working product</li>
+          </ul>
+          <div class="bc-foot"><b>Covers</b> the large majority of real use cases. Start here unless you have a specific reason not to.</div>
+        </div>
+        <div class="build-col">
+          <div class="bc-tag">Middle path</div>
+          <h4>Fine-tune an open model</h4>
+          <ul>
+            <li>Take Llama / Qwen / Mistral / DeepSeek</li>
+            <li>Adapt on your data (often LoRA)</li>
+            <li>Own the weights; run them anywhere</li>
+          </ul>
+          <div class="bc-foot"><b>Covers</b> domain tone, private data, on-prem or sovereign needs — at a fraction of pretraining cost.</div>
+        </div>
+        <div class="build-col">
+          <div class="bc-tag">Rare · frontier only</div>
+          <h4>Pretrain from scratch</h4>
+          <ul>
+            <li>Random weights → trillions of tokens</li>
+            <li>Tens to hundreds of millions of dollars</li>
+            <li>A cluster, a data team, months</li>
+          </ul>
+          <div class="bc-foot"><b>Only when</b> you're a lab pushing the frontier, or you need a capability, language, or control that nobody sells.</div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        So the real "idea to execution" path for almost everyone runs right-to-left up there: define the job, try an API, fine-tune an open model if that falls short, and only pretrain from scratch as a last resort with frontier-scale reasons and budget. The interesting engineering — data quality, evaluation, alignment, serving cost — lives in the middle two columns, not in heroically training a foundation model nobody needed.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     XVI. GLOSSARY
      ===================================================== -->
 <section class="reveal" id="gloss">
   <div class="container">
-    <div class="eyebrow">XIV · Quick Reference</div>
+    <div class="eyebrow">XVI · Quick Reference</div>
     <h2 class="serif">The <span class="italic amber">vocabulary.</span></h2>
     <p class="lead narrow">Everything we've touched, in a sentence each.</p>
 
@@ -2912,6 +3527,11 @@ footer .sig {
       <div class="gloss"><div class="term"><span class="icon"></span>All-reduce</div><div class="def">The collective communication that sums gradients across every GPU in a training cluster, after every batch. The bandwidth pattern that motivates NVLink and InfiniBand.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>NVLink</div><div class="def">NVIDIA's proprietary high-bandwidth interconnect between GPUs. Generation 5 hits 1.8 TB/s per GPU — about 14× PCIe Gen5.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Top-K / Top-P</div><div class="def">Sampling strategies. Top-K keeps the K most likely tokens; Top-P keeps the smallest set summing to probability P. Both renormalize and sample.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Gradient descent</div><div class="def">The optimization loop behind all training: measure the slope of the loss, step downhill, repeat. Written down by Cauchy in 1847; still the core of how every model learns.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Backpropagation</div><div class="def">The chain rule applied through every layer to compute the gradient for all weights in one backward sweep. Popularized for neural nets in 1986; what makes gradient descent tractable at scale.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Availability zone</div><div class="def">One or more isolated data centers within a cloud region, with independent power and cooling. Apps span several so one failure doesn't take everything down. AI training does the opposite — it packs into one site.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Interconnection queue</div><div class="def">The regulated line to connect a new large load or power plant to the grid. Now years long in the US, it has become the binding constraint on data-center growth — more than chips or capital.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Neocloud</div><div class="def">A cloud provider built only around GPUs — bare-metal, InfiniBand, cheaper than hyperscalers. CoreWeave, Lambda, Crusoe, Nebius. Even hyperscalers rent from them to fill capacity gaps.</div></div>
     </div>
   </div>
 </section>
@@ -3982,25 +4602,41 @@ renderTokens();
 /* ============================================================
    NEW: memory hierarchy
    ============================================================ */
+// `ns` is the access latency in nanoseconds — the single source of truth.
+// The bar length is DERIVED from it (relative speed, log scale), so the bar
+// and the amber latency number can never disagree. Rows are sorted fastest → slowest.
 const MEM_LEVELS = [
-  { name: 'Register',  sub: 'on-die',     size: '< 1 KB',      lat: '0.3 ns',   bar: 100 },
-  { name: 'L1 cache',  sub: 'on-die',     size: '~ 64 KB',     lat: '1 ns',     bar: 92  },
-  { name: 'L2 cache',  sub: 'on-die',     size: '~ 50 MB',     lat: '5 ns',     bar: 78  },
-  { name: 'L3 cache',  sub: 'on-die',     size: '~ 200 MB',    lat: '15 ns',    bar: 65  },
-  { name: 'HBM',       sub: 'on-package', size: '192 GB',      lat: '300 ns',   bar: 48  },
-  { name: 'DRAM',      sub: 'off-chip',   size: '1 TB',        lat: '90 ns',    bar: 58  },
-  { name: 'NVMe SSD',  sub: 'rack',       size: '10 TB',       lat: '50 µs',    bar: 25  },
-  { name: 'Network',   sub: 'cluster',    size: 'PB+',         lat: '10 µs',    bar: 32  },
+  { name: 'Register',  sub: 'on-die',      size: '< 1 KB',   lat: '0.3 ns', ns: 0.3,
+    tip: 'The handful of slots physically inside a compute core where a value must sit to be operated on. Fastest storage that exists, and by far the smallest.' },
+  { name: 'L1 cache',  sub: 'on-die',      size: '~ 64 KB',  lat: '1 ns',   ns: 1,
+    tip: 'Level-1 cache: a tiny, ultra-fast buffer next to each core holding the values it is about to reuse. First place the chip looks after registers.' },
+  { name: 'L2 cache',  sub: 'on-die',      size: '~ 50 MB',  lat: '5 ns',   ns: 5,
+    tip: 'Level-2 cache: larger and slightly slower than L1, shared across a group of cores. Catches data that spilled out of L1.' },
+  { name: 'L3 cache',  sub: 'on-die',      size: '~ 200 MB', lat: '15 ns',  ns: 15,
+    tip: 'Level-3 cache: the last and largest on-die cache, shared by the whole chip. Last stop before a request has to leave the silicon.' },
+  { name: 'DRAM',      sub: 'host memory', size: '1 TB',     lat: '90 ns',  ns: 90,
+    tip: 'The main system memory sticks (DDR) attached to the CPU. Low raw latency, but reaching it from a GPU means crossing PCIe, which adds microseconds.' },
+  { name: 'HBM',       sub: 'on-package',  size: '192 GB',   lat: '300 ns', ns: 300,
+    tip: 'High-Bandwidth Memory: DRAM stacked and bonded right next to the GPU die. Its per-access latency is actually higher than host DRAM — what makes it fast is enormous parallel bandwidth (8 TB/s), not latency.' },
+  { name: 'Network',   sub: 'cluster',     size: 'PB+',      lat: '10 µs',  ns: 10000,
+    tip: 'Reading another machine\u2019s memory across the cluster fabric (InfiniBand / RDMA). Surprisingly, this is faster than a local SSD: the network beats the disk.' },
+  { name: 'NVMe SSD',  sub: 'rack',        size: '10 TB',    lat: '50 µs',  ns: 50000,
+    tip: 'Flash storage on the server. Vast and cheap per byte, but ~100,000\u00d7 slower than a register. Where weights and datasets live at rest before being pulled into memory.' },
 ];
 function renderMem() {
-  document.getElementById('memWrap').innerHTML = MEM_LEVELS.map(m => `
+  // relative speed on a log scale: fastest → 100%, slowest → ~8%
+  const logs = MEM_LEVELS.map(m => -Math.log10(m.ns));
+  const hi = Math.max(...logs), lo = Math.min(...logs);
+  document.getElementById('memWrap').innerHTML = MEM_LEVELS.map((m, i) => {
+    const pct = 8 + ((logs[i] - lo) / (hi - lo)) * 92;
+    return `
     <div class="mem-row">
-      <div class="name">${m.name}<span class="sub">${m.sub}</span></div>
-      <div class="mem-bar"><div class="mem-bar-fill" style="width: ${m.bar}%"></div></div>
+      <div class="name"><span class="gterm" tabindex="0" data-tip="${m.tip}">${m.name}</span><span class="sub">${m.sub}</span></div>
+      <div class="mem-bar"><div class="mem-bar-fill" style="width: ${pct.toFixed(1)}%"></div></div>
       <div class="size">${m.size}</div>
       <div class="lat">${m.lat}</div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 renderMem();
 
@@ -4068,21 +4704,30 @@ renderKV();
    NEW: networking bandwidth
    ============================================================ */
 const NET_LINKS = [
-  { name: 'Home WiFi',           det: '802.11ax · best case',         bw_gbps: 1,       label: '1 Gbps' },
-  { name: '1 GbE ethernet',      det: 'office network',               bw_gbps: 1,       label: '1 Gbps' },
-  { name: '100 GbE',             det: 'cloud backbone',               bw_gbps: 100,     label: '100 Gbps' },
-  { name: 'InfiniBand HDR',      det: 'AI cluster fabric',            bw_gbps: 400,     label: '400 Gbps' },
-  { name: 'InfiniBand NDR',      det: 'next-gen cluster',             bw_gbps: 800,     label: '800 Gbps' },
-  { name: 'PCIe Gen 5 ×16',      det: 'GPU ↔ CPU',                    bw_gbps: 1000,    label: '1 Tbps' },
-  { name: 'NVLink 5',            det: 'GPU ↔ GPU (B200)',             bw_gbps: 14400,   label: '14.4 Tbps' },
-  { name: 'HBM3e on-package',    det: 'GPU ↔ its memory',             bw_gbps: 64000,   label: '64 Tbps' },
-  { name: 'NV-HBI chiplet link', det: 'die ↔ die on B200',           bw_gbps: 80000,   label: '80 Tbps' },
+  { name: 'Home WiFi',           det: '802.11ax · best case',  bw_gbps: 1,     label: '1 Gbps',
+    tip: 'A good home wireless connection. Fine for using a model over the internet; hopelessly slow for moving training data.' },
+  { name: '1 GbE ethernet',      det: 'office network',        bw_gbps: 1,     label: '1 Gbps',
+    tip: 'Standard wired office networking. The baseline "fast" most people picture — and the floor of this chart.' },
+  { name: '100 GbE',             det: 'cloud backbone',        bw_gbps: 100,   label: '100 Gbps',
+    tip: 'The links that stitch a cloud data center together. 100× a home connection, still far below what GPUs need to talk to each other.' },
+  { name: 'InfiniBand HDR',      det: 'AI cluster fabric',     bw_gbps: 400,   label: '400 Gbps',
+    tip: 'A dedicated low-latency fabric built for HPC and AI clusters. HDR = 400 Gbps per port. This is the tier where GPU-to-GPU training traffic starts to fit.' },
+  { name: 'InfiniBand NDR',      det: 'next-gen cluster',      bw_gbps: 800,   label: '800 Gbps',
+    tip: 'The next InfiniBand generation, 800 Gbps per port. The current default fabric for large training clusters.' },
+  { name: 'PCIe Gen 5 ×16',      det: 'GPU ↔ CPU',             bw_gbps: 1000,  label: '1 Tbps',
+    tip: 'The bus connecting a GPU to its host CPU inside one server. Wide, but a bottleneck compared to how fast GPUs talk to each other directly.' },
+  { name: 'NVLink 5',            det: 'GPU ↔ GPU (B200)',      bw_gbps: 14400, label: '14.4 Tbps',
+    tip: 'NVIDIA\u2019s direct GPU-to-GPU interconnect: 1.8 TB/s (14.4 Tbps) per Blackwell GPU, ~14× PCIe. This is what makes 72 GPUs in a rack behave like one big GPU.' },
+  { name: 'HBM3e on-package',    det: 'GPU ↔ its memory',      bw_gbps: 64000, label: '64 Tbps',
+    tip: 'The pipe between a GPU die and its stacked memory: 8 TB/s (64 Tbps). Feeding the compute cores fast enough is the whole game.' },
+  { name: 'NV-HBI chiplet link', det: 'die ↔ die on B200',     bw_gbps: 80000, label: '80 Tbps',
+    tip: 'The link fusing the two dies inside one B200 package: 10 TB/s (80 Tbps). The fastest wire on the chart, and the shortest — a few millimeters.' },
 ];
 function renderNet() {
   const maxBw = Math.max(...NET_LINKS.map(l => l.bw_gbps));
   document.getElementById('netBars').innerHTML = NET_LINKS.map(l => `
     <div class="net-bar">
-      <div class="name">${l.name}<div class="det">${l.det}</div></div>
+      <div class="name"><span class="gterm" tabindex="0" data-tip="${l.tip}">${l.name}</span><div class="det">${l.det}</div></div>
       <div class="vis"><div class="vis-fill" style="width: ${Math.max(2, (l.bw_gbps / maxBw) * 100)}%"></div></div>
       <div class="bw">${l.label}</div>
     </div>
@@ -4610,6 +5255,166 @@ renderSoftmax();
       btn.classList.remove('on');
     }
   });
+})();
+
+
+/* ============================================================
+   ADDED: interactive TOC + sticky scroll-spy nav
+   ============================================================ */
+(function () {
+  const secs = Array.from(document.querySelectorAll('main section[id]'))
+    .filter(s => s.querySelector('.eyebrow'));
+  const meta = secs.map(s => {
+    const raw = s.querySelector('.eyebrow').textContent.trim();
+    const parts = raw.split('\u00B7').map(x => x.trim());
+    return { id: s.id, num: parts[0] || '', name: parts.slice(1).join(' \u00B7 ') || raw, el: s };
+  });
+
+  const heroToc = document.getElementById('heroToc');
+  if (heroToc) {
+    heroToc.innerHTML = meta.map(m =>
+      `<a href="#${m.id}"><span class="toc-num">${m.num}</span><span class="toc-name">${m.name}</span></a>`
+    ).join('');
+  }
+
+  const sideNav = document.getElementById('sideNav');
+  if (!sideNav) return;
+  sideNav.innerHTML = meta.map(m =>
+    `<a href="#${m.id}" data-id="${m.id}"><span class="rail"></span><span class="sn-label">${m.num} \u00B7 ${m.name}</span></a>`
+  ).join('');
+  const links = Array.from(sideNav.querySelectorAll('a'));
+  const hero = document.querySelector('.hero');
+
+  function update() {
+    const y = window.scrollY;
+    const past = y > (hero ? hero.offsetHeight * 0.6 : 400);
+    sideNav.classList.toggle('show', past);
+
+    const line = y + window.innerHeight * 0.35;
+    let activeId = meta.length ? meta[0].id : null;
+    for (const m of meta) {
+      const top = m.el.getBoundingClientRect().top + y;
+      if (top <= line) activeId = m.id;
+    }
+    if (window.innerHeight + y >= document.body.scrollHeight - 4 && meta.length) {
+      activeId = meta[meta.length - 1].id;
+    }
+    links.forEach(a => a.classList.toggle('active', a.dataset.id === activeId));
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); ticking = false; }); }
+  }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+
+
+/* ============================================================
+   ADDED: "get to a gigawatt" power chooser
+   ============================================================ */
+(function () {
+  const tabs = document.getElementById('powTabs');
+  if (!tabs) return;
+  const POW = {
+    grid: {
+      time: '4\u20138 years', timeNote: 'interconnection queue + transmission upgrades',
+      firm: 'High', firmNote: 'grid-backed, 24/7 \u2014 if you can get the connection',
+      catch: 'The queue', catchNote: 'years of waiting; upgrade costs you may have to share',
+      body: 'The default, and the slowest. You apply to the regional grid operator, wait through impact studies and transmission upgrades, and hope your project isn\u2019t stuck behind thousands of others. Fine for an existing site with power already contracted; increasingly untenable for a new gigawatt-scale build.'
+    },
+    gas: {
+      time: '6\u201318 months', timeNote: 'turbines can be shipped and sited fast',
+      firm: 'High', firmNote: 'burns fuel on demand, day or night',
+      catch: 'Emissions + permits', catchNote: 'on-site combustion draws air permits and local pushback',
+      body: 'The speed play: bring gas turbines to the site and generate behind the meter, skipping the grid queue entirely. xAI did exactly this for Colossus \u2014 Memphis could spare only ~50 MW against a gigawatt need, so it stood up turbines just across the state line in Mississippi. Fast and firm, but it burns fuel and attracts scrutiny.'
+    },
+    nuclear: {
+      time: '2027\u20132030+', timeNote: 'plant restarts sooner; new SMRs later this decade',
+      firm: 'Highest', firmNote: 'clean, constant baseload, ~99.9% uptime',
+      catch: 'Not ready yet', catchNote: 'SMRs are early; restarts are few and slow',
+      body: 'The clean-and-firm answer, on a longer clock. Microsoft contracted the restart of Three Mile Island; Amazon backed X-energy; Google backed Kairos Power. Small modular reactors promise on-site, always-on, carbon-free power with no grid queue \u2014 but the first units only arrive late this decade. A bet on the back half.'
+    },
+    solar: {
+      time: '1\u20132 years', timeNote: 'fast to build where land and sun are cheap',
+      firm: 'Low', firmNote: 'intermittent \u2014 needs batteries or a gas backstop to firm up',
+      catch: 'The sun sets', catchNote: 'storage adds cost; alone it isn\u2019t 24/7 firm',
+      body: 'The cheap-and-clean option that can\u2019t stand alone. Solar plus battery storage builds quickly in the right geography and pairs with everything else. But AI clusters want firm, round-the-clock power, so solar usually shows up as one ingredient in a mix \u2014 rarely the whole answer for a gigawatt.'
+    }
+  };
+  function set(k) {
+    const d = POW[k]; if (!d) return;
+    document.getElementById('powTime').textContent = d.time;
+    document.getElementById('powTimeNote').textContent = d.timeNote;
+    document.getElementById('powFirm').textContent = d.firm;
+    document.getElementById('powFirmNote').textContent = d.firmNote;
+    document.getElementById('powCatch').textContent = d.catch;
+    document.getElementById('powCatchNote').textContent = d.catchNote;
+    document.getElementById('powBody').textContent = d.body;
+    tabs.querySelectorAll('.path-tab').forEach(b => b.classList.toggle('on', b.dataset.pow === k));
+  }
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('.path-tab'); if (!b) return; set(b.dataset.pow);
+  });
+})();
+
+
+/* ============================================================
+   ADDED: model-build pipeline switcher (LLM / VLM / world)
+   ============================================================ */
+(function () {
+  const tabs = document.getElementById('modelTabs');
+  const flow = document.getElementById('pipeFlow');
+  const note = document.getElementById('pipeNote');
+  if (!tabs || !flow) return;
+  const PIPE = {
+    llm: {
+      steps: [
+        ['01','Scope','Pick the capability, size, and budget. Text in, text out.'],
+        ['02','Data','Web text, code, books. Clean, deduplicate, and quality-filter trillions of tokens.'],
+        ['03','Tokenizer','Train a BPE tokenizer on the corpus to turn text into token IDs.'],
+        ['04','Architecture','A decoder-only transformer. Choose depth, width, and whether to go MoE.'],
+        ['05','Train','Pretrain across the cluster: predict the next token, billions of times over.'],
+        ['06','Align & serve','Instruction-tune, then RLHF or DPO. Serve with vLLM or SGLang.']
+      ],
+      note: 'This is the canonical LLM recipe \u2014 the one behind every chat model. The expensive, differentiating work is data quality and alignment, not the architecture, which is nearly identical everywhere.'
+    },
+    vlm: {
+      steps: [
+        ['01','Scope','Images (and maybe video) in, text out. Captioning, documents, charts, UI.'],
+        ['02','Data','Millions of image\u2013text pairs: alt-text, documents, diagrams, screen captures.'],
+        ['03','Encoder','A vision encoder (CLIP / SigLIP) for images, alongside the text tokenizer.'],
+        ['04','Architecture','Bolt the vision encoder onto an LLM via a small projector into token space.'],
+        ['05','Train','Usually start from a pretrained LLM; teach it to read images and align both streams.'],
+        ['06','Align & serve','Instruction-tune on visual tasks, then serve like any LLM.']
+      ],
+      note: 'The shortcut most teams take: don\u2019t build the language brain from scratch \u2014 graft vision onto an existing open LLM. The new work is the encoder, the projector, and the paired data.'
+    },
+    world: {
+      steps: [
+        ['01','Scope','Predict what happens next: future frames, states, or the result of an action.'],
+        ['02','Data','Video, simulation rollouts, and robot or game trajectories \u2014 often action-labeled.'],
+        ['03','Encoder','Compress frames into tokens (VQ-VAE / patches); encode actions alongside.'],
+        ['04','Architecture','A spatiotemporal transformer or diffusion model, conditioned on actions.'],
+        ['05','Train','Heavy compute over video and simulation: learn the dynamics of a world.'],
+        ['06','Roll out','Generate futures step by step \u2014 for planning, robotics, or interactive worlds.']
+      ],
+      note: 'The frontier, and the most compute-hungry of the three. Data is the bottleneck: high-quality, action-labeled video and simulation are far scarcer than web text. Genie-style interactive worlds and robotics foundation models live here.'
+    }
+  };
+  function set(k) {
+    const d = PIPE[k]; if (!d) return;
+    flow.innerHTML = d.steps.map((s, i) =>
+      `<div class="flow-step"><div class="fs-n">${s[0]}</div><div class="fs-t">${s[1]}</div><div class="fs-d">${s[2]}</div>${i < d.steps.length - 1 ? '<div class="fs-arrow">\u2192</div>' : ''}</div>`
+    ).join('');
+    note.textContent = d.note;
+    tabs.querySelectorAll('.path-tab').forEach(b => b.classList.toggle('on', b.dataset.model === k));
+  }
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('.path-tab'); if (!b) return; set(b.dataset.model);
+  });
+  set('llm');
 })();
 </script>
 
