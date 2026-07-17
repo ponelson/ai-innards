@@ -3480,11 +3480,84 @@ footer .sig {
 
 
 <!-- =====================================================
-     XVI. GLOSSARY
+     XVI. READING THE NUMBERS — scale primitive
+     ===================================================== -->
+<section class="reveal" id="scale">
+  <div class="container">
+    <div class="eyebrow">XVI · Reading the numbers</div>
+    <h2 class="serif">Reading the <span class="italic amber">numbers.</span></h2>
+    <p class="lead narrow">Every figure in this guide rides the same ladder of ten. Learn it once, and PFLOPS, terabytes, and gigawatt-hours all read on sight. Each rung is 1,000× the one below it.</p>
+
+    <style>
+      #scale .sc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
+      #scale .sc-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: rgba(255,255,255,0.5); }
+      #scale .sc-card h3 { margin: 0; padding: 14px 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--line); background: var(--bg-2); font-weight: 500; }
+      #scale .sc-row { display: grid; grid-template-columns: 62px 52px 1fr; align-items: baseline; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+      #scale .sc-row:last-child { border-bottom: 0; }
+      #scale .sc-row.hi { background: var(--accent-glow); }
+      #scale .sc-pre { font-family: var(--font-display); font-size: 15px; color: var(--ink); }
+      #scale .sc-pre small { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; color: var(--ink-4); text-transform: uppercase; }
+      #scale .sc-fac { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-feature-settings: "tnum" 1; }
+      #scale .sc-anchor { font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+      #scale .sc-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }
+      #scale .sc-note { border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: var(--radius-sm); padding: 16px 18px; background: rgba(255,255,255,0.4); }
+      #scale .sc-note b { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); margin-bottom: 8px; }
+      #scale .sc-note p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
+      #scale .sc-note code { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+      @media (max-width: 900px) { #scale .sc-grid, #scale .sc-notes { grid-template-columns: 1fr; } }
+    </style>
+
+    <div class="sc-grid">
+      <div class="sc-card">
+        <h3>Compute · FLOPS</h3>
+        <div class="sc-row"><span class="sc-pre">tera<small>T</small></span><span class="sc-fac">10¹²</span><span class="sc-anchor">A high-end laptop chip.</span></div>
+        <div class="sc-row hi"><span class="sc-pre">peta<small>P</small></span><span class="sc-fac">10¹⁵</span><span class="sc-anchor">One B200 GPU (~5). A full rack: ~450.</span></div>
+        <div class="sc-row hi"><span class="sc-pre">exa<small>E</small></span><span class="sc-fac">10¹⁸</span><span class="sc-anchor">A frontier training cluster (tens of these).</span></div>
+        <div class="sc-row"><span class="sc-pre">zetta<small>Z</small></span><span class="sc-fac">10²¹</span><span class="sc-anchor">Total work to train one model — 63 ZFLOP here.</span></div>
+      </div>
+
+      <div class="sc-card">
+        <h3>Data · bytes</h3>
+        <div class="sc-row"><span class="sc-pre">kilo<small>KB</small></span><span class="sc-fac">10³</span><span class="sc-anchor">A paragraph of text.</span></div>
+        <div class="sc-row"><span class="sc-pre">mega<small>MB</small></span><span class="sc-fac">10⁶</span><span class="sc-anchor">A photo.</span></div>
+        <div class="sc-row hi"><span class="sc-pre">giga<small>GB</small></span><span class="sc-fac">10⁹</span><span class="sc-anchor">A model in memory — 70B at INT4 ≈ 35 GB.</span></div>
+        <div class="sc-row"><span class="sc-pre">tera<small>TB</small></span><span class="sc-fac">10¹²</span><span class="sc-anchor">HBM bandwidth is quoted per second: 8 TB/s.</span></div>
+        <div class="sc-row"><span class="sc-pre">peta<small>PB</small></span><span class="sc-fac">10¹⁵</span><span class="sc-anchor">A pretraining corpus.</span></div>
+      </div>
+
+      <div class="sc-card">
+        <h3>Power · watts</h3>
+        <div class="sc-row"><span class="sc-pre">watt<small>W</small></span><span class="sc-fac">10⁰</span><span class="sc-anchor">One GPU is ~1,000 W (its TDP).</span></div>
+        <div class="sc-row"><span class="sc-pre">kilo<small>kW</small></span><span class="sc-fac">10³</span><span class="sc-anchor">A single server; a house.</span></div>
+        <div class="sc-row"><span class="sc-pre">mega<small>MW</small></span><span class="sc-fac">10⁶</span><span class="sc-anchor">One datacenter hall.</span></div>
+        <div class="sc-row hi"><span class="sc-pre">giga<small>GW</small></span><span class="sc-fac">10⁹</span><span class="sc-anchor">A frontier AI campus — about one nuclear reactor.</span></div>
+      </div>
+    </div>
+
+    <div class="sc-notes">
+      <div class="sc-note">
+        <b>FLOP vs FLOPS</b>
+        <p>A <code>FLOP</code> is one operation — a total. <code>FLOPS</code> is operations per second — a speed. A chip is rated in FLOPS; a whole training run is measured in total FLOP. That's why the economics widget reads <code>63 ZFLOP</code>, not per second.</p>
+      </div>
+      <div class="sc-note">
+        <b>Watt vs watt-hour</b>
+        <p>A <code>watt</code> is power — the rate energy is drawn. A <code>watt-hour</code> is energy — the amount used. A campus <em>draws</em> gigawatts; a training run <em>burns</em> gigawatt-hours (8.4 GWh here). Same split as FLOP vs FLOPS.</p>
+      </div>
+      <div class="sc-note">
+        <b>Bit vs byte</b>
+        <p>8 bits = 1 byte. Precision is quoted in bits per weight (<code>FP16</code> = 16), memory and files in bytes (GB), bandwidth in bytes per second (TB/s). So a 70B model at FP16 is 140 GB: 70B × 16 ÷ 8.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     XVII. GLOSSARY
      ===================================================== -->
 <section class="reveal" id="gloss">
   <div class="container">
-    <div class="eyebrow">XVI · Quick Reference</div>
+    <div class="eyebrow">XVII · Quick Reference</div>
     <h2 class="serif">The <span class="italic amber">vocabulary.</span></h2>
     <p class="lead narrow">Everything we've touched, in a sentence each.</p>
 
@@ -3538,6 +3611,27 @@ footer .sig {
       <div class="gloss"><div class="term"><span class="icon"></span>Availability zone</div><div class="def">One or more isolated data centers within a cloud region, with independent power and cooling. Apps span several so one failure doesn't take everything down. AI training does the opposite — it packs into one site.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Interconnection queue</div><div class="def">The regulated line to connect a new large load or power plant to the grid. Now years long in the US, it has become the binding constraint on data-center growth — more than chips or capital.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Neocloud</div><div class="def">A cloud provider built only around GPUs — bare-metal, InfiniBand, cheaper than hyperscalers. CoreWeave, Lambda, Crusoe, Nebius. Even hyperscalers rent from them to fill capacity gaps.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>BF16</div><div class="def">Brain float 16. The same 16 bits as FP16, but reallocated — more exponent, less mantissa — so it keeps FP32's dynamic range at lower precision. The default format for training, because it rarely overflows.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>INT4 / INT8</div><div class="def">Integer quantization. Weights stored as 4- or 8-bit integers rather than floating point, with a scale factor applied per group. Smaller and faster than any float format, at some cost to precision.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>FLOP vs FLOPS</div><div class="def">A FLOP is one floating-point operation — a count. FLOPS is operations per second — a rate. A chip is rated in FLOPS; a whole training run is measured in total FLOP (this guide's example: 63 ZFLOP).</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Watt-hour</div><div class="def">A unit of energy, not power: one watt sustained for one hour. A data center's draw is watts (a rate); a training run's consumption is watt-hours (an amount). GWh and TWh are the AI-scale versions.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>LLM</div><div class="def">Large language model. A transformer trained on text to predict the next token, scaled to billions of parameters. The thing most of this guide is about.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>VLM</div><div class="def">Vision-language model. An LLM with an image encoder bolted on, so the same next-token machinery can read pictures as well as text.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>RAG</div><div class="def">Retrieval-augmented generation. Before answering, the model runs a vector search over an outside corpus and pastes the top hits into its context. How a model uses knowledge it was never trained on. Section VIII is the retrieval half.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Sparsity</div><div class="def">The fraction of a computation that can be skipped because the values are zero. Exploited two ways: mixture-of-experts skips whole parameter blocks per token; hardware sparsity skips zeroed weights inside the matrix multiply.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>SFT</div><div class="def">Supervised fine-tuning. Training on curated prompt-and-ideal-answer pairs — the first alignment step, teaching a raw pretrained model to follow instructions.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>RLHF</div><div class="def">Reinforcement learning from human feedback. After pretraining, the model is tuned toward the answers humans prefer, using a reward model trained on human rankings. The technique that made raw models usable as assistants.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>DPO / GRPO</div><div class="def">Direct Preference Optimization and Group Relative Policy Optimization. Newer alignment methods that tune directly on preference data without RLHF's separate reward model. Cheaper, more stable, increasingly the default.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>InfiniBand</div><div class="def">A low-latency networking fabric that wires GPUs across servers in a training cluster. The open-standard counterpart to NVLink's on-node links; the thing neoclouds sell as a feature.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>PCIe</div><div class="def">Peripheral Component Interconnect Express — the standard bus connecting a GPU to the rest of a server. Roughly 14× slower than NVLink, which is why frontier GPUs talk to each other over NVLink instead.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>NCCL</div><div class="def">NVIDIA Collective Communications Library. The software that actually runs all-reduce and the other gradient-syncing operations across every GPU in a cluster.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>DRAM</div><div class="def">Dynamic RAM — the main working memory of any computer. HBM is DRAM stacked and moved right next to the GPU; ordinary system RAM is DRAM on the motherboard, slower to reach.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>SSD</div><div class="def">Solid-state drive. Flash storage — far bigger and cheaper than DRAM, far slower. The bottom, largest tier of the memory hierarchy, where model weights sit before they're loaded.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>IVF</div><div class="def">Inverted File index. A vector-search index that clusters vectors and searches only the nearest clusters. The main alternative to HNSW for pruning a billion-vector search.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>TSMC</div><div class="def">Taiwan Semiconductor Manufacturing Company — the foundry that fabricates almost every frontier AI chip. "TSMC 4NP" on the B200 names the process node it's built on.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>GPU generations</div><div class="def">The chips used as examples here. NVIDIA's data-center line runs A100 → H100 (Hopper) → B200 / B300 (Blackwell); GB200 and GB300 pair two GPUs with a Grace CPU on one board.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>SMR</div><div class="def">Small modular reactor. Factory-built nuclear units in the 50–300 MW range, pitched as a way to power an AI campus without the decade-long timeline of a conventional plant.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Grid operator</div><div class="def">The entity that balances a regional power grid and runs its interconnection queue — PJM is the largest in the US. Named here because that queue is where new data-center load waits years to plug in.</div></div>
     </div>
   </div>
 </section>
