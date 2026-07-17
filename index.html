@@ -6,38 +6,38 @@
 <title>Inside the Model — an interactive field guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,700;0,8..60,900;1,8..60,500;1,8..60,700&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
    THE PALETTE
    ============================================================ */
 :root {
-  --bg: #0c0d10;
-  --bg-2: #111317;
-  --surface: #161a20;
-  --surface-2: #1c2128;
-  --line: rgba(255,255,255,0.07);
-  --line-strong: rgba(255,255,255,0.16);
-  --line-bright: rgba(255,255,255,0.32);
-  --ink: #f1ece2;
-  --ink-2: #bfb8a8;
-  --ink-3: #807a6e;
-  --ink-4: #4a4640;
-  --accent: #e7a55a;       /* warm amber */
-  --accent-2: #6da8ff;     /* cold blue */
-  --accent-glow: rgba(231,165,90,0.22);
-  --pos: #7fc99a;
-  --neg: #e07d6b;
-  --grid: rgba(255,255,255,0.04);
+  --bg: #f5f5f7;
+  --bg-2: #eef1f6;
+  --surface: rgba(255,255,255,0.80);
+  --surface-2: rgba(255,255,255,0.92);
+  --line: rgba(0,0,0,0.09);
+  --line-strong: rgba(0,0,0,0.14);
+  --line-bright: rgba(0,0,0,0.26);
+  --ink: #111114;
+  --ink-2: #4c5260;
+  --ink-3: #6b6f7b;
+  --ink-4: #9aa0ac;
+  --accent: #0071e3;       /* Apple blue */
+  --accent-2: #6b47d6;     /* violet */
+  --accent-glow: rgba(0,113,227,0.14);
+  --pos: #1f8f4e;
+  --neg: #bd2b28;
+  --grid: rgba(0,0,0,0.05);
   --radius: 14px;
   --radius-sm: 8px;
   --radius-lg: 22px;
-  --shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 30px 80px -40px rgba(0,0,0,0.7);
-  --font-display: "Fraunces", "Times New Roman", serif;
-  --font-italic: "Instrument Serif", serif;
-  --font-body: "Geist", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --shadow: 0 8px 28px rgba(0,0,0,0.08);
+  --font-display: "Source Serif 4", ui-serif, Georgia, serif;
+  --font-italic: "Source Serif 4", ui-serif, Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
 }
 
 /* ============================================================
@@ -47,7 +47,11 @@
 html { scroll-behavior: smooth; }
 html, body {
   margin: 0; padding: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at 15% 0%, #eaf3ff 0, rgba(234,243,255,0) 38%),
+    radial-gradient(circle at 80% 8%, #fff0df 0, rgba(255,240,223,0) 32%),
+    linear-gradient(180deg, #fbfbfd 0, #f5f5f7 45%, #eff2f6 100%);
+  background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-body);
   font-weight: 400;
@@ -63,7 +67,8 @@ body::before {
   position: fixed; inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.025;
+  opacity: 0;
+  display: none;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
 }
@@ -74,15 +79,16 @@ body::after {
   position: fixed;
   top: -20vh; left: -10vw;
   width: 80vw; height: 60vh;
-  background: radial-gradient(ellipse at center, rgba(231,165,90,0.08), transparent 60%);
+  background: radial-gradient(ellipse at center, rgba(0,113,227,0.08), transparent 60%);
   pointer-events: none;
   z-index: 0;
+  display: none;
   filter: blur(20px);
 }
 
 main { position: relative; z-index: 1; }
 
-::selection { background: var(--accent); color: #1a1208; }
+::selection { background: var(--accent); color: #fff; }
 
 /* ============================================================
    TYPOGRAPHY
@@ -202,7 +208,7 @@ section + section::before {
 .contact-btn.on {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(231,165,90,0.06);
+  background: rgba(0,113,227,0.06);
 }
 .contact-card {
   position: fixed;
@@ -214,7 +220,7 @@ section + section::before {
   border-radius: var(--radius);
   padding: 22px 26px;
   min-width: 280px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(231,165,90,0.08);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,113,227,0.08);
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
@@ -351,7 +357,7 @@ section + section::before {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(circle at 50% 30%, rgba(231,165,90,0.04), transparent 60%),
+    radial-gradient(circle at 50% 30%, rgba(0,113,227,0.04), transparent 60%),
     var(--bg-2);
   overflow: hidden;
 }
@@ -503,7 +509,7 @@ section + section::before {
   transition: all 0.15s;
 }
 .fp-tab:hover { border-color: var(--line-bright); color: var(--ink); }
-.fp-tab.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+.fp-tab.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 .fp-bits {
   display: flex;
@@ -527,7 +533,7 @@ section + section::before {
   transition: all 0.2s;
 }
 .fp-bit.sign { background: rgba(224,125,107,0.15); color: var(--neg); border: 1px solid rgba(224,125,107,0.35); }
-.fp-bit.exp { background: rgba(109,168,255,0.12); color: var(--accent-2); border: 1px solid rgba(109,168,255,0.3); }
+.fp-bit.exp { background: rgba(107,71,214,0.12); color: var(--accent-2); border: 1px solid rgba(107,71,214,0.3); }
 .fp-bit.man { background: rgba(127,201,154,0.1); color: var(--pos); border: 1px solid rgba(127,201,154,0.28); }
 .fp-bit.off { opacity: 0.25; }
 
@@ -599,7 +605,7 @@ section + section::before {
   width: 14px; height: 14px; border-radius: 50%;
   background: var(--accent);
   cursor: pointer;
-  box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.18);
 }
 .weight-row input[type=range]::-moz-range-thumb {
   width: 14px; height: 14px; border-radius: 50%;
@@ -699,7 +705,7 @@ section + section::before {
   letter-spacing: 0.08em;
 }
 .embed-k:hover { border-color: var(--line-bright); color: var(--ink); }
-.embed-k.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+.embed-k.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 .similarity-list {
   margin-top: 16px;
@@ -718,7 +724,7 @@ section + section::before {
   border-radius: 6px;
   transition: all 0.15s;
 }
-.sim-row.top { background: rgba(231,165,90,0.06); border-color: rgba(231,165,90,0.2); }
+.sim-row.top { background: rgba(0,113,227,0.06); border-color: rgba(0,113,227,0.2); }
 .sim-row .rank { color: var(--ink-3); }
 .sim-row .word { color: var(--ink); }
 .sim-row .bar-cell { position: relative; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
@@ -761,7 +767,7 @@ section + section::before {
 }
 .quant-tabs button.on {
   background: var(--accent);
-  color: #1a1208;
+  color: #fff;
   border-color: var(--accent);
 }
 .quant-vis {
@@ -983,9 +989,9 @@ section + section::before {
   stroke: var(--accent);
   stroke-width: 1;
 }
-.die-svg .die-grid-inner { stroke: rgba(231,165,90,0.15); stroke-width: 0.5; }
+.die-svg .die-grid-inner { stroke: rgba(0,113,227,0.15); stroke-width: 0.5; }
 .die-svg .hbm-stack {
-  fill: rgba(109,168,255,0.08);
+  fill: rgba(107,71,214,0.08);
   stroke: var(--accent-2);
   stroke-width: 1;
 }
@@ -1075,7 +1081,7 @@ section + section::before {
   border-radius: 50%;
   background: var(--accent);
   cursor: pointer;
-  box-shadow: 0 0 0 5px rgba(231,165,90,0.18);
+  box-shadow: 0 0 0 5px rgba(0,113,227,0.18);
 }
 #scaleSlider::-moz-range-thumb {
   width: 18px; height: 18px;
@@ -1144,7 +1150,7 @@ section + section::before {
   transition: all 0.2s;
 }
 .rung:hover { border-color: var(--line-bright); }
-.rung.highlight { border-color: var(--accent); background: rgba(231,165,90,0.04); }
+.rung.highlight { border-color: var(--accent); background: rgba(0,113,227,0.04); }
 .rung .rung-label { color: var(--ink); }
 .rung .rung-detail {
   font-size: 10.5px;
@@ -1198,9 +1204,9 @@ section + section::before {
   font-family: var(--font-mono); font-size: 11px; color: var(--ink-2);
   transition: all 0.25s;
 }
-.matmul-cell.active-row { background: rgba(231,165,90,0.15); border-color: var(--accent); color: var(--accent); }
-.matmul-cell.active-col { background: rgba(109,168,255,0.12); border-color: var(--accent-2); color: var(--accent-2); }
-.matmul-cell.computing { background: rgba(231,165,90,0.35); border-color: var(--accent); color: var(--ink); box-shadow: 0 0 12px rgba(231,165,90,0.4); }
+.matmul-cell.active-row { background: rgba(0,113,227,0.15); border-color: var(--accent); color: var(--accent); }
+.matmul-cell.active-col { background: rgba(107,71,214,0.12); border-color: var(--accent-2); color: var(--accent-2); }
+.matmul-cell.computing { background: rgba(0,113,227,0.35); border-color: var(--accent); color: var(--ink); box-shadow: 0 0 12px rgba(0,113,227,0.4); }
 .matmul-cell.done { background: var(--surface-2); color: var(--ink); border-color: var(--line-strong); }
 .matmul-cell.dim { opacity: 0.4; }
 .matmul-symbol { font-family: var(--font-display); font-size: 32px; color: var(--ink-3); font-weight: 300; }
@@ -1211,7 +1217,7 @@ section + section::before {
 .matmul-label .amb { color: var(--accent); }
 .matmul-controls { margin-top: 22px; display: flex; gap: 12px; justify-content: center; align-items: center; }
 .matmul-btn {
-  background: var(--accent); color: #1a1208; border: none;
+  background: var(--accent); color: #fff; border: none;
   padding: 10px 22px; font-family: var(--font-mono); font-size: 11px;
   border-radius: var(--radius-sm); cursor: pointer;
   letter-spacing: 0.12em; text-transform: uppercase;
@@ -1235,7 +1241,7 @@ section + section::before {
 .arch-box rect { transition: all 0.2s; }
 .arch-box .arch-fill { fill: var(--surface); stroke: var(--line-strong); }
 .arch-box:hover .arch-fill { stroke: var(--accent); fill: var(--surface-2); }
-.arch-box.active .arch-fill { stroke: var(--accent); fill: rgba(231,165,90,0.08); }
+.arch-box.active .arch-fill { stroke: var(--accent); fill: rgba(0,113,227,0.08); }
 .arch-box text { font-family: var(--font-mono); font-size: 11px; fill: var(--ink); text-anchor: middle; pointer-events: none; }
 .arch-box .arch-sub { font-size: 9px; fill: var(--ink-3); letter-spacing: 0.08em; }
 .arch-info {
@@ -1268,8 +1274,8 @@ section + section::before {
 }
 .att-token:hover { border-color: var(--line-bright); color: var(--ink); }
 .att-token.query {
-  background: var(--accent); color: #1a1208; border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+  background: var(--accent); color: #fff; border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.18);
 }
 .att-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: start; }
 .att-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 18px 20px; }
@@ -1308,7 +1314,7 @@ section + section::before {
   padding: 6px 10px; font-family: var(--font-mono); font-size: 11px;
   background: var(--bg); border-radius: 4px;
 }
-.att-bar-row.top { background: rgba(231,165,90,0.06); }
+.att-bar-row.top { background: rgba(0,113,227,0.06); }
 .att-bar-row .word { color: var(--ink); }
 .att-bar-row .bar-bg { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; position: relative; }
 .att-bar-row .bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 2px; }
@@ -1360,7 +1366,7 @@ section + section::before {
 }
 .gd-row input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%;
-  background: var(--accent); cursor: pointer; box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+  background: var(--accent); cursor: pointer; box-shadow: 0 0 0 4px rgba(0,113,227,0.18);
 }
 .gd-row input[type=range]::-moz-range-thumb {
   width: 14px; height: 14px; border-radius: 50%; background: var(--accent);
@@ -1373,7 +1379,7 @@ section + section::before {
   letter-spacing: 0.14em; text-transform: uppercase;
   border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
 }
-.gd-btn.primary { background: var(--accent); color: #1a1208; border: none; }
+.gd-btn.primary { background: var(--accent); color: #fff; border: none; }
 .gd-btn.primary:hover { background: #f5b56e; }
 .gd-btn.ghost { background: transparent; border: 1px solid var(--line-strong); color: var(--ink-2); }
 .gd-btn.ghost:hover { border-color: var(--ink); color: var(--ink); }
@@ -1404,7 +1410,7 @@ section + section::before {
 .moe-svg { width: 100%; height: auto; max-width: 600px; display: block; margin: 0 auto; }
 .moe-expert { transition: all 0.4s; }
 .moe-expert rect.body { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1; transition: all 0.4s; }
-.moe-expert.active rect.body { fill: rgba(231,165,90,0.16); stroke: var(--accent); stroke-width: 1.5; }
+.moe-expert.active rect.body { fill: rgba(0,113,227,0.16); stroke: var(--accent); stroke-width: 1.5; }
 .moe-expert text { font-family: var(--font-mono); font-size: 10px; fill: var(--ink-2); text-anchor: middle; }
 .moe-expert.active text { fill: var(--accent); }
 .moe-route { stroke: var(--ink-4); stroke-width: 1; fill: none; opacity: 0.4; transition: all 0.3s; }
@@ -1416,7 +1422,7 @@ section + section::before {
   border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
 }
 .moe-tok-btn:hover { border-color: var(--line-bright); color: var(--ink); }
-.moe-tok-btn.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+.moe-tok-btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 .moe-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
 .moe-stat { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
 .moe-stat .k { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
@@ -1457,7 +1463,7 @@ section + section::before {
 .kv-slider-row input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
   border-radius: 50%; background: var(--accent); cursor: pointer;
-  box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.18);
 }
 .kv-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .kv-stat { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
@@ -1497,7 +1503,7 @@ section + section::before {
 }
 .econ-row input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%;
-  background: var(--accent); cursor: pointer; box-shadow: 0 0 0 4px rgba(231,165,90,0.18);
+  background: var(--accent); cursor: pointer; box-shadow: 0 0 0 4px rgba(0,113,227,0.18);
 }
 .econ-out {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
@@ -1519,7 +1525,7 @@ section + section::before {
   border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
 }
 .sample-strat:hover { border-color: var(--line-bright); }
-.sample-strat.on { border-color: var(--accent); background: rgba(231,165,90,0.05); }
+.sample-strat.on { border-color: var(--accent); background: rgba(0,113,227,0.05); }
 .sample-strat .name {
   font-family: var(--font-mono); font-size: 12px; color: var(--ink);
   margin-bottom: 4px; letter-spacing: 0.04em;
@@ -1876,7 +1882,7 @@ footer .sig {
   color: var(--ink-2); cursor: pointer; transition: all 0.18s ease;
 }
 .path-tab:hover { color: var(--ink); border-color: var(--line-bright); }
-.path-tab.on { background: var(--accent); color: #1a1208; border-color: var(--accent); }
+.path-tab.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 .path-flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 22px; }
 .flow-step {
@@ -2007,7 +2013,7 @@ footer .sig {
         <!-- arrows defs -->
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.4)"/>
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(0,0,0,0.4)"/>
           </marker>
         </defs>
 
@@ -2126,7 +2132,7 @@ footer .sig {
 
       <div class="fp-legend">
         <span><i style="background:rgba(224,125,107,0.5);"></i>Sign (±)</span>
-        <span><i style="background:rgba(109,168,255,0.5);"></i>Exponent (scale)</span>
+        <span><i style="background:rgba(107,71,214,0.5);"></i>Exponent (scale)</span>
         <span><i style="background:rgba(127,201,154,0.4);"></i>Mantissa (precision)</span>
       </div>
 
@@ -2198,7 +2204,7 @@ footer .sig {
 
             <defs>
               <marker id="smallarrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#bfb8a8"/>
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b6f7b"/>
               </marker>
             </defs>
           </svg>
@@ -2354,7 +2360,7 @@ footer .sig {
 
             <!-- Repeat bracket -->
             <path class="arch-repeat" d="M 250 138 L 268 138 L 268 458 L 250 458"/>
-            <text x="272" y="302" font-family="var(--font-mono)" font-size="11" fill="#e7a55a">× N</text>
+            <text x="272" y="302" font-family="var(--font-mono)" font-size="11" fill="#0071e3">× N</text>
 
             <!-- Blocks -->
             <g class="arch-box" data-key="input" transform="translate(60,10)"><rect class="arch-fill" width="160" height="30" rx="4"/><text x="80" y="20" dy="3">Tokens</text></g>
@@ -2651,8 +2657,8 @@ footer .sig {
         <svg viewBox="0 0 700 460" class="die-svg" id="dieSvg">
           <defs>
             <linearGradient id="dieGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="rgba(231,165,90,0.14)"/>
-              <stop offset="100%" stop-color="rgba(231,165,90,0.04)"/>
+              <stop offset="0%" stop-color="rgba(0,113,227,0.14)"/>
+              <stop offset="100%" stop-color="rgba(0,113,227,0.04)"/>
             </linearGradient>
           </defs>
 
@@ -3713,7 +3719,7 @@ function reLU(x) { return Math.max(0, x); }
 function strokeForWeight(w) {
   // sign sets color, magnitude sets width
   const width = 0.5 + Math.abs(w) * 2.5;
-  const color = w >= 0 ? 'rgba(231,165,90,' + Math.min(1, 0.35 + Math.abs(w) * 0.4) + ')' : 'rgba(224,125,107,' + Math.min(1, 0.35 + Math.abs(w) * 0.4) + ')';
+  const color = w >= 0 ? 'rgba(0,113,227,' + Math.min(1, 0.35 + Math.abs(w) * 0.4) + ')' : 'rgba(224,125,107,' + Math.min(1, 0.35 + Math.abs(w) * 0.4) + ')';
   return { width, color };
 }
 
@@ -3738,7 +3744,7 @@ function renderNeuron() {
     line.setAttribute('stroke-width', s.width.toFixed(2));
     const txt = document.getElementById(id + 'Text');
     txt.textContent = id + ' = ' + w.toFixed(1);
-    txt.setAttribute('fill', w >= 0 ? '#e7a55a' : '#e07d6b');
+    txt.setAttribute('fill', w >= 0 ? '#0071e3' : '#e07d6b');
   });
 
   const sum = w1 * x1 + w2 * x2 + w3 * x3 + b;
@@ -3807,7 +3813,7 @@ const EMBEDDINGS = [
   { word: 'API',      x: 0.88, y: 0.66, cluster: 4 }
 ];
 
-const CLUSTER_COLORS = ['#e7a55a', '#7fc99a', '#e07d6b', '#6da8ff', '#c894e4'];
+const CLUSTER_COLORS = ['#0071e3', '#7fc99a', '#e07d6b', '#6b47d6', '#c894e4'];
 
 function setupEmbedSvg(svgId, withCluster=true, interactive=false) {
   const svg = document.getElementById(svgId);
@@ -3912,7 +3918,7 @@ function runSearch() {
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', qx); line.setAttribute('y1', qy);
     line.setAttribute('x2', tx); line.setAttribute('y2', ty);
-    line.setAttribute('stroke', '#e7a55a');
+    line.setAttribute('stroke', '#0071e3');
     line.setAttribute('stroke-width', '1');
     line.setAttribute('stroke-opacity', Math.max(0.2, tk.sim));
     line.setAttribute('stroke-dasharray', '3 3');
@@ -4102,7 +4108,7 @@ function renderChipChart() {
   const x1 = xScale(1971), y1 = yScale(Math.log10(2300));
   const x2 = xScale(2025), y2 = yScale(Math.log10(2300) + (2025 - 1971) * Math.log10(2) / 2);
   html += `<line class="chip-moore-line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
-  html += `<text class="chip-axis-label" x="${x2 - 6}" y="${y2 - 6}" text-anchor="end" fill="#e7a55a" opacity="0.7">MOORE</text>`;
+  html += `<text class="chip-axis-label" x="${x2 - 6}" y="${y2 - 6}" text-anchor="end" fill="#0071e3" opacity="0.7">MOORE</text>`;
 
   // dots
   CHIPS.forEach((c, i) => {
@@ -4116,8 +4122,8 @@ function renderChipChart() {
     const labelY = cy + 4;
     html += `<g class="chip-dot${active}" data-i="${i}">
       <title>${c.name} · ${c.year} · ${formatTransistors(c.transistors)} transistors</title>
-      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${i === selectedChip ? '#e7a55a' : '#bfb8a8'}" stroke="${i === selectedChip ? '#f1ece2' : 'none'}" stroke-width="${i === selectedChip ? 1.5 : 0}"/>
-      <text x="${labelX}" y="${labelY}" font-size="10" fill="${i === selectedChip ? '#e7a55a' : '#807a6e'}">${short}</text>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${i === selectedChip ? '#0071e3' : '#6b6f7b'}" stroke="${i === selectedChip ? '#111114' : 'none'}" stroke-width="${i === selectedChip ? 1.5 : 0}"/>
+      <text x="${labelX}" y="${labelY}" font-size="10" fill="${i === selectedChip ? '#0071e3' : '#807a6e'}">${short}</text>
     </g>`;
   });
 
@@ -4540,11 +4546,11 @@ const TOK_SORTED = [...TOK_VOCAB].sort((a, b) => b.length - a.length);
 
 // Color palette for tokens (cycle through, distinct hues)
 const TOK_COLORS = [
-  'rgba(231,165,90,0.18)', 'rgba(109,168,255,0.18)', 'rgba(127,201,154,0.18)',
+  'rgba(0,113,227,0.18)', 'rgba(107,71,214,0.18)', 'rgba(127,201,154,0.18)',
   'rgba(224,125,107,0.18)', 'rgba(200,148,228,0.18)', 'rgba(231,200,90,0.16)',
 ];
 const TOK_BORDERS = [
-  'rgba(231,165,90,0.5)', 'rgba(109,168,255,0.5)', 'rgba(127,201,154,0.5)',
+  'rgba(0,113,227,0.5)', 'rgba(107,71,214,0.5)', 'rgba(127,201,154,0.5)',
   'rgba(224,125,107,0.5)', 'rgba(200,148,228,0.5)', 'rgba(231,200,90,0.5)',
 ];
 
@@ -4903,17 +4909,17 @@ function renderGd() {
       const s = gdToScreen(p.x, p.y);
       d += `${s.sx},${s.sy} ${i < gdState.path.length - 1 ? 'L ' : ''}`;
     });
-    html += `<path d="${d}" stroke="#e7a55a" stroke-width="1.2" fill="none" opacity="0.7"/>`;
+    html += `<path d="${d}" stroke="#0071e3" stroke-width="1.2" fill="none" opacity="0.7"/>`;
     gdState.path.forEach((p, i) => {
       const s = gdToScreen(p.x, p.y);
       const op = 0.2 + 0.8 * (i / gdState.path.length);
-      html += `<circle cx="${s.sx}" cy="${s.sy}" r="1.5" fill="#e7a55a" opacity="${op}"/>`;
+      html += `<circle cx="${s.sx}" cy="${s.sy}" r="1.5" fill="#0071e3" opacity="${op}"/>`;
     });
   }
 
   // Current position (marble)
   const cur = gdToScreen(gdState.x, gdState.y);
-  html += `<circle cx="${cur.sx}" cy="${cur.sy}" r="7" fill="#e7a55a" stroke="#f1ece2" stroke-width="1.5"/>`;
+  html += `<circle cx="${cur.sx}" cy="${cur.sy}" r="7" fill="#0071e3" stroke="#111114" stroke-width="1.5"/>`;
 
   svg.setAttribute('viewBox', `0 0 ${GD_VIEW.w} ${GD_VIEW.h}`);
   svg.innerHTML = html;
@@ -4982,13 +4988,13 @@ function renderScaling() {
   // grid
   for (let c = xMin; c <= xMax; c++) {
     const x = xs(c);
-    html += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>`;
+    html += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>`;
     const label = '10' + ['¹⁹','²⁰','²¹','²²','²³','²⁴','²⁵','²⁶'][c - xMin];
     html += `<text x="${x}" y="${H - padB + 18}" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#807a6e" letter-spacing="0.06em">${label}</text>`;
   }
   for (let l = 0.4; l <= 1.4; l += 0.2) {
     const y = ys(l);
-    html += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>`;
+    html += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>`;
     html += `<text x="${padL - 8}" y="${y + 3}" text-anchor="end" font-family="ui-monospace" font-size="10" fill="#807a6e">${l.toFixed(1)}</text>`;
   }
 
@@ -4997,15 +5003,15 @@ function renderScaling() {
   html += `<text x="${padL}" y="${padT - 12}" text-anchor="start" font-family="ui-monospace" font-size="10" fill="#807a6e" letter-spacing="0.1em">↑ LOSS</text>`;
 
   // axis
-  html += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H - padB}" stroke="rgba(255,255,255,0.16)" stroke-width="0.5"/>`;
-  html += `<line x1="${padL}" y1="${H - padB}" x2="${W - padR}" y2="${H - padB}" stroke="rgba(255,255,255,0.16)" stroke-width="0.5"/>`;
+  html += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H - padB}" stroke="rgba(0,0,0,0.16)" stroke-width="0.5"/>`;
+  html += `<line x1="${padL}" y1="${H - padB}" x2="${W - padR}" y2="${H - padB}" stroke="rgba(0,0,0,0.16)" stroke-width="0.5"/>`;
 
   // Several model sizes — each is a curve that flattens out (overtraining)
   // L(C, N) = a/N^α + b/D^β + c, where C ~ 6ND, so each N curve in C dies into a plateau
   const sizes = [
-    { N: 1e9,  color: 'rgba(255,255,255,0.25)', label: '1B' },
+    { N: 1e9,  color: 'rgba(0,0,0,0.25)', label: '1B' },
     { N: 7e9,  color: 'rgba(127,201,154,0.5)',  label: '7B' },
-    { N: 70e9, color: 'rgba(109,168,255,0.55)', label: '70B' },
+    { N: 70e9, color: 'rgba(107,71,214,0.55)', label: '70B' },
     { N: 1e12, color: 'rgba(224,125,107,0.5)',  label: '1T' }
   ];
   sizes.forEach(s => {
@@ -5040,8 +5046,8 @@ function renderScaling() {
     const y = ys(loss);
     optD += (optD ? ' L ' : 'M ') + `${x},${y}`;
   }
-  html += `<path d="${optD}" stroke="#e7a55a" stroke-width="2" fill="none" stroke-dasharray="6 3"/>`;
-  html += `<text x="${xs(xMax) - 4}" y="${padT + 16}" text-anchor="end" font-family="ui-monospace" font-size="11" fill="#e7a55a" letter-spacing="0.06em">COMPUTE-OPTIMAL (Chinchilla)</text>`;
+  html += `<path d="${optD}" stroke="#0071e3" stroke-width="2" fill="none" stroke-dasharray="6 3"/>`;
+  html += `<text x="${xs(xMax) - 4}" y="${padT + 16}" text-anchor="end" font-family="ui-monospace" font-size="11" fill="#0071e3" letter-spacing="0.06em">COMPUTE-OPTIMAL (Chinchilla)</text>`;
 
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svg.innerHTML = html;
@@ -5071,12 +5077,12 @@ function renderMoE() {
   // Input token at top
   const route = MOE_ROUTES[moeActiveTok];
   const tokenWords = ['The', 'cat', 'sat', 'quietly', 'on', 'matrix'];
-  html += `<rect x="260" y="20" width="80" height="36" rx="6" fill="rgba(231,165,90,0.16)" stroke="#e7a55a" stroke-width="1.5"/>`;
-  html += `<text x="300" y="42" text-anchor="middle" font-family="ui-monospace" font-size="13" fill="#e7a55a">"${tokenWords[moeActiveTok]}"</text>`;
+  html += `<rect x="260" y="20" width="80" height="36" rx="6" fill="rgba(0,113,227,0.16)" stroke="#0071e3" stroke-width="1.5"/>`;
+  html += `<text x="300" y="42" text-anchor="middle" font-family="ui-monospace" font-size="13" fill="#0071e3">"${tokenWords[moeActiveTok]}"</text>`;
 
   // Router
-  html += `<rect x="240" y="86" width="120" height="32" rx="4" fill="#1c2128" stroke="rgba(255,255,255,0.16)"/>`;
-  html += `<text x="300" y="106" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#bfb8a8">ROUTER</text>`;
+  html += `<rect x="240" y="86" width="120" height="32" rx="4" fill="#eef1f6" stroke="rgba(0,0,0,0.16)"/>`;
+  html += `<text x="300" y="106" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#6b6f7b">ROUTER</text>`;
 
   // 8 experts in 2 rows
   const expertW = 60, expertH = 36, gap = 12;
@@ -5097,8 +5103,8 @@ function renderMoE() {
   }
 
   // Output below experts
-  html += `<rect x="260" y="260" width="80" height="36" rx="6" fill="#1c2128" stroke="rgba(255,255,255,0.16)"/>`;
-  html += `<text x="300" y="282" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#bfb8a8">output</text>`;
+  html += `<rect x="260" y="260" width="80" height="36" rx="6" fill="#eef1f6" stroke="rgba(0,0,0,0.16)"/>`;
+  html += `<text x="300" y="282" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#6b6f7b">output</text>`;
   // Lines from active experts to output
   route.forEach(idx => {
     const ex = startX + idx * (expertW + gap) + expertW/2;
