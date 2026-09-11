@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#f5f5f7" id="themeColorMeta">
-<title>Inside the Model v2.0 &mdash; an interactive field guide</title>
-<meta property="og:title" content="Inside the Model v2.0">
+<title>Inside the Model v2.1 &mdash; an interactive field guide</title>
+<meta property="og:title" content="Inside the Model v2.1">
 <meta property="og:description" content="A field guide to what a modern AI model actually is, from floating-point numbers up through the datacenter that runs it.">
 <meta name="description" content="A field guide to what a modern AI model actually is, from floating-point numbers up through the datacenter that runs it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2168,7 +2168,7 @@ main section[id] { scroll-margin-top: 96px; }
     <button class="tocbar-title" id="tocTop" title="Back to top">
       <span class="tb-dot"></span>
       <span class="tb-name">Inside the Model</span>
-      <span class="tb-v">v2.0</span>
+      <span class="tb-v">v2.1</span>
     </button>
     <nav class="tocbar-scroll" id="tocScroll" aria-label="Table of contents"></nav>
     <div class="tocbar-actions">
@@ -2190,7 +2190,7 @@ main section[id] { scroll-margin-top: 96px; }
 <section class="hero">
   <div class="container">
     <div class="nav-row">
-      <div><span class="dot"></span>Inside the Model <span class="faint" style="font-size:11px;">v2.0 · 9 September 2026, 2:51 PM ET</span></div>
+      <div><span class="dot"></span>Inside the Model <span class="faint" style="font-size:11px;">v2.1 · 11 September 2026, 7:29 AM ET</span></div>
       <div class="right">
         <span>An interactive field guide · 2026</span>
         <button class="contact-btn" id="themeToggle" aria-pressed="false"><span id="themeLabel" class="themeLabel">Dark</span></button>
@@ -3000,7 +3000,7 @@ main section[id] { scroll-margin-top: 96px; }
         <div class="scale-readout">
           <div class="scale-big" id="scaleGpus">100,000</div>
           <div class="scale-sub">B200 GPUs</div>
-          <div class="scale-desc" id="scaleDesc">100K-GPU class &mdash; Colossus phase 1 scale (2024, then H100s)</div>
+          <div class="scale-desc" id="scaleDesc">100K-GPU class &mdash; Colossus (xAI's Memphis cluster) phase 1 scale (2024, then H100s)</div>
         </div>
         <input type="range" id="scaleSlider" min="0" max="6" step="1" value="3" />
         <div class="scale-ticks">
@@ -3045,7 +3045,7 @@ main section[id] { scroll-margin-top: 96px; }
       <div class="ladder" id="energyLadder"></div>
 
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
-        Global data centres used roughly <span class="amber mono">415 TWh</span> in 2024 and about <span class="amber mono">485 TWh</span> in 2025 — around 1.5% of all electricity. The IEA's updated base case has that roughly doubling to <span class="amber mono">~950 TWh</span> by 2030, about 3% of world demand, with AI-focused capacity tripling over the same period and doing most of the pushing. Two things are worth holding alongside that. The IEA also notes that supply-chain bottlenecks — the ones in the next section — are making the more aggressive near-term scenarios <em>less</em> likely, not more. And a 3% share is a smaller number than the coverage implies: the strain is local and concentrated, not global and diffuse. Whether it's worth it depends on whether the things AI ends up doing turn out to be worth the joules, and there is no consensus on that, even inside the industry.
+        Global data centers used roughly <span class="amber mono">415 TWh</span> in 2024 and about <span class="amber mono">485 TWh</span> in 2025 — around 1.5% of all electricity. The IEA's updated base case has that roughly doubling to <span class="amber mono">~950 TWh</span> by 2030, about 3% of world demand, with AI-focused capacity tripling over the same period and doing most of the pushing. Two things are worth holding alongside that. The IEA also notes that supply-chain bottlenecks — the ones in the next section — are making the more aggressive near-term scenarios <em>less</em> likely, not more. And a 3% share is a smaller number than the coverage implies: the strain is local and concentrated, not global and diffuse. Whether it's worth it depends on whether the things AI ends up doing turn out to be worth the joules, and there is no consensus on that, even inside the industry.
       </p>
     </div>
   </div>
@@ -3090,13 +3090,13 @@ main section[id] { scroll-margin-top: 96px; }
         <div class="fact-card">
           <div class="fc-k">Capital per gigawatt</div>
           <div class="fc-v">$38–60<span class="u"> B</span></div>
-          <p class="fc-note">All-in cost for a gigawatt of AI data centre — buildings, power, cooling, networking, and the GPUs, which dominate. Epoch AI models ~$38 B of upfront capital; fully built-out campus figures circulating in 2026 run $45–60 B. The estimate has climbed steeply in a year, which is itself the finding.</p>
+          <p class="fc-note">All-in cost for a gigawatt of AI data center — buildings, power, cooling, networking, and the GPUs, which dominate. Epoch AI models ~$38 B of upfront capital; fully built-out campus figures circulating in 2026 run $45–60 B. The estimate has climbed steeply in a year, which is itself the finding.</p>
         </div>
       </div>
 
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
-        One caveat on that first number, because it is widely misread: the interconnection queue counts <em>generation and storage</em> asking to connect, not data centres asking to plug in. Load interconnection is tracked separately and far more patchily, utility by utility. The queue is a proxy for how slowly the supply side moves, not a census of AI demand — and it is quoted as the latter constantly.<br><br>
-        The direction still holds. For decades, siting a data centre was about land, fibre, and tax breaks. Now the first question is whether the grid can give you the power at all, and when. Load is growing faster than transmission can be permitted and built, so power availability has become the primary screen for a serious project — and the reason developers increasingly bring their own generation rather than wait in line. Natural gas in the queues rose 86% in 2025, to 253 GW, which is roughly what that decision looks like in aggregate.
+        One caveat on that first number, because it is widely misread: the interconnection queue counts <em>generation and storage</em> asking to connect, not data centers asking to plug in. Load interconnection is tracked separately and far more patchily, utility by utility. The queue is a proxy for how slowly the supply side moves, not a census of AI demand — and it is quoted as the latter constantly.<br><br>
+        The direction still holds. For decades, siting a data center was about land, fibre, and tax breaks. Now the first question is whether the grid can give you the power at all, and when. Load is growing faster than transmission can be permitted and built, so power availability has become the primary screen for a serious project — and the reason developers increasingly bring their own generation rather than wait in line. Natural gas in the queues rose 86% in 2025, to 253 GW, which is roughly what that decision looks like in aggregate.
       </p>
     </div>
 
@@ -3167,7 +3167,7 @@ main section[id] { scroll-margin-top: 96px; }
             <div class="az-zone single"><div class="z-name">One NVLink / InfiniBand fabric</div><div class="z-sub">every GPU a few microseconds from every other</div></div>
             <div class="az-zone single"><div class="z-name">One dedicated power plant</div><div class="z-sub">gigawatt-scale, often on-site generation</div></div>
           </div>
-          <p class="fc-note" style="margin-top: 14px;">Frontier training wants the <b style="color:var(--ink);">opposite</b> of redundancy: every GPU as close as physically possible, because an all-reduce after every batch punishes distance. So the biggest clusters are single mega-sites — xAI's Colossus in Memphis, which passed 555,000 GPUs and gigawatt-class draw across its second site in early 2026, and OpenAI's Stargate in Abilene — not spread across zones.</p>
+          <p class="fc-note" style="margin-top: 14px;">Frontier training wants the <b style="color:var(--ink);">opposite</b> of redundancy: every GPU as close as physically possible, because an all-reduce after every batch punishes distance. So the biggest clusters are single mega-sites — xAI's Colossus in Memphis, which passed 555,000 GPUs and gigawatt-class draw across its second site in early 2026, and OpenAI's Stargate (OpenAI, Oracle and SoftBank joint venture) in Abilene — not spread across zones.</p>
         </div>
       </div>
 
@@ -3187,7 +3187,7 @@ main section[id] { scroll-margin-top: 96px; }
       </div>
 
       <div class="min-table">
-        <div class="min-row"><div class="m-el">Copper<span class="m-sym">Cu</span></div><div class="m-use">Everything electrical: busbars, cabling, transformer and motor windings. The highest-volume metal in the buildout. S&amp;P Global's January 2026 study puts world demand at 28 million tonnes in 2025 rising to 42 million by 2040, against mined supply it expects to peak in 2030 — a projected 10-million-tonne annual shortfall. Data centres are a small slice of that (1.1 Mt today, ~2.5 Mt by 2040) but the fastest-growing one.</div></div>
+        <div class="min-row"><div class="m-el">Copper<span class="m-sym">Cu</span></div><div class="m-use">Everything electrical: busbars, cabling, transformer and motor windings. The highest-volume metal in the buildout. S&amp;P Global's January 2026 study puts world demand at 28 million tonnes in 2025 rising to 42 million by 2040, against mined supply it expects to peak in 2030 — a projected 10-million-tonne annual shortfall. Data centers are a small slice of that (1.1 Mt today, ~2.5 Mt by 2040) but the fastest-growing one.</div></div>
         <div class="min-row"><div class="m-el">Gallium<span class="m-sym">Ga</span></div><div class="m-use">Power electronics (GaN) that convert and regulate the huge currents feeding racks efficiently. Low-volume but strategically fragile — supply is concentrated in China, which has used export controls as leverage.</div></div>
         <div class="min-row"><div class="m-el">Rare earths<span class="m-sym">Nd, Dy…</span></div><div class="m-use">Neodymium and friends make the permanent magnets in fans, pumps, motors, and generators — including the turbines spun up to power these sites. Also China-dominated and export-sensitive.</div></div>
         <div class="min-row"><div class="m-el">Electrical steel<span class="m-sym">GOES</span></div><div class="m-use">Grain-oriented silicon steel is the core of every transformer. A narrow global manufacturing base makes it a direct cap on how fast grid and site power can be built.</div></div>
@@ -3465,7 +3465,7 @@ main section[id] { scroll-margin-top: 96px; }
       </div>
 
       <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
-        The numbers above are DeepSeek-V3's, kept because they are clean and public. The scale has moved a long way since: Moonshot's Kimi K3, released with open weights in July 2026, is 2.8 T total parameters against 104 B active, and DeepSeek V4-Pro is 1.6 T total. The ratio is the point — totals keep exploding while active parameters stay pinned in the tens of billions. The trick is huge capacity (many specialised experts) at modest inference cost (only a few light up per token). The catch is that you still have to hold every expert in memory, including the ones this token never touches, so MoE buys compute back and pays for it in HBM. As of 2026 essentially every frontier open-weight release is sparse; the dense model has stopped being made at the top end.
+        The numbers above are DeepSeek-V3's, kept because they are clean and public. The scale has moved a long way since: Moonshot's Kimi (Moonshot AI, open weights) K3, released with open weights in July 2026, is 2.8 T total parameters against 104 B active, and DeepSeek (open weights) V4-Pro is 1.6 T total. The ratio is the point — totals keep exploding while active parameters stay pinned in the tens of billions. The trick is huge capacity (many specialized experts) at modest inference cost (only a few light up per token). The catch is that you still have to hold every expert in memory, including the ones this token never touches, so MoE buys compute back and pays for it in HBM. As of 2026 essentially every frontier open-weight release is sparse; the dense model has stopped being made at the top end.
       </p>
     </div>
   </div>
@@ -3649,14 +3649,14 @@ main section[id] { scroll-margin-top: 96px; }
       </div>
 
       <div class="tool-grid">
-        <div class="tool-cat"><div class="tc-k">Framework</div><div class="tc-list">PyTorch <span>· dominant</span><br/>JAX <span>· Google / TPU</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Framework</div><div class="tc-list">PyTorch (open source) <span>· dominant</span><br/>JAX (open source) <span>· Google / TPU</span></div></div>
         <div class="tool-cat"><div class="tc-k">Training stack</div><div class="tc-list">Megatron-LM<br/>DeepSpeed · NeMo<br/>torchtitan · Nanotron</div></div>
         <div class="tool-cat"><div class="tc-k">Parallelism</div><div class="tc-list">data · tensor<br/>pipeline · sequence<br/>FSDP <span>· shard everything</span></div></div>
         <div class="tool-cat"><div class="tc-k">Data</div><div class="tc-list">Common Crawl + licensed<br/>dedup · quality filter<br/>tokenizer <span>(BPE)</span></div></div>
-        <div class="tool-cat"><div class="tc-k">Orchestration</div><div class="tc-list">SLURM · Kubernetes<br/>Ray<br/>NCCL <span>· GPU comms</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Orchestration</div><div class="tc-list">SLURM · Kubernetes (open source)<br/>Ray<br/>NCCL <span>· GPU comms</span></div></div>
         <div class="tool-cat"><div class="tc-k">Alignment</div><div class="tc-list">SFT <span>· instruction-tune</span><br/>DPO · RLHF · GRPO<br/>eval harnesses</div></div>
-        <div class="tool-cat"><div class="tc-k">Start from open weights</div><div class="tc-list">Llama · Qwen · Mistral<br/>DeepSeek · Gemma<br/>OLMo <span>· fully open</span></div></div>
-        <div class="tool-cat"><div class="tc-k">Serving</div><div class="tc-list">vLLM · SGLang<br/>TensorRT-LLM · TGI<br/>+ quantization</div></div>
+        <div class="tool-cat"><div class="tc-k">Start from open weights</div><div class="tc-list">Llama (open weights, not open source) · Qwen (open weights) · Mistral (several models open weights)<br/>DeepSeek · Gemma (Google, open weights)<br/>OLMo <span>· fully open</span></div></div>
+        <div class="tool-cat"><div class="tc-k">Serving</div><div class="tc-list">vLLM (open source) · SGLang<br/>TensorRT-LLM · TGI<br/>+ quantization</div></div>
       </div>
     </div>
 
@@ -3819,7 +3819,7 @@ main section[id] { scroll-margin-top: 96px; }
       <div class="gloss"><div class="term"><span class="icon"></span>Process node</div><div class="def">A generation of chip manufacturing technology, named in nanometers ("3nm", "4nm"). The names stopped corresponding to physical size around 2015. What's real is transistor density: ~130–300 M/mm².</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>FLOPS</div><div class="def">Floating-point operations per second. The unit of compute throughput. A single B200 does ~4.5 PFLOPS (10¹⁵) dense at FP8; a Rubin package does ~50 PFLOPS at FP4. Modern AI clusters hit tens of EFLOPS (10¹⁸).</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>HBM</div><div class="def">High-Bandwidth Memory. DRAM stacked vertically and placed right next to a GPU die, with a wide interface. The B200 carries 192 GB of HBM3e at 8 TB/s; B300 raises that to 288 GB on 12-high stacks; Rubin moves to 288 GB of HBM4 at 22 TB/s.</div></div>
-      <div class="gloss"><div class="term"><span class="icon"></span>Tensor core</div><div class="def">A specialised matrix-multiply unit inside modern GPUs. NVIDIA's 5th-generation tensor cores handle FP4, FP6, FP8, and FP16 with hardware sparsity support. Each generation has added a lower-precision format; that, more than clock speed, is where the headline FLOPS gains come from.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Tensor core</div><div class="def">A specialized matrix-multiply unit inside modern GPUs. NVIDIA's 5th-generation tensor cores handle FP4, FP6, FP8, and FP16 with hardware sparsity support. Each generation has added a lower-precision format; that, more than clock speed, is where the headline FLOPS gains come from.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>TDP</div><div class="def">Thermal Design Power — the steady-state heat a chip is expected to dissipate. The B200 is rated at 1,000 W, up from the H100's 700 W; the B300 at 1,400 W. Past roughly 1 kW per chip, liquid cooling stops being optional, which is why the number matters to buildings and not just to chips.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Data center</div><div class="def">A facility housing thousands to millions of servers. AI data centers are increasingly purpose-built: liquid-cooled, gigawatt-scale, often with their own power generation.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>PUE</div><div class="def">Power Usage Effectiveness — how much total power a data center draws per watt of useful compute. Good modern facilities: 1.1–1.3. The overhead is cooling, lighting, networking, losses.</div></div>
@@ -3841,7 +3841,7 @@ main section[id] { scroll-margin-top: 96px; }
       <div class="gloss"><div class="term"><span class="icon"></span>Gradient descent</div><div class="def">The optimization loop behind all training: measure the slope of the loss, step downhill, repeat. Written down by Cauchy in 1847; still the core of how every model learns.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Backpropagation</div><div class="def">The chain rule applied through every layer to compute the gradient for all weights in one backward sweep. Popularized for neural nets in 1986; what makes gradient descent tractable at scale.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Availability zone</div><div class="def">One or more isolated data centers within a cloud region, with independent power and cooling. Apps span several so one failure doesn't take everything down. AI training does the opposite — it packs into one site.</div></div>
-      <div class="gloss"><div class="term"><span class="icon"></span>Interconnection queue</div><div class="def">The regulated line to connect a new power plant to the transmission grid — 2,061 GW of generation and storage were in it at the end of 2025, with a five-year median wait. Large <i>loads</i> like data centres queue separately, through the local utility, and are tracked far less consistently. Both queues, not just the famous one, are now binding constraints.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Interconnection queue</div><div class="def">The regulated line to connect a new power plant to the transmission grid — 2,061 GW of generation and storage were in it at the end of 2025, with a five-year median wait. Large <i>loads</i> like data centers queue separately, through the local utility, and are tracked far less consistently. Both queues, not just the famous one, are now binding constraints.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Neocloud</div><div class="def">A cloud provider built only around GPUs — bare-metal, InfiniBand, cheaper than hyperscalers. CoreWeave, Lambda, Crusoe, Nebius. Even hyperscalers rent from them to fill capacity gaps.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>BF16</div><div class="def">Brain float 16. The same 16 bits as FP16, but reallocated — more exponent, less mantissa — so it keeps FP32's dynamic range at lower precision. The default format for training, because it rarely overflows.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>INT4 / INT8</div><div class="def">Integer quantization. Weights stored as 4- or 8-bit integers rather than floating point, with a scale factor applied per group. Smaller and faster than any float format, at some cost to precision.</div></div>
@@ -3861,8 +3861,8 @@ main section[id] { scroll-margin-top: 96px; }
       <div class="gloss"><div class="term"><span class="icon"></span>SSD</div><div class="def">Solid-state drive. Flash storage — far bigger and cheaper than DRAM, far slower. The bottom, largest tier of the memory hierarchy, where model weights sit before they're loaded.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>IVF</div><div class="def">Inverted File index. A vector-search index that clusters vectors and searches only the nearest clusters. The main alternative to HNSW for pruning a billion-vector search.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>TSMC</div><div class="def">Taiwan Semiconductor Manufacturing Company — the foundry that fabricates almost every frontier AI chip. "TSMC 4NP" on the B200 names the process node it's built on.</div></div>
-      <div class="gloss"><div class="term"><span class="icon"></span>GPU generations</div><div class="def">The chips used as examples here. NVIDIA's data-centre line runs A100 → H100 / H200 (Hopper) → B200 / B300 (Blackwell) → Rubin, which began shipping in the second half of 2026 and pairs with the Vera CPU. GB200 and GB300 pair two GPUs with a Grace CPU on one board; the equivalent Rubin rack is the NVL72.</div></div>
-      <div class="gloss"><div class="term"><span class="icon"></span>SMR</div><div class="def">Small modular reactor. Factory-built nuclear units in the 50–300 MW range, pitched as a way to power an AI campus without the decade-long timeline of a conventional plant. Worth noting that no commercial SMR is yet serving a data centre; the announcements run well ahead of the concrete.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>GPU generations</div><div class="def">The chips used as examples here. NVIDIA's data-center line runs A100 → H100 / H200 (Hopper) → B200 / B300 (Blackwell) → Rubin, which began shipping in the second half of 2026 and pairs with the Vera CPU. GB200 and GB300 pair two GPUs with a Grace CPU on one board; the equivalent Rubin rack is the NVL72.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>SMR</div><div class="def">Small modular reactor. Factory-built nuclear units in the 50–300 MW range, pitched as a way to power an AI campus without the decade-long timeline of a conventional plant. Worth noting that no commercial SMR is yet serving a data center; the announcements run well ahead of the concrete.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Grid operator</div><div class="def">The entity that balances a regional power grid and runs its interconnection queue — PJM is the largest in the US. Named here because that queue is where new data-center load waits years to plug in.</div></div>
     </div>
   </div>
@@ -3878,11 +3878,13 @@ main section[id] { scroll-margin-top: 96px; }
     <span>Scroll → ↑</span>
   </div>
   <div class="container">
-    <p class="verstamp">Inside the Model — v2.0 · build 2026-09-09T14:51-04:00 · supersedes v1.0 (2026-08-27, first house-style pass: dark theme and token set throughout, contact card, nav labels).
+    <p class="verstamp">Inside the Model — v2.1 · build 2026-09-11T07:29-04:00 · supersedes v2.0 (2026-09-09, floating table-of-contents bar and the silicon and power audit summarized below).
+    <br><br>
+    <b>Changes in v2.1:</b> Two editorial conventions applied throughout. Codenames and program names now carry what they actually refer to, so Colossus (xAI's Memphis cluster) and Stargate (OpenAI, Oracle and SoftBank joint venture) rather than the bare name, alongside the accelerator codenames the guide already spelled out. And every open model or tool is marked on first mention, separating open source (PyTorch, vLLM, JAX, Kubernetes) from open weights (Llama, DeepSeek, Qwen, Kimi, Gemma, most of Mistral); downloadable parameters are not auditable software and the guide now says which is which. Spelling normalized to US forms, matching the rest of the series. No factual content changed: the September 9 audit below still stands.
     <br><br>
     <b>Changes in v2:</b> Added a floating table-of-contents bar that rides down the page once the hero is cleared — full section list, horizontally scrollable, active section tracked, reading-progress line, and the theme and contact controls that previously scrolled away with the hero. It works at every width, which the left rail (wide screens only) did not; one scroll-spy now drives the hero TOC, the rail, and the bar so they cannot disagree.
     <br><br>
-    <b>Audit:</b> Silicon roadmap moved on — Vera Rubin entered production 1 June 2026 and is shipping (336 B transistors, TSMC N3, 288 GB HBM4 at 22 TB/s, ~50 PFLOPS FP4, NVLink 6), and B300 specifics added; the guide still uses B200 as its reference chip and now says so. Corrected the cluster slider's 100,000-GPU label, which credited xAI's Colossus phase 1 to B200s when that build was H100s. Refreshed the IEA energy figures to the updated base case (~950 TWh by 2030) and added the agency's own note that supply-chain bottlenecks are making faster scenarios less likely. Rebuilt all four power-wall figures against Berkeley Lab's <i>Queued Up: 2026 Edition</i> (2,061 GW queued at end-2025, down 10%; 61-month median to energize), Wood Mackenzie transformer lead times, and current per-gigawatt capital estimates, which have climbed from ~$29 B to $38–60 B in a year. Added the caveat that the interconnection queue counts generation, not data-centre load — the most common misreading of that number. Copper figures moved to S&amp;P Global's January 2026 study. Mixture-of-experts now cites Kimi K3 (2.8 T total / 104 B active) alongside DeepSeek-V3. Eight glossary entries updated. Section structure, interactive demos, and voice are unchanged.</p>
+    <b>Audit:</b> Silicon roadmap moved on — Vera Rubin entered production 1 June 2026 and is shipping (336 B transistors, TSMC N3, 288 GB HBM4 at 22 TB/s, ~50 PFLOPS FP4, NVLink 6), and B300 specifics added; the guide still uses B200 as its reference chip and now says so. Corrected the cluster slider's 100,000-GPU label, which credited xAI's Colossus phase 1 to B200s when that build was H100s. Refreshed the IEA energy figures to the updated base case (~950 TWh by 2030) and added the agency's own note that supply-chain bottlenecks are making faster scenarios less likely. Rebuilt all four power-wall figures against Berkeley Lab's <i>Queued Up: 2026 Edition</i> (2,061 GW queued at end-2025, down 10%; 61-month median to energize), Wood Mackenzie transformer lead times, and current per-gigawatt capital estimates, which have climbed from ~$29 B to $38–60 B in a year. Added the caveat that the interconnection queue counts generation, not data-center load — the most common misreading of that number. Copper figures moved to S&amp;P Global's January 2026 study. Mixture-of-experts now cites Kimi K3 (2.8 T total / 104 B active) alongside DeepSeek-V3. Eight glossary entries updated. Section structure, interactive demos, and voice are unchanged.</p>
   </div>
 </footer>
 
@@ -4619,7 +4621,7 @@ function fmtEnergy(mw) {
   return (twh * 1000).toFixed(twh > 0.01 ? 1 : 2) + ' GWh/yr';
 }
 function energyComparison(twh) {
-  // IEA: global data centre load ~485 TWh (2025); US ~45% of that, ~220 TWh
+  // IEA: global data center load ~485 TWh (2025); US ~45% of that, ~220 TWh
   if (twh >= 100) return (twh / 485 * 100).toFixed(1) + '% of global data center load';
   if (twh >= 0.5) return (twh / 220 * 100).toFixed(2) + '% of US data center load';
   return '< 0.01% of US data center load';
