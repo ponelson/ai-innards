@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#f5f5f7" id="themeColorMeta">
-<title>Inside the Model v2.1 &mdash; an interactive field guide</title>
-<meta property="og:title" content="Inside the Model v2.1">
+<title>Inside the Model v3.0 &mdash; an interactive field guide</title>
+<meta property="og:title" content="Inside the Model v3.0">
 <meta property="og:description" content="A field guide to what a modern AI model actually is, from floating-point numbers up through the datacenter that runs it.">
 <meta name="description" content="A field guide to what a modern AI model actually is, from floating-point numbers up through the datacenter that runs it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1795,10 +1795,17 @@ footer .sig {
   transition: opacity 0.4s ease;
   max-height: 86vh;
   overflow: hidden;
+  /* The rail lives in the gutter and may never reach the content column.
+     .container is 1140px wide and centered, so the gutter runs from the
+     viewport edge to calc(50vw - 570px). The rail starts 24px in, which
+     leaves it calc(50vw - 594px) of room. Anything longer is clipped
+     rather than drawn over the prose. */
+  max-width: calc(50vw - 594px);
 }
 .side-nav.show { opacity: 1; pointer-events: auto; }
 .side-nav a {
   display: flex; align-items: center; gap: 10px;
+  min-width: 0;
   border: none;
   padding: 3px 6px;
   color: var(--ink-4);
@@ -1818,13 +1825,19 @@ footer .sig {
   opacity: 0;
   transform: translateX(-4px);
   transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .side-nav:hover a .sn-label { opacity: 1; transform: none; }
 .side-nav a:hover { color: var(--ink-2); }
 .side-nav a.active { color: var(--accent); }
 .side-nav a.active .rail { width: 26px; background: var(--accent); }
 .side-nav a.active .sn-label { opacity: 1; transform: none; color: var(--accent); }
-@media (max-width: 1320px) { .side-nav { display: none; } }
+/* Below this width the gutter is too narrow to hold a legible label, so the
+   rail stands down entirely and the floating TOC bar carries navigation.
+   1140px of content + 2 x 210px of gutter = 1560px. */
+@media (max-width: 1560px) { .side-nav { display: none; } }
 
 /* ============================================================
    ADDED: interactive table of contents (hero)
@@ -2140,6 +2153,93 @@ main section[id] { scroll-margin-top: 96px; }
   * { animation-duration: 0.001ms !important; transition-duration: 0.05s !important; }
 }
 
+
+/* ============================================================
+   ADDED v3.0: the round trip (inference path)
+   ============================================================ */
+.rt-scale {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 12px; flex-wrap: wrap;
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4);
+  margin: 22px 0 8px;
+}
+.rt-scale .rt-total { color: var(--accent); letter-spacing: 0.04em; }
+.rt-bar {
+  display: flex; width: 100%; height: 34px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  overflow: hidden; background: var(--surface);
+}
+.rt-seg {
+  min-width: 3px; padding: 0; border: 0; cursor: pointer;
+  opacity: 0.78; transition: opacity 0.18s ease;
+  font-family: var(--font-mono); color: var(--ink);
+}
+.rt-seg:hover { opacity: 1; }
+.rt-seg.on { opacity: 1; box-shadow: inset 0 0 0 2px var(--ink); }
+.rt-seg + .rt-seg { border-left: 1px solid var(--bg); }
+.ph-client { background: color-mix(in srgb, var(--ink-4) 50%, transparent); }
+.ph-net    { background: color-mix(in srgb, var(--orchid) 85%, transparent); }
+.ph-cpu    { background: color-mix(in srgb, var(--pos-soft) 90%, transparent); }
+.ph-gpu    { background: var(--accent); }
+.ph-dec    { background: var(--heat-hot); }
+
+.rt-readout {
+  margin-top: 20px;
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 24px 26px;
+}
+.rt-readout .rt-n {
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
+}
+.rt-readout h4 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 22px; letter-spacing: -0.015em; color: var(--ink);
+  margin: 8px 0 16px;
+}
+.rt-meta {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(172px, 1fr));
+  gap: 10px; margin-bottom: 18px;
+}
+.rt-meta > div {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+}
+.rt-meta .rk {
+  display: block; font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-4); margin-bottom: 6px;
+}
+.rt-meta .rv { display: block; font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+.rt-meta .rv.figure { font-family: var(--font-mono); color: var(--accent); }
+.rt-readout p { font-size: 14px; line-height: 1.7; color: var(--ink-2); margin: 0; max-width: 78ch; }
+
+.rt-list {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(234px, 1fr));
+  gap: 8px; margin-top: 20px;
+}
+.rt-step {
+  display: flex; align-items: baseline; gap: 10px; text-align: left;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 11px 13px; cursor: pointer;
+  font-family: var(--font-body);
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.rt-step:hover { border-color: var(--line-bright); }
+.rt-step.on { border-color: var(--accent); background: var(--accent-glow); }
+.rt-step .sn { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); flex: none; width: 15px; }
+.rt-step .st { font-size: 13px; color: var(--ink); line-height: 1.35; flex: 1; }
+.rt-step .sms { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3); flex: none; }
+.rt-step.on .sms { color: var(--accent); }
+@media (max-width: 640px) { .rt-meta { grid-template-columns: 1fr; } }
+
+.chart-legend .swatch.ph-client { background: color-mix(in srgb, var(--ink-4) 50%, transparent); width: 14px; }
+.chart-legend .swatch.ph-net    { background: color-mix(in srgb, var(--orchid) 85%, transparent); width: 14px; }
+.chart-legend .swatch.ph-cpu    { background: color-mix(in srgb, var(--pos-soft) 90%, transparent); width: 14px; }
+.chart-legend .swatch.ph-gpu    { background: var(--accent); width: 14px; }
+.chart-legend .swatch.ph-dec    { background: var(--heat-hot); width: 14px; }
+
 </style>
 </head>
 
@@ -2168,7 +2268,7 @@ main section[id] { scroll-margin-top: 96px; }
     <button class="tocbar-title" id="tocTop" title="Back to top">
       <span class="tb-dot"></span>
       <span class="tb-name">Inside the Model</span>
-      <span class="tb-v">v2.1</span>
+      <span class="tb-v">v3.0</span>
     </button>
     <nav class="tocbar-scroll" id="tocScroll" aria-label="Table of contents"></nav>
     <div class="tocbar-actions">
@@ -2190,7 +2290,7 @@ main section[id] { scroll-margin-top: 96px; }
 <section class="hero">
   <div class="container">
     <div class="nav-row">
-      <div><span class="dot"></span>Inside the Model <span class="faint" style="font-size:11px;">v2.1 · 11 September 2026, 7:29 AM ET</span></div>
+      <div><span class="dot"></span>Inside the Model <span class="faint" style="font-size:11px;">Field guide / <b>v3.0</b> · 21 September 2026, 12:08 PM ET · build 2026-09-21T12:08-04:00</span></div>
       <div class="right">
         <span>An interactive field guide · 2026</span>
         <button class="contact-btn" id="themeToggle" aria-pressed="false"><span id="themeLabel" class="themeLabel">Dark</span></button>
@@ -3354,7 +3454,7 @@ main section[id] { scroll-margin-top: 96px; }
 
 
 <!-- =====================================================
-     XII. TRAINING — gradient descent, scaling laws, MoE
+     XIII. TRAINING — gradient descent, scaling laws, MoE
      ===================================================== -->
 <section class="reveal" id="training" data-nav="Training">
   <div class="container">
@@ -3473,7 +3573,7 @@ main section[id] { scroll-margin-top: 96px; }
 
 
 <!-- =====================================================
-     XIII. LOGITS → SOFTMAX → TOKEN
+     XIV. LOGITS → SOFTMAX → TOKEN
      ===================================================== -->
 <section class="reveal" id="softmax" data-nav="Output">
   <div class="container">
@@ -3559,11 +3659,190 @@ main section[id] { scroll-margin-top: 96px; }
 
 
 <!-- =====================================================
-     XV. FROM SCRATCH — building a model, idea to execution
+     XV. INFERENCE — keystroke to answer
+     ===================================================== -->
+<section class="reveal" id="inference" data-nav="Inference">
+  <div class="container">
+    <div class="eyebrow">XV · Inference</div>
+    <h2 class="serif">What happens when you <span class="italic amber">hit return.</span></h2>
+    <p class="lead narrow">Everything so far described the model at rest. This is the model in use: one prompt, one answer, and the dozen or so hops in between. Two of those hops do nearly all the work, and they stress the hardware in opposite directions.</p>
+
+    <p class="muted" style="font-size: 15px; line-height: 1.75; max-width: 78ch;">
+      Nothing is computed on your machine. The text you typed leaves as a few hundred bytes inside an ordinary HTTPS request, and every number in this guide then gets touched somewhere else: in a building you will never see, on chips you will never own, drawing power from a grid that had to be planned years in advance to make room for it. The round trip usually takes between two and twenty seconds. Very little of that is the model thinking.
+    </p>
+    <p class="muted" style="font-size: 15px; line-height: 1.75; max-width: 78ch;">
+      A language model answers in two phases that have nothing in common except the weights they share. <span class="mono amber">Prefill</span> reads your whole prompt at once, in parallel, and is limited by how fast the chip can multiply. <span class="mono amber">Decode</span> writes the answer one token at a time, in sequence, and is limited by how fast the chip can read its own memory. A GPU doing both at once does neither well, which is why the serving systems that shipped through 2026 pull the two apart onto separate pools of hardware.
+    </p>
+
+    <!-- DEMO 30: THE ROUND TRIP -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>The round trip</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Pick a workload, then walk the path. Click any block in a bar, or any step in the list below it.</p>
+        </div>
+        <div class="label"><span class="num">30</span>ROUND TRIP</div>
+      </div>
+
+      <div class="path-tabs" id="rtTabs">
+        <button class="path-tab on" data-rt="chat">Short chat</button>
+        <button class="path-tab" data-rt="rag">Long context</button>
+        <button class="path-tab" data-rt="reason">Reasoning model</button>
+      </div>
+      <p class="muted mono" id="rtWorkload" style="font-size: 11.5px; letter-spacing: 0.02em; margin: -8px 0 4px;"></p>
+
+      <div class="chart-legend" style="margin-top: 18px;">
+        <span class="lg"><span class="swatch ph-client"></span>Your device</span>
+        <span class="lg"><span class="swatch ph-net"></span>Network</span>
+        <span class="lg"><span class="swatch ph-cpu"></span>CPU services</span>
+        <span class="lg"><span class="swatch ph-gpu"></span>GPU, prefill</span>
+        <span class="lg"><span class="swatch ph-dec"></span>GPU, decode</span>
+      </div>
+
+      <div class="rt-scale">
+        <span>The whole answer, drawn to scale</span>
+        <span class="rt-total" id="rtTotal"></span>
+      </div>
+      <div class="rt-bar" id="rtBarAll"></div>
+
+      <div class="rt-scale">
+        <span>The first token, same path, expanded</span>
+        <span class="rt-total" id="rtTtft"></span>
+      </div>
+      <div class="rt-bar" id="rtBarTtft"></div>
+
+      <div class="rt-readout" id="rtReadout"></div>
+      <div class="rt-list" id="rtList"></div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 13.5px; line-height: 1.65;">
+        Times are typical for a well run production service in 2026, not guarantees, and the queue in step 4 is the one that moves most. Energy is estimated as <span class="mono">(output tokens + input tokens ÷ 8) × 2.5 J</span>, with the constant fitted so that a short answer lands on Google's measured median of 0.24 Wh. Input tokens are discounted because prefill runs at far higher utilization than decode. It is a shape, not a measurement.
+      </p>
+    </div>
+
+    <h3>Prefill is a sprint. Decode is a drip.</h3>
+    <p class="muted" style="font-size: 15px; line-height: 1.75; max-width: 78ch;">
+      The two phases produce the same kind of number and cost completely different things. Prefill is one pass over the prompt with every token visible at once, so the matrix multiplies are large and the tensor cores run near their rated throughput. It is the only part of the round trip where the headline PFLOPS figure from section X means much. Decode is the opposite: one token per pass, nothing to parallelize over, and the same weights pulled out of HBM every single time. The chip spends most of a decode step waiting on its own memory.
+    </p>
+
+    <!-- DEMO 31: BATCHING ARITHMETIC -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>Why your request is never alone</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">One user cannot keep a modern GPU busy. The arithmetic, for a 70B model in FP8 on a Blackwell (B200).</p>
+        </div>
+        <div class="label"><span class="num">31</span>BATCHING</div>
+      </div>
+
+      <div class="min-table">
+        <div class="min-row"><div class="m-el">Weights read<span class="m-sym">per token</span></div><div class="m-use"><span class="mono amber">70 GB.</span> Every output token requires reading the whole model out of HBM, because every weight takes part in the forward pass. In a mixture-of-experts model only the active experts are read, which is why a 671B-parameter MoE with 37B active behaves like a 37B model on this line rather than a 671B one. That is a serving decision as much as a training one.</div></div>
+        <div class="min-row"><div class="m-el">Time to read them</div><div class="m-use"><span class="mono amber">70 GB ÷ 8 TB/s = 8.75 ms.</span> The memory system working flat out, using the B200's HBM3e bandwidth from section X.</div></div>
+        <div class="min-row"><div class="m-el">Arithmetic<span class="m-sym">per token</span></div><div class="m-use"><span class="mono amber">140 GFLOP.</span> About 2 FLOPs per parameter. At the B200's 4.5 PFLOPS of dense FP8, that is <span class="mono">0.031 ms</span> of actual work.</div></div>
+        <div class="min-row"><div class="m-el">So the chip is idle</div><div class="m-use"><span class="mono amber">99.6% of the step.</span> At batch size one the tensor cores finish in 0.031 ms and then wait 8.7 ms for the next set of weights to arrive. Buying more compute does nothing for this.</div></div>
+        <div class="min-row"><div class="m-el">Batch that balances</div><div class="m-use"><span class="mono amber">≈ 280 requests.</span> 8.75 ÷ 0.031. Weights are read once for the whole batch, so the memory cost is shared while the arithmetic scales with the batch. The real crossover is lower, because each request also drags its own KV cache through memory and that part is not shared.</div></div>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; font-size: 14px; line-height: 1.7;">
+        This is what continuous batching does: rather than collecting a fixed batch and running it to completion, the scheduler keeps a pool of in-flight requests and admits a new one whenever another finishes, so the step loop never runs empty. The consequence for you is that your tokens are produced inside the same loop as several hundred strangers' tokens, on the same chips, in the same millisecond. Your latency depends on their prompt lengths. Sharing is not an efficiency bonus here. It is the only thing that makes the economics work at all.
+      </p>
+
+      <div class="fact-grid" style="margin-top: 26px;">
+        <div class="fact-card">
+          <div class="fc-k">Single-request ceiling</div>
+          <div class="fc-v">114<span class="u">tok/s</span></div>
+          <p class="fc-note">70B in FP8, 8 TB/s of HBM, batch of one. A hard bandwidth limit, not a tuning target.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Balanced batch</div>
+          <div class="fc-v">~280<span class="u">requests</span></div>
+          <p class="fc-note">Where arithmetic time catches memory time, by the table above. Ignores KV cache traffic, which pulls it down.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Splitting the phases</div>
+          <div class="fc-v">2–3<span class="u">×</span></div>
+          <p class="fc-note">Typical throughput gain from running prefill and decode on separate GPU pools. NVIDIA's own benchmark on GB200 NVL72 with wide expert parallelism reports 7× on DeepSeek-R1 at about 50 tokens per second per user.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Software, not silicon</div>
+          <div class="fc-v">2.7<span class="u">×</span></div>
+          <p class="fc-note">NVIDIA's MLPerf v6.0 improvement on DeepSeek-R1 over its own earlier submission on identical hardware. This cycle's biggest inference gains came from serving software.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Where a single token goes inside the box</h3>
+    <p class="muted" style="font-size: 14.5px; line-height: 1.7; max-width: 78ch;">
+      Section XII laid out the memory hierarchy in general. This is the part of it a decode step actually touches, in order, several hundred times per second.
+    </p>
+    <div class="path-flow" style="margin-top: 18px;">
+      <div class="flow-step"><div class="fs-n">01</div><div class="fs-t">HBM3e</div><div class="fs-d">192 GB per B200. The weights and the KV cache live here, and every token reads from it.</div><div class="fs-arrow">→</div></div>
+      <div class="flow-step"><div class="fs-n">02</div><div class="fs-t">L2 cache</div><div class="fs-d">Tens of megabytes. Catches reuse inside a single matrix multiply, not across the model.</div><div class="fs-arrow">→</div></div>
+      <div class="flow-step"><div class="fs-n">03</div><div class="fs-t">SMs</div><div class="fs-d">The streaming multiprocessors that schedule the work onto the hardware.</div><div class="fs-arrow">→</div></div>
+      <div class="flow-step"><div class="fs-n">04</div><div class="fs-t">Tensor cores</div><div class="fs-d">Where the matrix multiply from section IV happens, in FP8 or FP4.</div><div class="fs-arrow">→</div></div>
+      <div class="flow-step"><div class="fs-n">05</div><div class="fs-t">NVLink</div><div class="fs-d">1.8 TB/s per GPU on Blackwell (B200). Ties together the 8 or 72 GPUs that hold one model.</div><div class="fs-arrow">→</div></div>
+      <div class="flow-step"><div class="fs-n">06</div><div class="fs-t">InfiniBand</div><div class="fs-d">Crosses racks, and carries the KV cache from the prefill pool to the decode pool.</div></div>
+    </div>
+    <p class="muted" style="margin-top: 18px; font-size: 14px; line-height: 1.7; max-width: 78ch;">
+      A frontier model does not fit in 192 GB, so it is split across 8 GPUs and often across a whole NVL72 rack. That means steps 05 and 06 are not occasional: a single token's forward pass crosses the interconnect several times on its way through the model. This is the practical reason a served model is a property of a rack rather than of a chip.
+    </p>
+
+    <!-- DEMO 32: ENERGY -->
+    <div class="demo">
+      <div class="demo-header">
+        <div>
+          <h3>What one answer costs</h3>
+          <p style="margin: 6px 0 0; font-size: 13.5px;">Four published figures, four different boundaries. The spread between them is the finding.</p>
+        </div>
+        <div class="label"><span class="num">32</span>JOULES</div>
+      </div>
+
+      <div class="fact-grid">
+        <div class="fact-card">
+          <div class="fc-k">Google, median Gemini prompt</div>
+          <div class="fc-v">0.24<span class="u">Wh</span></div>
+          <p class="fc-note">Measured in production across Google's own fleet in May 2025, published August 2025. Counts accelerators, host CPUs, idle reserved capacity and facility overhead at a fleet PUE of 1.09. The same prompt is 0.03 g CO2e and 0.26 mL of water.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Same prompt, accelerators only</div>
+          <div class="fc-v">0.10<span class="u">Wh</span></div>
+          <p class="fc-note">From the same paper. The gap to the figure on its left is idle capacity, host CPUs and cooling. Most third-party estimates use this narrower boundary without saying so, which is why they read low.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">OpenAI, average query</div>
+          <div class="fc-v">0.34<span class="u">Wh</span></div>
+          <p class="fc-note">Stated by Sam Altman in June 2025 with no methodology attached. Close enough to Google's number to be interesting, unverifiable enough to be worth flagging.</p>
+        </div>
+        <div class="fact-card">
+          <div class="fc-k">Long reasoning answers</div>
+          <div class="fc-v">18–40<span class="u">Wh</span></div>
+          <p class="fc-note">Reported for GPT-5 class responses during 2026. Two orders of magnitude above a median chat prompt, for exactly the reason the round trip shows: thinking tokens are decode steps, and decode is where the joules go.</p>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top: 24px; font-size: 14px; line-height: 1.7;">
+        The hardware arithmetic reaches the same place, which is a useful check on all four. Take one eight-GPU Blackwell (B200) node drawing roughly 8 kW at the accelerators, serving a large model to a few hundred concurrent users at an aggregate 10,000 output tokens per second. That is <span class="mono amber">0.8 J per token</span>. A 300-token answer is 240 J, or <span class="mono amber">0.067 Wh</span>, against Google's measured 0.10 Wh for accelerators alone. Two independent routes landing within a factor of 1.5 is about as good as this kind of estimate gets.
+      </p>
+      <p class="muted" style="font-size: 14px; line-height: 1.7;">
+        One thing worth doing rather than assuming. Google's figure excludes training, and training is usually waved away as negligible per query. Run it: a 50 GWh training run, the common estimate for GPT-4, amortized across a year of serving at a billion messages a day, is about <span class="mono amber">0.14 Wh per message</span>. That is the same order as the serving cost, not a rounding error. It falls fast with volume and with how long a model stays in service, so treat it as a shape rather than a fact, but the claim that training energy disappears into the per-query number is not something the arithmetic supports at anything under a few billion queries a day.
+      </p>
+      <p class="muted" style="font-size: 14px; line-height: 1.7;">
+        The comparison everyone reaches for is web search, usually against a Google figure of 0.3 Wh that dates from 2009 and has almost certainly fallen since. On that basis a median chat prompt and a search are in the same range, and the widely repeated claim that a chat query costs ten times a search does not survive contact with either company's own numbers. None of which settles anything, because the useful unit is energy per outcome rather than energy per query, and nobody has a clean way to measure that.
+      </p>
+    </div>
+
+    <p class="muted" style="font-size: 15px; line-height: 1.75; max-width: 78ch;">
+      Put the pieces together and a good deal of the industry's shape follows from them. Prefill being compute-bound is why input tokens are priced below output tokens. Decode being memory-bound is why HBM capacity and bandwidth, rather than FLOPS, decide how many users a chip can carry, and why each new generation is judged on its memory as hard as on its math. The queue in step 4 is why capacity gets built ahead of demand. And the fact that one user cannot saturate one GPU is why inference is a batching business, which is why it concentrates into a small number of very large buildings drawing very large amounts of power. Which is where sections X and XI came from.
+    </p>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     XVI. FROM SCRATCH — building a model, idea to execution
      ===================================================== -->
 <section class="reveal" id="build" data-nav="From Scratch">
   <div class="container">
-    <div class="eyebrow">XV · From Scratch</div>
+    <div class="eyebrow">XVI · From Scratch</div>
     <h2 class="serif">So you want to <span class="italic amber">build one.</span></h2>
     <p class="lead narrow">Everything so far explained what a model <span class="italic">is</span>. This is the other direction: what it takes to make one — the pipeline from idea to running system, the tools involved, and where the whole thing actually runs. The honest headline first: almost no one trains from scratch, and knowing when not to is half the skill.</p>
 
@@ -3712,11 +3991,11 @@ main section[id] { scroll-margin-top: 96px; }
 
 
 <!-- =====================================================
-     XVI. READING THE NUMBERS — scale primitive
+     XVII. READING THE NUMBERS — scale primitive
      ===================================================== -->
 <section class="reveal" id="scale" data-nav="Scale">
   <div class="container">
-    <div class="eyebrow">XVI · Reading the numbers</div>
+    <div class="eyebrow">XVII · Reading the numbers</div>
     <h2 class="serif">Reading the <span class="italic amber">numbers.</span></h2>
     <p class="lead narrow">Every figure in this guide rides the same ladder of ten. Learn it once, and PFLOPS, terabytes, and gigawatt-hours all read on sight. Each rung is 1,000× the one below it.</p>
 
@@ -3785,11 +4064,11 @@ main section[id] { scroll-margin-top: 96px; }
 
 
 <!-- =====================================================
-     XVII. GLOSSARY
+     XVIII. GLOSSARY
      ===================================================== -->
 <section class="reveal" id="gloss" data-nav="Reference">
   <div class="container">
-    <div class="eyebrow">XVII · Quick Reference</div>
+    <div class="eyebrow">XVIII · Quick Reference</div>
     <h2 class="serif">The <span class="italic amber">vocabulary.</span></h2>
     <p class="lead narrow">Everything we've touched, in a sentence each.</p>
 
@@ -3830,6 +4109,13 @@ main section[id] { scroll-margin-top: 96px; }
       <div class="gloss"><div class="term"><span class="icon"></span>LayerNorm</div><div class="def">Normalizing activations to have mean 0 and variance 1 across a vector. Stabilizes training of deep networks.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>FFN / MLP</div><div class="def">The feed-forward network inside each transformer block. Two linear layers with a non-linearity between. Roughly two-thirds of a model's parameters live here.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>BPE</div><div class="def">Byte-Pair Encoding — the algorithm behind most modern tokenizers. Starts from raw bytes, iteratively merges the most common adjacent pairs into single tokens.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Inference</div><div class="def">Running a trained model to produce an output. The opposite of training: no gradients, no weight updates, just a forward pass. Nearly all of the compute a deployed model consumes over its life is inference.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Prefill</div><div class="def">The first phase of answering: the whole prompt is pushed through the model in one forward pass, all tokens in parallel, producing the KV cache. Compute-bound, so this is where tensor cores run near their rated throughput.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Decode</div><div class="def">The second phase: one forward pass per output token, in sequence. Memory-bandwidth-bound, because every token requires reading the model's weights out of HBM again. Where nearly all of a long answer's time and energy goes.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>TTFT</div><div class="def">Time to first token. The wait from sending a request to the first streamed character, covering network, queue and prefill. The latency users actually feel. For reasoning models, time to first <em>visible</em> token is the more honest measure and can be tens of seconds longer.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Continuous batching</div><div class="def">Keeping a pool of in-flight requests and admitting a new one whenever another finishes, rather than running fixed batches to completion. The technique that makes serving economics work, because a single request leaves a GPU roughly 99% idle.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Disaggregated serving</div><div class="def">Running prefill and decode on separate pools of GPUs and shipping the KV cache between them, because the two phases bottleneck on different hardware. Shipped across vLLM, SGLang, TensorRT-LLM and NVIDIA Dynamo (all open source) during 2026.</div></div>
+      <div class="gloss"><div class="term"><span class="icon"></span>Prefix cache</div><div class="def">Keeping the KV cache of a prompt's leading tokens so a follow-up turn, or another request sharing the same system prompt, can skip re-computing it. The main reason a second message in a conversation answers faster than the first.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>KV cache</div><div class="def">During generation, keys and values from previous tokens are cached so they don't need to be recomputed. Grows linearly with context length; dominates serving memory for long contexts.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Mixture of experts</div><div class="def">An architecture where each token activates only a sparse subset of the model's parameters via a learned router. Lets total capacity be enormous while per-token compute stays modest.</div></div>
       <div class="gloss"><div class="term"><span class="icon"></span>Scaling laws</div><div class="def">Empirical power-law relationships between loss, parameters, data, and compute. Chinchilla showed the optimal ratio is ~20 training tokens per parameter.</div></div>
@@ -3878,7 +4164,9 @@ main section[id] { scroll-margin-top: 96px; }
     <span>Scroll → ↑</span>
   </div>
   <div class="container">
-    <p class="verstamp">Inside the Model — v2.1 · build 2026-09-11T07:29-04:00 · supersedes v2.0 (2026-09-09, floating table-of-contents bar and the silicon and power audit summarized below).
+    <p class="verstamp">Inside the Model — v3.0 · build 2026-09-21T12:08-04:00 · supersedes v2.1 (2026-09-11, editorial conventions for codenames and open source/open weights).
+    <br/><br/>
+    <b>Changes in v3.0:</b> Added section XV, Inference: the full path from a user pressing return to the last token arriving, as an interactive trace across thirteen steps and three workloads (short chat, long context, reasoning), with the hardware each step runs on, where the time goes, and what the answer costs in joules. Sections on the prefill/decode split, the batching arithmetic that shows why one request leaves a GPU 99.6% idle, the route a single token takes through HBM, tensor cores, NVLink and InfiniBand, and four published per-query energy figures with their differing measurement boundaries. Seven glossary terms added. Later sections renumbered XVI to XVIII. Layout fix: the left navigation rail is now constrained to the gutter and clipped rather than allowed to overlap the text column, and it stands down below 1560px instead of 1320px, where the gutter was too narrow to hold it; the floating TOC bar covers every width below that.
     <br><br>
     <b>Changes in v2.1:</b> Two editorial conventions applied throughout. Codenames and program names now carry what they actually refer to, so Colossus (xAI's Memphis cluster) and Stargate (OpenAI, Oracle and SoftBank joint venture) rather than the bare name, alongside the accelerator codenames the guide already spelled out. And every open model or tool is marked on first mention, separating open source (PyTorch, vLLM, JAX, Kubernetes) from open weights (Llama, DeepSeek, Qwen, Kimi, Gemma, most of Mistral); downloadable parameters are not auditable software and the guide now says which is which. Spelling normalized to US forms, matching the rest of the series. No factual content changed: the September 9 audit below still stands.
     <br><br>
@@ -5850,6 +6138,256 @@ renderSoftmax();
   });
   set('llm');
 })();
+
+
+/* ============================================================
+   ADDED v3.0: the round trip — keystroke to answer
+   ============================================================ */
+(function () {
+  const barAll = document.getElementById('rtBarAll');
+  const barTtft = document.getElementById('rtBarTtft');
+  const list = document.getElementById('rtList');
+  const readout = document.getElementById('rtReadout');
+  const tabs = document.getElementById('rtTabs');
+  const elTotal = document.getElementById('rtTotal');
+  const elTtft = document.getElementById('rtTtft');
+  const elWork = document.getElementById('rtWorkload');
+  if (!barAll || !barTtft || !list || !readout || !tabs) return;
+
+  const PHASE = {
+    client: 'Your device',
+    net: 'Network',
+    cpu: 'CPU services',
+    gpu: 'GPU, prefill',
+    dec: 'GPU, decode'
+  };
+
+  const STAGES = [
+    {
+      name: 'You hit return',
+      phase: 'client',
+      where: 'Your laptop or phone, in the browser or the app',
+      limit: 'Nothing yet',
+      body: 'The text is already sitting in a variable. The client wraps it in JSON along with the conversation so far and your account token, then opens or reuses a TLS connection. No part of the model is on your machine and no inference happens here. On a phone, animating the keyboard costs more compute than sending the request does.'
+    },
+    {
+      name: 'Out to the edge',
+      phase: 'net',
+      where: 'Fibre, then the nearest point of presence',
+      limit: 'The speed of light, and hop count',
+      body: 'The request lands at whichever edge site anycast routing puts closest to you, usually 10 to 40 ms away. A warm TLS session means no handshake to pay for. This hop is pure geography: a user in Sydney talking to a model served in Virginia spends roughly 200 ms on the round trip before anything at all is computed, which is why providers replicate serving capacity by region even though the weights are identical everywhere.'
+    },
+    {
+      name: 'Gateway: identity, quota, policy',
+      phase: 'cpu',
+      where: 'Ordinary CPU servers, no accelerator involved',
+      limit: 'Database lookups',
+      body: 'Authenticate the key, check the rate limit, apply the account policy, and decide which model version and which region should take the request. Input safety classification often runs here too, sometimes as a small model of its own. All of it is cheap, and all of it sits on the critical path to the first token.'
+    },
+    {
+      name: 'Queue and admission',
+      phase: 'cpu',
+      where: 'The scheduler in front of the serving pool',
+      limit: 'How busy the fleet is right now',
+      body: 'The most variable number on this page by a wide margin. A request joins a running batch only when there is free HBM for its KV cache and a slot in the step loop. At low load the wait rounds to zero. At peak it can exceed the compute time by an order of magnitude, which is why published latency figures are medians, and why the same prompt feels different at 9 in the morning and 9 at night. Capacity planning is mostly the business of keeping this number small.'
+    },
+    {
+      name: 'Tokenize',
+      phase: 'cpu',
+      where: 'Host CPU, sitting next to the GPU',
+      limit: 'Nothing meaningful',
+      body: 'Byte-pair encoding turns text into integer IDs, as in section VI. A few hundred microseconds for a chat message. For 60,000 tokens of retrieved documents it becomes measurable, though it stays a rounding error next to what comes after it.'
+    },
+    {
+      name: 'Assemble the context',
+      phase: 'cpu',
+      where: 'CPU, plus the vector index when retrieval is on',
+      limit: 'Retrieval, when there is retrieval',
+      body: 'What the model sees is rarely what you typed. The system prompt, the conversation history, any tool definitions and any retrieved passages are concatenated into one sequence, with the retrieval step being the vector search of section VIII. This is where a two-line question quietly becomes a 20,000-token prompt, and where most of the cost of an agent request is created.'
+    },
+    {
+      name: 'Prefill',
+      phase: 'gpu',
+      where: 'Tensor cores, weights streamed from HBM',
+      limit: 'Arithmetic. This phase is compute-bound',
+      body: 'The whole prompt goes through the model in a single forward pass, every token in parallel. The tensor cores run near their rated throughput here, and this is the only part of the round trip where the headline PFLOPS number from section X means very much. The product is the KV cache of section XII: two vectors per token per attention head, held in HBM for the rest of the request. Prefill cost rises with prompt length, and the attention part of it rises faster than linearly, which is why the long-context preset spends seconds where the chat preset spends milliseconds.'
+    },
+    {
+      name: 'Hand the cache to a decode worker',
+      phase: 'gpu',
+      where: 'NVLink inside the rack, InfiniBand or RDMA across racks',
+      limit: 'Interconnect bandwidth',
+      body: 'Through 2026 the two phases increasingly run on different GPUs. NVIDIA Dynamo (open source) reached general availability on 16 March 2026, and vLLM (open source), SGLang (open source) and TensorRT-LLM all ship the same split. The reason is in the rows either side of this one: prefill wants arithmetic, decode wants memory bandwidth, and a chip doing both is underused on whichever it is not doing. The price of splitting them is that the KV cache has to physically move, which is what 1.8 TB/s of NVLink per Blackwell (B200) GPU is for.'
+    },
+    {
+      name: 'Sample the first token',
+      phase: 'gpu',
+      where: 'Same GPU, final layer of the model',
+      limit: 'Nothing measurable',
+      body: 'Logits, softmax, top-p, exactly as in section XIV. The chosen token is turned back into text and pushed onto the stream. Everything up to this point is time to first token, which is the number users experience as responsiveness. Under about 500 ms a chat interface feels alive; beyond a couple of seconds it feels broken, however good the answer turns out to be.'
+    },
+    {
+      name: 'Decode, one token at a time',
+      phase: 'dec',
+      where: 'GPU, bounded by HBM reads rather than arithmetic',
+      limit: 'Memory bandwidth',
+      body: 'The model now runs once per output token, and each of those runs has to pull the weights it needs out of HBM. A 70B model in FP8 is 70 GB of weights, a B200 reads at about 8 TB/s, so one request on its own cannot exceed roughly 114 tokens per second however much compute sits idle beside it. Nothing here is parallel: token 400 cannot begin until token 399 exists. That sequential floor is underneath every latency claim anyone makes, and the next panel is what serving systems do about it.'
+    },
+    {
+      name: 'Stream it back',
+      phase: 'net',
+      where: 'Server-sent events, over the connection already open',
+      limit: 'The same network hop as step 2',
+      body: 'Tokens are pushed as they are produced rather than held back until the answer is complete. That is an interface decision with real consequences: it hides decode time behind reading time, and it is why an answer that takes 12 seconds to finish can feel faster than one that takes 3 seconds and lands all at once.'
+    },
+    {
+      name: 'Render',
+      phase: 'client',
+      where: 'Back on your device',
+      limit: 'Markdown parsing',
+      body: 'The client reassembles the stream, parses markdown and paints. Modest cost, though a long code block re-highlighted on every arriving chunk is a genuine source of stutter in chat apps.'
+    },
+    {
+      name: 'Afterwards',
+      phase: 'cpu',
+      where: 'Off the critical path',
+      limit: 'Nothing the user waits for',
+      body: 'Output safety classification, logging, usage metering and billing, and a write into the prefix cache so the next turn of this conversation can skip most of its prefill. That last one matters more than it sounds: in a long conversation, a cached prefix is often the whole difference between a quick follow-up and a slow one.'
+    }
+  ];
+
+  const TTFT_STEPS = 9;
+
+  const PRESETS = {
+    chat: {
+      note: '400-token prompt · 300-token answer · non-reasoning model · warm prefix cache · user and serving region on the same continent',
+      inTok: 400, outTok: 300,
+      ms: [2, 35, 12, 120, 1, 6, 55, 4, 3, 3333, 35, 15, 0]
+    },
+    rag: {
+      note: '60,000 tokens of retrieved documents and history · 800-token answer · the shape of most agent and document-Q&A traffic',
+      inTok: 60000, outTok: 800,
+      ms: [2, 55, 14, 220, 24, 180, 1850, 38, 4, 13300, 55, 40, 0]
+    },
+    reason: {
+      note: '2,000-token prompt · about 6,000 thinking tokens you never see · then a 700-token answer. First token is fast; first VISIBLE token is not',
+      inTok: 2000, outTok: 6700,
+      ms: [2, 35, 12, 140, 2, 8, 130, 5, 3, 78800, 35, 25, 0]
+    }
+  };
+
+  let current = 'chat';
+  let active = 6;
+
+  function fmt(ms) {
+    if (ms === 0) return 'off path';
+    if (ms < 1000) return Math.round(ms) + ' ms';
+    if (ms < 10000) return (ms / 1000).toFixed(2) + ' s';
+    return (ms / 1000).toFixed(1) + ' s';
+  }
+
+  function energyWh(p) {
+    const joules = (p.outTok + p.inTok / 8) * 2.5;
+    return joules / 3600;
+  }
+
+  function buildBar(el, count) {
+    const p = PRESETS[current];
+    el.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      if (!p.ms[i]) continue;
+      const b = document.createElement('button');
+      b.className = 'rt-seg ph-' + STAGES[i].phase;
+      b.style.flexGrow = String(p.ms[i]);
+      b.style.flexBasis = '0';
+      b.dataset.i = String(i);
+      b.setAttribute('aria-label', STAGES[i].name + ', ' + fmt(p.ms[i]));
+      b.title = STAGES[i].name + ' · ' + fmt(p.ms[i]);
+      el.appendChild(b);
+    }
+  }
+
+  function buildList() {
+    const p = PRESETS[current];
+    list.innerHTML = STAGES.map(function (s, i) {
+      return '<button class="rt-step" data-i="' + i + '">' +
+             '<span class="sn">' + String(i + 1).padStart(2, '0') + '</span>' +
+             '<span class="st">' + s.name + '</span>' +
+             '<span class="sms">' + fmt(p.ms[i]) + '</span>' +
+             '</button>';
+    }).join('');
+  }
+
+  function renderReadout() {
+    const p = PRESETS[current];
+    const s = STAGES[active];
+    readout.innerHTML =
+      '<div class="rt-n">Step ' + String(active + 1).padStart(2, '0') +
+        ' of ' + STAGES.length + ' &middot; ' + PHASE[s.phase] + '</div>' +
+      '<h4>' + s.name + '</h4>' +
+      '<div class="rt-meta">' +
+        '<div><span class="rk">Where it runs</span><span class="rv">' + s.where + '</span></div>' +
+        '<div><span class="rk">Typical time</span><span class="rv figure">' +
+          (p.ms[active] ? fmt(p.ms[active]) : 'Off the critical path') + '</span></div>' +
+        '<div><span class="rk">What limits it</span><span class="rv">' + s.limit + '</span></div>' +
+      '</div>' +
+      '<p>' + s.body + '</p>';
+  }
+
+  function markActive() {
+    [].forEach.call(document.querySelectorAll('.rt-seg'), function (b) {
+      b.classList.toggle('on', Number(b.dataset.i) === active);
+    });
+    [].forEach.call(list.querySelectorAll('.rt-step'), function (b) {
+      b.classList.toggle('on', Number(b.dataset.i) === active);
+    });
+  }
+
+  function render() {
+    const p = PRESETS[current];
+    let ttft = 0, total = 0;
+    for (let i = 0; i < STAGES.length; i++) {
+      total += p.ms[i];
+      if (i < TTFT_STEPS) ttft += p.ms[i];
+    }
+    buildBar(barAll, 12);
+    buildBar(barTtft, TTFT_STEPS);
+    buildList();
+    renderReadout();
+    markActive();
+    if (elWork) elWork.textContent = p.note;
+    if (elTotal) elTotal.textContent = 'TOTAL ' + fmt(total) + '  ·  ' +
+      p.outTok.toLocaleString() + ' OUTPUT TOKENS  ·  ≈ ' + energyWh(p).toFixed(2) + ' Wh';
+    if (elTtft) elTtft.textContent = 'TIME TO FIRST TOKEN ' + fmt(ttft);
+  }
+
+  function pick(i) {
+    if (isNaN(i) || i < 0 || i >= STAGES.length) return;
+    active = i;
+    renderReadout();
+    markActive();
+  }
+
+  barAll.addEventListener('click', function (e) {
+    const b = e.target.closest('.rt-seg'); if (b) pick(Number(b.dataset.i));
+  });
+  barTtft.addEventListener('click', function (e) {
+    const b = e.target.closest('.rt-seg'); if (b) pick(Number(b.dataset.i));
+  });
+  list.addEventListener('click', function (e) {
+    const b = e.target.closest('.rt-step'); if (b) pick(Number(b.dataset.i));
+  });
+  tabs.addEventListener('click', function (e) {
+    const b = e.target.closest('.path-tab'); if (!b) return;
+    [].forEach.call(tabs.querySelectorAll('.path-tab'), function (t) { t.classList.remove('on'); });
+    b.classList.add('on');
+    current = b.dataset.rt;
+    render();
+  });
+
+  render();
+})();
+
 </script>
 
 </body>
