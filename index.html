@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#f5f5f7" id="themeColorMeta">
-<title>Inside the Model v3.0 &mdash; an interactive field guide</title>
-<meta property="og:title" content="Inside the Model v3.0">
+<title>Inside the Model v3.1 &mdash; an interactive field guide</title>
+<meta property="og:title" content="Inside the Model v3.1">
 <meta property="og:description" content="A field guide to what a modern AI model actually is, from floating-point numbers up through the datacenter that runs it.">
 <meta name="description" content="A field guide to what a modern AI model actually is, from floating-point numbers up through the datacenter that runs it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2268,7 +2268,7 @@ main section[id] { scroll-margin-top: 96px; }
     <button class="tocbar-title" id="tocTop" title="Back to top">
       <span class="tb-dot"></span>
       <span class="tb-name">Inside the Model</span>
-      <span class="tb-v">v3.0</span>
+      <span class="tb-v">v3.1</span>
     </button>
     <nav class="tocbar-scroll" id="tocScroll" aria-label="Table of contents"></nav>
     <div class="tocbar-actions">
@@ -2290,7 +2290,7 @@ main section[id] { scroll-margin-top: 96px; }
 <section class="hero">
   <div class="container">
     <div class="nav-row">
-      <div><span class="dot"></span>Inside the Model <span class="faint" style="font-size:11px;">Field guide / <b>v3.0</b> · 21 September 2026, 12:08 PM ET · build 2026-09-21T12:08-04:00</span></div>
+      <div><span class="dot"></span>Inside the Model <span class="faint" style="font-size:11px;">Field guide / <b>v3.1</b> · 19 October 2026, 6:08 PM ET · build 2026-10-19T18:08-04:00</span></div>
       <div class="right">
         <span>An interactive field guide · 2026</span>
         <button class="contact-btn" id="themeToggle" aria-pressed="false"><span id="themeLabel" class="themeLabel">Dark</span></button>
@@ -3082,7 +3082,7 @@ main section[id] { scroll-margin-top: 96px; }
         That "4NP" process name is mostly marketing — actual transistor features are around <span class="amber mono">20 nm</span>, which is still only ~100 silicon atoms across. A silicon atom is <span class="amber mono">0.2 nm</span>. There's not much room left to shrink before quantum effects make transistors stop working as switches.
       </p>
       <p class="faint" style="margin-top: 14px; font-size: 12px; line-height: 1.6;">
-        The B200 shown here is the reference point for this guide, and it is now a generation behind. NVIDIA ships on a roughly annual cadence: <span class="muted">Blackwell Ultra (B300 / GB300)</span> reached partner systems in the second half of 2025 and broad availability in January 2026 — same 208 B transistors, but 288 GB of HBM3e on 12-high stacks, 15 PFLOPS dense FP4, and a 1,400 W TDP. <span class="muted">Vera Rubin</span> entered full production on 1 June 2026 and began customer shipments this quarter: two reticle-sized dies, 336 B transistors on TSMC N3, 288 GB of HBM4 at 22 TB/s, ~50 PFLOPS of FP4 inference per package, and NVLink 6 at 3.6 TB/s. Rubin Ultra (2027, four dies per package) and Feynman (2028) are already on the map. Every number on this page moves with the cadence; the shapes don't.
+        The B200 shown here is the reference point for this guide, and it is now a generation behind. NVIDIA ships on a roughly annual cadence: <span class="muted">Blackwell Ultra (B300 / GB300)</span> reached partner systems in the second half of 2025 and broad availability in January 2026 — same 208 B transistors, but 288 GB of HBM3e on 12-high stacks, 15 PFLOPS dense FP4, and a 1,400 W TDP. <span class="muted">Vera Rubin (Vera Rubin NVL72)</span> was ramping into full production by NVIDIA&rsquo;s account at the end of May 2026, and Microsoft announced the first installation on 23 August, with volume shipments through the autumn: two reticle-sized dies, 336 B transistors on TSMC N3, 288 GB of HBM4 at 22 TB/s, ~50 PFLOPS of FP4 inference per package, and NVLink 6 at 3.6 TB/s. Rubin Ultra (2027, four dies per package) and Feynman (2028) are already on the map. Every number on this page moves with the cadence; the shapes don't.
       </p>
     </div>
 
@@ -4164,7 +4164,11 @@ main section[id] { scroll-margin-top: 96px; }
     <span>Scroll → ↑</span>
   </div>
   <div class="container">
-    <p class="verstamp">Inside the Model — v3.0 · build 2026-09-21T12:08-04:00 · supersedes v2.1 (2026-09-11, editorial conventions for codenames and open source/open weights).
+    <p class="verstamp">Inside the Model v3.1 · build 2026-10-19T18:08-04:00 · supersedes v3.0 (build 2026-09-21T12:08-04:00).
+    <br/><br/>
+    <b>Changes in v3.1:</b> The Rubin status line no longer asserts a 1 June full-production date, which the AI Model Stack dropped because published dates disagree; it now uses NVIDIA&rsquo;s own wording and the first announced installation, and names the rack (Vera Rubin NVL72). &ldquo;Began customer shipments this quarter&rdquo;, written in Q3, is replaced with dates. Nothing else changed.
+    <br/><br/>
+    v3.0 superseded v2.1 (2026-09-11, editorial conventions for codenames and open source/open weights).
     <br/><br/>
     <b>Changes in v3.0:</b> Added section XV, Inference: the full path from a user pressing return to the last token arriving, as an interactive trace across thirteen steps and three workloads (short chat, long context, reasoning), with the hardware each step runs on, where the time goes, and what the answer costs in joules. Sections on the prefill/decode split, the batching arithmetic that shows why one request leaves a GPU 99.6% idle, the route a single token takes through HBM, tensor cores, NVLink and InfiniBand, and four published per-query energy figures with their differing measurement boundaries. Seven glossary terms added. Later sections renumbered XVI to XVIII. Layout fix: the left navigation rail is now constrained to the gutter and clipped rather than allowed to overlap the text column, and it stands down below 1560px instead of 1320px, where the gutter was too narrow to hold it; the floating TOC bar covers every width below that.
     <br><br>
